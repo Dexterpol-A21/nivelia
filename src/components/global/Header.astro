@@ -1,0 +1,75 @@
+---
+import { Briefcase, House, Mail, Users } from '@lucide/astro';
+import { NAV_LINKS, SITE } from '@utils/constants';
+
+const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const icons = {
+  '/': House,
+  '/servicios': Briefcase,
+  '/sobre-nosotros': Users,
+  '/contacto': Mail,
+} as const;
+---
+
+<header
+  class="sticky top-0 z-40 border-b border-border bg-surface/90 backdrop-blur-md"
+>
+  <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 md:h-20">
+    <a href="/" class="font-heading text-xl font-bold tracking-tight text-text md:text-2xl">
+      {SITE.title}
+    </a>
+
+    <nav class="hidden items-center gap-1 md:flex" aria-label="Principal">
+      {
+        NAV_LINKS.map((link) => {
+          const href = link.href.replace(/\/$/, '') || '/';
+          const active = pathname === href;
+          return (
+            <a
+              href={link.href}
+              class:list={[
+                'rounded-lg px-3 py-2 text-sm font-semibold transition-colors',
+                active ? 'text-text' : 'text-text-muted hover:text-text',
+              ]}
+              aria-current={active ? 'page' : undefined}
+            >
+              {link.label}
+            </a>
+          );
+        })
+      }
+    </nav>
+  </div>
+</header>
+
+<nav
+  class="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-surface/95 backdrop-blur-md md:hidden"
+  style="padding-bottom: max(env(safe-area-inset-bottom), 8px)"
+  aria-label="Principal móvil"
+>
+  <ul class="grid grid-cols-4">
+    {
+      NAV_LINKS.map((link) => {
+        const href = link.href.replace(/\/$/, '') || '/';
+        const active = pathname === href;
+        const Icon = icons[link.href as keyof typeof icons];
+        return (
+          <li>
+            <a
+              href={link.href}
+              class:list={[
+                'flex min-h-14 flex-col items-center justify-center gap-1 px-2 py-2 text-[10px] font-semibold',
+                active ? 'text-text' : 'text-text-muted',
+              ]}
+              aria-current={active ? 'page' : undefined}
+            >
+              {Icon && <Icon size={24} stroke-width={active ? 2.25 : 1.75} />}
+              <span>{link.label}</span>
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
+</nav>

@@ -1,0 +1,225 @@
+---
+import { Image } from 'astro:assets';
+import GlyvFlora from '@components/home/GlyvFlora.astro';
+import GlyvNerves from '@components/home/GlyvNerves.astro';
+import GlyvButtons from '@components/ui/GlyvButtons.astro';
+import photo100 from '../../assets/products/glyv-100.png';
+import photoNervia from '../../assets/products/glyv-nervia.png';
+import { PRODUCTS } from '@utils/constants';
+
+const photos = {
+  glucose: {
+    src: photo100,
+    alt: 'Nopal, canela y cápsulas de Glyv >100',
+  },
+  nervia: {
+    src: photoNervia,
+    alt: 'Passiflora, valeriana y cápsulas de Glyv Nervia',
+  },
+} as const;
+---
+
+<section class="home-products" aria-label="Productos Glyv">
+  {
+    PRODUCTS.map((product) => (
+      <article class={`product-plate is-${product.tone}`} id={product.id}>
+        <div class="product-plate__figure">
+          <Image
+            class="product-plate__photo"
+            src={photos[product.tone].src}
+            alt={photos[product.tone].alt}
+            widths={[640, 960, 1280]}
+            sizes="(min-width: 900px) 50vw, 100vw"
+          />
+        </div>
+
+        <div class="product-plate__copy">
+          {product.tone === 'nervia' && <GlyvNerves />}
+          <p class="product-plate__line">{product.line}</p>
+          <h2>{product.name}</h2>
+          <p class="product-plate__claim">{product.claim}</p>
+          <p class="product-plate__use">
+            {product.use} {product.pack}
+          </p>
+          <p class="product-plate__ings">{product.ingredients}</p>
+          <GlyvButtons primary={product.cta} secondary={product.formula} />
+        </div>
+
+        {product.tone === 'glucose' && <GlyvFlora variant="plate" />}
+      </article>
+    ))
+  }
+</section>
+
+<style>
+  .home-products {
+    --cream: #f4efe6;
+    --forest: #1e4a32;
+    --petroleum: #0b4f6c;
+    --ink: #1a2a22;
+    font-family: Outfit, sans-serif;
+  }
+
+  .product-plate {
+    position: relative;
+    display: grid;
+    min-height: 28rem;
+    overflow: hidden;
+  }
+
+  .product-plate.is-glucose {
+    background: var(--forest);
+    color: var(--cream);
+  }
+
+  .product-plate.is-nervia {
+    background: var(--petroleum);
+    color: var(--cream);
+  }
+
+  .product-plate__figure {
+    position: relative;
+    z-index: 1;
+    min-height: 22rem;
+    overflow: hidden;
+    background: var(--cream);
+  }
+
+  .product-plate.is-nervia .product-plate__figure {
+    background: #083d54;
+  }
+
+  .product-plate__photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .product-plate__copy {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem 1.5rem 2.2rem;
+  }
+
+  .product-plate__copy > :not(.glyv-nerves) {
+    position: relative;
+    z-index: 1;
+  }
+
+  .product-plate__line {
+    margin: 0 0 0.7rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.04em;
+    color: var(--cream);
+    opacity: 0.72;
+  }
+
+  .product-plate h2 {
+    margin: 0;
+    font-family: Fraunces, serif;
+    font-size: clamp(2.6rem, 8vw, 5.2rem);
+    font-weight: 500;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+  }
+
+  .product-plate__claim {
+    margin: 1.15rem 0 0;
+    max-width: 18ch;
+    font-family: Fraunces, serif;
+    font-size: clamp(1.25rem, 3vw, 1.85rem);
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .product-plate__use {
+    margin: 1rem 0 0;
+    font-size: 0.95rem;
+    line-height: 1.45;
+    opacity: 0.86;
+  }
+
+  .product-plate__ings {
+    margin: 0.85rem 0 0;
+    max-width: 34rem;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    opacity: 0.78;
+  }
+
+  @media (min-width: 900px) {
+    .product-plate {
+      grid-template-columns: 1fr 1fr;
+      min-height: 36rem;
+    }
+
+    .product-plate.is-nervia .product-plate__figure {
+      order: 1;
+    }
+
+    .product-plate__figure {
+      min-height: 36rem;
+    }
+
+    .product-plate__copy {
+      padding: 3rem 2.6rem;
+    }
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const mm = gsap.matchMedia();
+
+  mm.add('(prefers-reduced-motion: no-preference)', () => {
+    const desktop = window.matchMedia('(min-width: 900px)').matches;
+
+    document.querySelectorAll('.product-plate').forEach((plate) => {
+      const figure = plate.querySelector('.product-plate__figure');
+      const copy = plate.querySelector('.product-plate__copy');
+      if (!figure || !copy) return;
+
+      const figureFromRight = desktop && plate.classList.contains('is-nervia');
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: plate,
+          start: 'top 82%',
+          once: true,
+        },
+      });
+
+      tl.from(
+        figure,
+        {
+          xPercent: figureFromRight ? 100 : -100,
+          duration: 1.15,
+          ease: 'power3.out',
+        },
+        0,
+      )
+        .from(
+          copy,
+          {
+            xPercent: figureFromRight ? -100 : 100,
+            duration: 1.15,
+            ease: 'power3.out',
+          },
+          0.06,
+        )
+        .add(() => {
+          plate.querySelectorAll('.is-scroll').forEach((el) => {
+            el.classList.add('is-auto');
+          });
+        });
+    });
+  });
+</script>

@@ -1,0 +1,65 @@
+@import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+@theme {
+  --font-heading: "Fraunces", serif;
+  --font-body: "Outfit", sans-serif;
+
+  --color-primary: #171717;
+  --color-primary-dark: #0a0a0a;
+  --color-secondary: #525252;
+  --color-accent: #2563eb;
+  --color-bg: #fafafa;
+  --color-surface: #ffffff;
+  --color-text: #171717;
+  --color-text-muted: #525252;
+  --color-border: #e5e5e5;
+}
+
+@layer base {
+  html {
+    scroll-behavior: auto;
+    scrollbar-width: none;
+  }
+
+  html::-webkit-scrollbar {
+    display: none;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #1e4a32 #f4efe6;
+  }
+
+  *::-webkit-scrollbar {
+    width: 0.7rem;
+    height: 0.7rem;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #f4efe6;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: #1e4a32;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: #0b4f6c;
+  }
+
+  *::-webkit-scrollbar-corner {
+    background: #f4efe6;
+  }
+
+  body {
+    @apply bg-bg text-text font-body antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading;
+  }
+}

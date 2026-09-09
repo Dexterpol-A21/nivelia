@@ -1,0 +1,603 @@
+---
+interface Props {
+  auto?: boolean;
+  variant?: 'hero' | 'plate';
+}
+
+const { auto = false, variant = 'hero' } = Astro.props;
+const drawClass = auto ? 'is-auto' : 'is-scroll';
+
+const r = (n: number) => Math.round(n * 10) / 10;
+
+type Pt = { x: number; y: number };
+
+function leaf(x0: number, y0: number, x1: number, y1: number) {
+  const dx = x1 - x0;
+  const dy = y1 - y0;
+  const len = Math.hypot(dx, dy) || 1;
+  const ux = dx / len;
+  const uy = dy / len;
+  const nx = -uy;
+  const ny = ux;
+  const px = x0 + ux * Math.min(16, len * 0.28);
+  const py = y0 + uy * Math.min(16, len * 0.28);
+  const w = Math.min(20, len * 0.3);
+  const shoot = [
+    `M${r(x0)} ${r(y0)}`,
+    `Q${r(x0 + ux * 8 + nx * 1.2)} ${r(y0 + uy * 8 + ny * 1.2)} ${r(px)} ${r(py)}`,
+    `C${r(px + nx * w + ux * 10)} ${r(py + ny * w + uy * 10)}`,
+    `${r(x1 + nx * w * 0.3)} ${r(y1 + ny * w * 0.3)}`,
+    `${r(x1)} ${r(y1)}`,
+    `C${r(x1 - nx * w * 0.3)} ${r(y1 - ny * w * 0.3)}`,
+    `${r(px - nx * w + ux * 8)} ${r(py - ny * w + uy * 8)}`,
+    `${r(px)} ${r(py)}`,
+  ].join(' ');
+  const rib = `M${r(px)} ${r(py)} Q${r(px + ux * (len * 0.4))} ${r(py + uy * (len * 0.4))} ${r(x1)} ${r(y1)}`;
+  return { shoot, rib };
+}
+
+function parseCubics(d: string) {
+  const nums = (d?.match(/-?\d*\.?\d+/g) ?? []).map(Number);
+  const segs: { p0: Pt; p1: Pt; p2: Pt; p3: Pt }[] = [];
+  let i = 0;
+  let x = nums[i++] ?? 0;
+  let y = nums[i++] ?? 0;
+  while (i + 5 < nums.length) {
+    const p1 = { x: nums[i++], y: nums[i++] };
+    const p2 = { x: nums[i++], y: nums[i++] };
+    const p3 = { x: nums[i++], y: nums[i++] };
+    segs.push({ p0: { x, y }, p1, p2, p3 });
+    x = p3.x;
+    y = p3.y;
+  }
+  return segs;
+}
+
+function cubicAt(seg: { p0: Pt; p1: Pt; p2: Pt; p3: Pt }, t: number): Pt {
+  const u = 1 - t;
+  return {
+    x: u ** 3 * seg.p0.x + 3 * u ** 2 * t * seg.p1.x + 3 * u * t ** 2 * seg.p2.x + t ** 3 * seg.p3.x,
+    y: u ** 3 * seg.p0.y + 3 * u ** 2 * t * seg.p1.y + 3 * u * t ** 2 * seg.p2.y + t ** 3 * seg.p3.y,
+  };
+}
+
+function cubicDeriv(seg: { p0: Pt; p1: Pt; p2: Pt; p3: Pt }, t: number): Pt {
+  const u = 1 - t;
+  return {
+    x: 3 * u ** 2 * (seg.p1.x - seg.p0.x) + 6 * u * t * (seg.p2.x - seg.p1.x) + 3 * t ** 2 * (seg.p3.x - seg.p2.x),
+    y: 3 * u ** 2 * (seg.p1.y - seg.p0.y) + 6 * u * t * (seg.p2.y - seg.p1.y) + 3 * t ** 2 * (seg.p3.y - seg.p2.y),
+  };
+}
+
+function leavesOnStem(
+  d: string,
+  count: number,
+  length: number,
+  start = 0.14,
+  end = 0.9,
+  sideStart = 1,
+) {
+  const segs = parseCubics(d);
+  const samples: { x: number; y: number; tx: number; ty: number; s: number }[] = [];
+  let dist = 0;
+  let prev: Pt | null = null;
+  segs.forEach((seg, si) => {
+    const steps = 48;
+    for (let i = si === 0 ? 0 : 1; i <= steps; i++) {
+      const t = i / steps;
+      const p = cubicAt(seg, t);
+      const dlt = cubicDeriv(seg, t);
+      if (prev) dist += Math.hypot(p.x - prev.x, p.y - prev.y);
+      samples.push({ x: p.x, y: p.y, tx: dlt.x, ty: dlt.y, s: dist });
+      prev = p;
+    }
+  });
+
+  const total = samples.at(-1)?.s ?? 1;
+  const tips: [number, number, number, number][] = [];
+
+  for (let i = 0; i < count; i++) {
+    const target = (start + ((end - start) * (i + 0.5)) / count) * total;
+    const sample = samples.find((pt) => pt.s >= target) ?? samples.at(-1);
+    if (!sample) continue;
+    const tlen = Math.hypot(sample.tx, sample.ty) || 1;
+    const fx = sample.tx / tlen;
+    const fy = sample.ty / tlen;
+    const nx = -fy;
+    const ny = fx;
+    const side = (i % 2 === 0 ? 1 : -1) * sideStart;
+    tips.push([
+      sample.x,
+      sample.y,
+      sample.x + nx * side * length + fx * length * 0.22,
+      sample.y + ny * side * length + fy * length * 0.22,
+    ]);
+  }
+
+  return tips;
+}
+
+function bundle(
+  branches: { d: string; count: number; length: number; start?: number; end?: number; side?: number }[],
+) {
+  const stems = branches.map((branch) => branch.d);
+  const tips = branches.flatMap((branch) =>
+    leavesOnStem(branch.d, branch.count, branch.length, branch.start, branch.end, branch.side),
+  );
+  const leaves = tips.map(([a, b, c, d]) => leaf(a, b, c, d));
+  return {
+    stems,
+    shoots: leaves.map((item) => item.shoot),
+    ribs: leaves.map((item) => item.rib),
+  };
+}
+
+const vineMain = {
+  stems: [
+    'M0 10 C44.9 17.7 120.3 28.5 210 46 C299.7 63.5 328.1 91.1 420 92 C511.9 92.9 541.7 44.4 640 50 C738.3 55.6 773.2 113.3 880 118 C986.8 122.7 1028.9 63.5 1140 72 C1251.1 80.5 1293.2 136.6 1400 158 C1506.8 179.4 1588.7 169 1640 172',
+  ],
+  shoots: [
+    'M99 26.1 Q98.6 35.3 105.9 41.2 C100 59.4 115.8 68.6 118.2 67.9 C120.5 67.3 123.6 48.6 105.9 41.2',
+    'M314.2 75.3 Q313.2 83.6 319.6 89.4 C313 105.7 326.9 115 329.1 114.5 C331.4 114 335.4 97.2 319.6 89.4',
+    'M537 65.9 Q543.7 59 542 49.3 C559.6 39.2 553.5 20.4 550.8 19.9 C548.1 19.4 532.8 31.2 542 49.3',
+    'M746.5 79.6 Q744.5 87.8 750 94.3 C741.4 109.7 754 120.8 756.3 120.4 C758.7 120.1 764.7 104 750 94.3',
+    'M1008.4 93.6 Q1014.6 86.8 1012.6 77.5 C1028.8 67.2 1022.7 49.5 1020.1 49.1 C1017.6 48.7 1003.7 60.6 1012.6 77.5',
+    'M1260.2 104.9 Q1257.8 113.4 1263.4 120.4 C1253.4 136.3 1266.5 148.4 1269 148 C1271.6 147.7 1278.8 131.1 1263.4 120.4',
+    'M1540.8 171.9 Q1548.5 168.5 1550.3 160.1 C1567.7 157.5 1568.9 140 1567.1 139.1 C1565.2 138.2 1549 142.5 1550.3 160.1',
+  ],
+  ribs: [
+    'M105.9 41.2 Q110.6 54.6 118.2 67.9',
+    'M319.6 89.4 Q323 101.9 329.1 114.5',
+    'M542 49.3 Q547.5 35.6 550.8 19.9',
+    'M750 94.3 Q751.9 107.1 756.3 120.4',
+    'M1012.6 77.5 Q1017.5 64.2 1020.1 49.1',
+    'M1263.4 120.4 Q1264.8 133.9 1269 148',
+    'M1550.3 160.1 Q1559.3 150.8 1567.1 139.1',
+  ],
+};
+
+const vineBottom = {
+  stems: [
+    'M0 188 C32.1 175.2 85.9 153.6 150 128 C214.1 102.4 231.6 86.4 300 68 C368.4 49.6 397.4 41.1 470 42 C542.6 42.9 569.5 53.6 640 72 C710.5 90.4 731.6 107.5 800 128 C868.4 148.5 887.4 157.3 960 168 C1032.6 178.7 1063.1 182.3 1140 178 C1216.9 173.7 1247.4 151.4 1320 148 C1392.6 144.6 1411.6 152.6 1480 162 C1548.4 171.4 1605.8 185.6 1640 192',
+  ],
+  shoots: [
+    'M63 162.8 Q67.2 170.1 75.8 170.9 C80.3 187.9 97.2 186.4 98.5 185.2 C99.8 184 93.1 167.6 75.8 170.9',
+    'M223.4 95.3 Q228.9 87.9 226.2 78.9 C241.3 67.2 233.6 50.2 231.1 49.9 C228.5 49.7 215.7 62.8 226.2 78.9',
+    'M375.9 49.2 Q379 57 387.3 59.1 C389.2 76.6 406 77.8 407.6 76.8 C409.2 75.7 404.9 58.5 387.3 59.1',
+    'M555.8 50.4 Q564.3 48.2 567.5 39.8 C586.3 40.3 590.1 22 588.3 20.8 C586.6 19.7 568.8 21.1 567.5 39.8',
+    'M720.8 99.2 Q719.2 107 724.8 113 C716.6 128.2 729.5 138 731.8 137.6 C734.1 137.2 739.7 121.5 724.8 113',
+    'M871.7 149.8 Q879.9 148 883.2 140.1 C900.8 140.9 905.3 123.8 903.8 122.7 C902.3 121.6 885.4 122.6 883.2 140.1',
+    'M1048.4 178.6 Q1056 176 1058.3 168.2 C1075.5 167.6 1077.8 150.7 1076 149.7 C1074.3 148.7 1058.2 151 1058.3 168.2',
+    'M1231.6 162.7 Q1238.3 157 1237.5 148 C1254.7 140.3 1250.5 122.5 1248.1 121.9 C1245.7 121.3 1230.6 130.6 1237.5 148',
+    'M1401.6 150.2 Q1402.1 158.2 1409 162.5 C1405.1 179.2 1420.1 185.2 1422.2 184.5 C1424.3 183.7 1425.6 166.9 1409 162.5',
+    'M1572.8 178.1 Q1580.2 176.4 1583.2 169.2 C1599.2 170 1603.1 154.4 1601.7 153.4 C1600.3 152.4 1585 153.3 1583.2 169.2',
+  ],
+  ribs: [
+    'M75.8 170.9 Q86.1 178.8 98.5 185.2',
+    'M226.2 78.9 Q229.8 65.2 231.1 49.9',
+    'M387.3 59.1 Q396.3 68.5 407.6 76.8',
+    'M567.5 39.8 Q578.4 31.6 588.3 20.8',
+    'M724.8 113 Q727 125.2 731.8 137.6',
+    'M883.2 140.1 Q893.9 132.7 903.8 122.7',
+    'M1058.3 168.2 Q1067.7 160.1 1076 149.7',
+    'M1237.5 148 Q1243.8 136 1248.1 121.9',
+    'M1409 162.5 Q1414.3 173.7 1422.2 184.5',
+    'M1583.2 169.2 Q1592.8 162.5 1601.7 153.4',
+  ],
+};
+
+const plateBranches = [
+  {
+    d: 'M0 860 C48 770 66 640 80 510 C94 380 128 250 186 198 C228 148 268 138 300 192',
+    count: 6,
+    length: 48,
+    start: 0.1,
+    end: 0.92,
+  },
+  {
+    d: 'M8 12 C78 30 150 22 198 68 C228 92 218 128 176 118',
+    count: 3,
+    length: 40,
+    start: 0.16,
+    end: 0.86,
+    side: -1,
+  },
+  {
+    d: 'M800 14 C776 78 816 150 798 248',
+    count: 3,
+    length: 42,
+    start: 0.16,
+    end: 0.88,
+  },
+  {
+    d: 'M1600 8 C1524 34 1448 82 1396 138 C1366 168 1408 198 1464 208',
+    count: 3,
+    length: 40,
+    start: 0.14,
+    end: 0.86,
+  },
+  {
+    d: 'M800 900 C778 850 808 798 770 728',
+    count: 3,
+    length: 42,
+    start: 0.16,
+    end: 0.88,
+    side: -1,
+  },
+];
+
+const vinePlate = bundle(plateBranches);
+
+const layers =
+  variant === 'plate'
+    ? [{ class: 'is-plate', vine: vinePlate, viewBox: '0 0 1600 900' }]
+    : [
+        { class: 'is-main', vine: vineMain, viewBox: '0 0 1600 180' },
+        { class: 'is-bottom', vine: vineBottom, viewBox: '0 0 1600 200' },
+      ];
+---
+
+{
+  layers.map((layer) => (
+    <div
+      class={`glyv-flora ${layer.class} ${drawClass}`}
+      aria-hidden="true"
+      data-branches={layer.class === 'is-plate' ? JSON.stringify(plateBranches) : undefined}
+    >
+      {['is-dark', 'is-light'].map((tone) => (
+        <div class={`glyv-flora__clip ${tone}`}>
+          <svg
+            class={`glyv-flora__svg ${tone}`}
+            viewBox={layer.viewBox}
+            fill="none"
+            preserveAspectRatio="none"
+          >
+            <g class="glyv-flora__vine">
+              {layer.vine.stems.map((d) => (
+                <path class="is-stem" pathLength="1" d={d} />
+              ))}
+              {layer.vine.shoots.map((d) => (
+                <path class="is-shoot" pathLength="1" d={d} />
+              ))}
+              {layer.vine.ribs.map((d) => (
+                <path class="is-rib" pathLength="1" d={d} />
+              ))}
+            </g>
+          </svg>
+        </div>
+      ))}
+    </div>
+  ))
+}
+
+<style>
+  .glyv-flora {
+    --cream: #f4efe6;
+    --forest: #1e4a32;
+    pointer-events: none;
+    position: absolute;
+    z-index: 4;
+  }
+
+  .glyv-flora.is-main {
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--flora-main-h, max(7.5rem, 11.25vw));
+    overflow: visible;
+  }
+
+  .glyv-flora.is-plate {
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .glyv-flora.is-plate .glyv-flora__clip {
+    height: 100%;
+  }
+
+  .glyv-flora.is-bottom {
+    display: none;
+  }
+
+  .glyv-flora__clip {
+    position: relative;
+    overflow: hidden;
+    min-width: 0;
+  }
+
+  .glyv-flora__svg {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  .glyv-flora__svg.is-dark {
+    color: var(--forest);
+  }
+
+  .glyv-flora__clip.is-light {
+    display: none;
+  }
+
+  .glyv-flora__svg.is-light {
+    color: var(--cream);
+  }
+
+  .glyv-flora__vine {
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    opacity: 0.82;
+  }
+
+  .glyv-flora__vine .is-stem {
+    stroke-width: 2.05;
+  }
+
+  .glyv-flora__vine .is-shoot {
+    stroke-width: 1.45;
+  }
+
+  .glyv-flora__vine .is-rib {
+    stroke-width: 0.8;
+    opacity: 0.7;
+  }
+
+  .glyv-flora__vine path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+
+  .glyv-flora.is-auto .glyv-flora__vine path {
+    animation: glyv-flora-vine 3.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  .glyv-flora.is-auto .glyv-flora__vine .is-shoot {
+    animation-delay: 0.55s;
+  }
+
+  .glyv-flora.is-auto .glyv-flora__vine .is-rib {
+    animation-delay: 0.95s;
+  }
+
+  @keyframes glyv-flora-vine {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .glyv-flora__vine path {
+      animation: none;
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .glyv-flora.is-main,
+    .glyv-flora.is-bottom,
+    .glyv-flora.is-plate {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .glyv-flora__clip.is-light {
+      display: block;
+    }
+
+    .glyv-flora__svg {
+      width: 200%;
+    }
+
+    .glyv-flora__clip.is-dark .glyv-flora__svg {
+      left: 0;
+    }
+
+    .glyv-flora__clip.is-light .glyv-flora__svg {
+      left: -100%;
+    }
+
+    .glyv-flora.is-main {
+      height: var(--flora-main-h-desktop, var(--flora-main-h, max(10.5rem, 11.25vw)));
+    }
+
+    .glyv-flora.is-bottom {
+      display: grid;
+      top: auto;
+      left: 0;
+      right: 0;
+      bottom: var(--flora-bottom, 0);
+      height: var(--flora-bottom-h, 10.5rem);
+    }
+  }
+</style>
+
+<script>
+  type Branch = {
+    d: string;
+    count: number;
+    length: number;
+    start?: number;
+    end?: number;
+    side?: number;
+  };
+
+  const VB_W = 1600;
+  const VB_H = 900;
+
+  const round = (n: number) => Math.round(n * 10) / 10;
+
+  function parseCubics(d: string) {
+    const nums = (d.match(/-?\d*\.?\d+/g) ?? []).map(Number);
+    const segs: { p0: { x: number; y: number }; p1: { x: number; y: number }; p2: { x: number; y: number }; p3: { x: number; y: number } }[] = [];
+    let i = 0;
+    let x = nums[i++] ?? 0;
+    let y = nums[i++] ?? 0;
+    while (i + 5 < nums.length) {
+      const p1 = { x: nums[i++], y: nums[i++] };
+      const p2 = { x: nums[i++], y: nums[i++] };
+      const p3 = { x: nums[i++], y: nums[i++] };
+      segs.push({ p0: { x, y }, p1, p2, p3 });
+      x = p3.x;
+      y = p3.y;
+    }
+    return segs;
+  }
+
+  function cubicAt(
+    seg: { p0: { x: number; y: number }; p1: { x: number; y: number }; p2: { x: number; y: number }; p3: { x: number; y: number } },
+    t: number,
+  ) {
+    const u = 1 - t;
+    return {
+      x: u ** 3 * seg.p0.x + 3 * u ** 2 * t * seg.p1.x + 3 * u * t ** 2 * seg.p2.x + t ** 3 * seg.p3.x,
+      y: u ** 3 * seg.p0.y + 3 * u ** 2 * t * seg.p1.y + 3 * u * t ** 2 * seg.p2.y + t ** 3 * seg.p3.y,
+    };
+  }
+
+  function cubicDeriv(
+    seg: { p0: { x: number; y: number }; p1: { x: number; y: number }; p2: { x: number; y: number }; p3: { x: number; y: number } },
+    t: number,
+  ) {
+    const u = 1 - t;
+    return {
+      x: 3 * u ** 2 * (seg.p1.x - seg.p0.x) + 6 * u * t * (seg.p2.x - seg.p1.x) + 3 * t ** 2 * (seg.p3.x - seg.p2.x),
+      y: 3 * u ** 2 * (seg.p1.y - seg.p0.y) + 6 * u * t * (seg.p2.y - seg.p1.y) + 3 * t ** 2 * (seg.p3.y - seg.p2.y),
+    };
+  }
+
+  const HERO_LEAF = {
+    tipX: 19.2,
+    tipY: 41.8,
+    shoot: [
+      [0, 0],
+      [-0.4, 9.2, 6.9, 15.1],
+      [1, 33.3, 16.8, 42.5, 19.2, 41.8],
+      [21.5, 41.2, 24.6, 22.5, 6.9, 15.1],
+    ],
+    rib: [6.9, 15.1, 11.6, 28.5, 19.2, 41.8],
+  } as const;
+
+  const HERO_AXIS = Math.hypot(HERO_LEAF.tipX, HERO_LEAF.tipY);
+  const AXIS_COS = HERO_LEAF.tipY / HERO_AXIS;
+  const AXIS_SIN = HERO_LEAF.tipX / HERO_AXIS;
+  const HERO_PX = 36;
+
+  function toLeafAxis(x: number, y: number) {
+    return {
+      x: x * AXIS_COS - y * AXIS_SIN,
+      y: x * AXIS_SIN + y * AXIS_COS,
+    };
+  }
+
+  function heroLeaf(
+    attachX: number,
+    attachY: number,
+    dirX: number,
+    dirY: number,
+    kX: number,
+    kY: number,
+    flip: boolean,
+  ) {
+    const scale = HERO_PX / HERO_AXIS;
+    const side = flip ? -1 : 1;
+    const map = (x: number, y: number) => {
+      const local = toLeafAxis(x, y);
+      const px = local.x * side * scale;
+      const py = local.y * scale;
+      const sx = attachX * kX + dirX * py + -dirY * px;
+      const sy = attachY * kY + dirY * py + dirX * px;
+      return `${round(sx / kX)} ${round(sy / kY)}`;
+    };
+
+    const shoot = [
+      `M${map(0, 0)}`,
+      `Q${map(HERO_LEAF.shoot[1][0], HERO_LEAF.shoot[1][1])} ${map(HERO_LEAF.shoot[1][2], HERO_LEAF.shoot[1][3])}`,
+      `C${map(HERO_LEAF.shoot[2][0], HERO_LEAF.shoot[2][1])} ${map(HERO_LEAF.shoot[2][2], HERO_LEAF.shoot[2][3])} ${map(HERO_LEAF.shoot[2][4], HERO_LEAF.shoot[2][5])}`,
+      `C${map(HERO_LEAF.shoot[3][0], HERO_LEAF.shoot[3][1])} ${map(HERO_LEAF.shoot[3][2], HERO_LEAF.shoot[3][3])} ${map(HERO_LEAF.shoot[3][4], HERO_LEAF.shoot[3][5])}`,
+    ].join(' ');
+
+    const rib = `M${map(HERO_LEAF.rib[0], HERO_LEAF.rib[1])} Q${map(HERO_LEAF.rib[2], HERO_LEAF.rib[3])} ${map(HERO_LEAF.rib[4], HERO_LEAF.rib[5])}`;
+    return { shoot, rib };
+  }
+
+  function leavesForBranch(branch: Branch, kX: number, kY: number) {
+    const segs = parseCubics(branch.d);
+    const samples: { x: number; y: number; tx: number; ty: number; s: number }[] = [];
+    let dist = 0;
+    let prev: { x: number; y: number } | null = null;
+    segs.forEach((seg, si) => {
+      const steps = 48;
+      for (let i = si === 0 ? 0 : 1; i <= steps; i++) {
+        const t = i / steps;
+        const p = cubicAt(seg, t);
+        const dlt = cubicDeriv(seg, t);
+        if (prev) dist += Math.hypot(p.x - prev.x, p.y - prev.y);
+        samples.push({ x: p.x, y: p.y, tx: dlt.x, ty: dlt.y, s: dist });
+        prev = p;
+      }
+    });
+
+    const total = samples[samples.length - 1]?.s ?? 1;
+    const start = branch.start ?? 0.14;
+    const end = branch.end ?? 0.9;
+    const sideStart = branch.side ?? 1;
+    const tips: { shoot: string; rib: string }[] = [];
+
+    for (let i = 0; i < branch.count; i++) {
+      const target = (start + ((end - start) * (i + 0.5)) / branch.count) * total;
+      const sample = samples.find((pt) => pt.s >= target) ?? samples[samples.length - 1];
+      if (!sample) continue;
+      const tanX = sample.tx * kX;
+      const tanY = sample.ty * kY;
+      const tlen = Math.hypot(tanX, tanY) || 1;
+      const fx = tanX / tlen;
+      const fy = tanY / tlen;
+      const nx = -fy;
+      const ny = fx;
+      const side = (i % 2 === 0 ? 1 : -1) * sideStart;
+      const dirX = nx * side * 0.92 + fx * 0.39;
+      const dirY = ny * side + fy * 0.39;
+      const dlen = Math.hypot(dirX, dirY) || 1;
+      tips.push(
+        heroLeaf(sample.x, sample.y, dirX / dlen, dirY / dlen, kX, kY, side < 0),
+      );
+    }
+
+    return tips;
+  }
+
+  function layoutPlateLeaves() {
+    const flora = document.querySelector<HTMLElement>('.glyv-flora.is-plate');
+    const raw = flora?.dataset.branches;
+    const svg = flora?.querySelector('svg');
+    if (!flora || !raw || !svg) return;
+
+    const rect = svg.getBoundingClientRect();
+    if (rect.width < 32 || rect.height < 32) return;
+
+    const kX = rect.width / VB_W;
+    const kY = rect.height / VB_H;
+    const branches = JSON.parse(raw) as Branch[];
+    const leaves = branches.flatMap((branch) => leavesForBranch(branch, kX, kY));
+
+    flora.querySelectorAll('.glyv-flora__svg').forEach((node) => {
+      const shoots = node.querySelectorAll('.is-shoot');
+      const ribs = node.querySelectorAll('.is-rib');
+      leaves.forEach((leaf, i) => {
+        shoots[i]?.setAttribute('d', leaf.shoot);
+        ribs[i]?.setAttribute('d', leaf.rib);
+      });
+    });
+  }
+
+  const flora = document.querySelector('.glyv-flora.is-plate');
+  if (flora) {
+    layoutPlateLeaves();
+    new ResizeObserver(layoutPlateLeaves).observe(flora);
+  }
+</script>

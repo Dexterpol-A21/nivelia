@@ -1,0 +1,11 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { PAGES } from '@utils/constants';
+---
+
+<BaseLayout title={PAGES.contacto.title} description={PAGES.contacto.description}>
+  <section class="mx-auto max-w-6xl px-5 py-24 md:py-32">
+    <h1 class="text-4xl font-extrabold md:text-6xl">{PAGES.contacto.title}</h1>
+    <p class="mt-6 max-w-xl text-lg text-text-muted">{PAGES.contacto.description}</p>
+  </section>
+</BaseLayout>

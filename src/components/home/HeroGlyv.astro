@@ -1,0 +1,182 @@
+---
+import GlyvFlora from '@components/home/GlyvFlora.astro';
+import GlyvButtons from '@components/ui/GlyvButtons.astro';
+import { HERO } from '@utils/constants';
+
+const copy = HERO;
+---
+
+<section id="hero-glyv" class="hero-glyv" aria-label="Glyv">
+  <div class="hero-glyv__cream">
+    <p class="hero-glyv__wordmark animate-in">{copy.wordmark}</p>
+  </div>
+
+  <div class="hero-glyv__forest">
+    <p class="hero-glyv__eyebrow">{copy.eyebrow}</p>
+    <h1 class="animate-in">{copy.h1}</h1>
+    <p class="hero-glyv__body animate-in">{copy.body}</p>
+    <GlyvButtons class="animate-in" primary={copy.cta} secondary={copy.secondary} />
+  </div>
+
+  <div class="hero-glyv__petroleum">
+    <p class="hero-glyv__band">{copy.band}</p>
+    <dl>
+      {
+        copy.specs.map((spec) => (
+          <div>
+            <dt>{spec.k}</dt>
+            <dd>{spec.v}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+
+  <GlyvFlora auto />
+</section>
+
+<style>
+  .hero-glyv {
+    --cream: #f4efe6;
+    --forest: #1e4a32;
+    --petroleum: #0b4f6c;
+    --ink: #1a2a22;
+    --cols: 1fr 1fr;
+    --flora-bottom: 7.4rem;
+    --flora-main-h: max(7.5rem, 11.25vw);
+    --flora-main-h-desktop: max(10.5rem, 11.25vw);
+    --flora-bottom-h: 10.5rem;
+    position: relative;
+    min-height: 100dvh;
+    display: grid;
+    font-family: Outfit, sans-serif;
+  }
+
+  .hero-glyv__cream,
+  .hero-glyv__forest,
+  .hero-glyv__petroleum {
+    position: relative;
+    z-index: 1;
+    padding: 1.5rem 1.35rem;
+  }
+
+  .hero-glyv__cream {
+    background: var(--cream);
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding-top: 2.6rem;
+  }
+
+  .hero-glyv__wordmark {
+    margin: auto 0;
+    font-family: Fraunces, serif;
+    font-size: clamp(4.6rem, 18vw, 9.5rem);
+    font-weight: 600;
+    line-height: 0.78;
+    letter-spacing: -0.05em;
+  }
+
+  .hero-glyv__forest {
+    background: var(--forest);
+    color: var(--cream);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .hero-glyv__eyebrow {
+    margin: 0 0 1rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--cream);
+    opacity: 0.72;
+  }
+
+  .hero-glyv h1 {
+    margin: 0;
+    max-width: 12ch;
+    font-family: Fraunces, serif;
+    font-size: clamp(2.15rem, 6vw, 4.2rem);
+    font-weight: 500;
+    line-height: 1.02;
+  }
+
+  .hero-glyv__body {
+    margin: 1.15rem 0 0;
+    max-width: 28rem;
+    font-size: 1.05rem;
+    line-height: 1.55;
+    opacity: 0.88;
+  }
+
+  .hero-glyv__petroleum {
+    background: var(--petroleum);
+    color: var(--cream);
+  }
+
+  .hero-glyv__band {
+    margin: 0;
+    font-family: Fraunces, serif;
+    font-size: clamp(1.35rem, 3.4vw, 2rem);
+    font-weight: 500;
+    line-height: 1.15;
+  }
+
+  .hero-glyv dl {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem 1.25rem;
+    margin: 1.5rem 0 0;
+  }
+
+  .hero-glyv dt {
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  .hero-glyv dd {
+    margin: 0.2rem 0 0;
+    font-family: Fraunces, serif;
+    font-size: 1.05rem;
+  }
+
+  @media (min-width: 900px) {
+    .hero-glyv {
+      grid-template-columns: var(--cols);
+      grid-template-rows: 1fr auto;
+    }
+
+    .hero-glyv__cream {
+      padding-top: 3.2rem;
+    }
+
+    .hero-glyv__forest {
+      padding-right: 2.6rem;
+    }
+
+    .hero-glyv__petroleum {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: var(--cols);
+      gap: 1.5rem 2rem;
+      padding: 1.6rem 2.2rem 1.8rem;
+      align-items: center;
+    }
+
+    .hero-glyv__band {
+      margin: 0;
+    }
+
+    .hero-glyv dl {
+      grid-template-columns: repeat(4, 1fr);
+      margin: 0;
+    }
+  }
+</style>

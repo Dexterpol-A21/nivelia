@@ -1,0 +1,156 @@
+<div class="glyv-scroll" aria-hidden="true">
+  <div class="glyv-scroll__track">
+    <div class="glyv-scroll__thumb"></div>
+  </div>
+</div>
+
+<style>
+  .glyv-scroll {
+    --cream: #f4efe6;
+    --forest: #1e4a32;
+    --petroleum: #0b4f6c;
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    width: 0.7rem;
+  }
+
+  .glyv-scroll.is-off {
+    display: none;
+  }
+
+  .glyv-scroll__track {
+    pointer-events: auto;
+    position: absolute;
+    inset: 0;
+    background: var(--cream);
+    cursor: pointer;
+  }
+
+  .glyv-scroll__thumb {
+    position: absolute;
+    left: 0;
+    right: 0;
+    background: var(--forest);
+    cursor: grab;
+    touch-action: none;
+  }
+
+  .glyv-scroll__thumb:active {
+    cursor: grabbing;
+    background: var(--petroleum);
+  }
+
+  :global(body:has(.glyv-nav.is-open) .glyv-scroll) {
+    opacity: 0;
+    pointer-events: none;
+  }
+</style>
+
+<script>
+  const root = document.querySelector('.glyv-scroll');
+  const track = root?.querySelector<HTMLElement>('.glyv-scroll__track');
+  const thumb = root?.querySelector<HTMLElement>('.glyv-scroll__thumb');
+
+  if (root && track && thumb) {
+    let dragging = false;
+    let grab = 0;
+
+    const lenis = () =>
+      (window as Window & { glyvLenis?: { scrollTo: (y: number, opts?: { immediate?: boolean }) => void; scroll: number; limit: number } }).glyvLenis;
+
+    const metrics = () => {
+      const view = window.innerHeight;
+      const total = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight);
+      return { view, total, max: Math.max(1, total - view) };
+    };
+
+    const progress = () => {
+      const instance = lenis();
+      if (instance) return instance.limit === 0 ? 0 : instance.scroll / instance.limit;
+      const { max } = metrics();
+      return window.scrollY / max;
+    };
+
+    const layout = () => {
+      const { view, total } = metrics();
+      root.classList.toggle('is-off', total <= view + 2);
+      const trackH = track.clientHeight;
+      const thumbH = Math.max(48, (view / total) * trackH);
+      thumb.style.height = `${thumbH}px`;
+      paint();
+    };
+
+    const paint = () => {
+      const trackH = track.clientHeight;
+      const thumbH = thumb.offsetHeight;
+      const y = progress() * Math.max(0, trackH - thumbH);
+      thumb.style.transform = `translateY(${y}px)`;
+    };
+
+    const scrollToRatio = (ratio: number, immediate = false) => {
+      const { max } = metrics();
+      const y = Math.min(1, Math.max(0, ratio)) * max;
+      const instance = lenis();
+      if (instance) instance.scrollTo(y, { immediate });
+      else window.scrollTo({ top: y, behavior: immediate ? 'auto' : 'auto' });
+    };
+
+    const ratioFromEvent = (clientY: number, offset = 0) => {
+      const rect = track.getBoundingClientRect();
+      const thumbH = thumb.offsetHeight;
+      const span = Math.max(1, rect.height - thumbH);
+      return (clientY - rect.top - offset) / span;
+    };
+
+    const attachLenis = () => {
+      const live = lenis();
+      if (!live) return false;
+      live.on('scroll', paint);
+      layout();
+      return true;
+    };
+
+    track.addEventListener('pointerdown', (event) => {
+      if (event.button !== 0) return;
+      event.preventDefault();
+      const onThumb = event.target === thumb;
+      const rect = thumb.getBoundingClientRect();
+      grab = onThumb ? event.clientY - rect.top : thumb.offsetHeight / 2;
+      dragging = true;
+      thumb.setPointerCapture(event.pointerId);
+      scrollToRatio(ratioFromEvent(event.clientY, grab), true);
+    });
+
+    track.addEventListener('pointermove', (event) => {
+      if (!dragging) return;
+      scrollToRatio(ratioFromEvent(event.clientY, grab), true);
+    });
+
+    track.addEventListener('pointerup', () => {
+      dragging = false;
+    });
+
+    track.addEventListener('pointercancel', () => {
+      dragging = false;
+    });
+
+    document.addEventListener('scroll', paint, { passive: true });
+    window.addEventListener('resize', layout);
+
+    if (!attachLenis()) {
+      const id = window.setInterval(() => {
+        if (attachLenis()) window.clearInterval(id);
+      }, 40);
+      window.setTimeout(() => window.clearInterval(id), 2000);
+    }
+
+    window.addEventListener('load', layout);
+    const watcher = new ResizeObserver(layout);
+    watcher.observe(document.body);
+    layout();
+  }
+</script>

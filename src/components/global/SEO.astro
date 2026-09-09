@@ -1,0 +1,56 @@
+---
+import { SITE } from '@utils/constants';
+import type { SeoProps } from '../../types';
+
+interface Props extends SeoProps {}
+
+const {
+  title,
+  description,
+  image = '/images/og-default.jpg',
+  canonical = Astro.url.pathname,
+} = Astro.props;
+
+const fullTitle = title.includes(SITE.title) ? title : `${title} | ${SITE.title}`;
+const siteUrl = Astro.site ?? new URL(SITE.url);
+const canonicalHref = new URL(canonical, siteUrl).href;
+const imageHref = new URL(image, siteUrl).href;
+---
+
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalHref} />
+
+<meta property="og:title" content={fullTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={imageHref} />
+<meta property="og:url" content={canonicalHref} />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content={SITE.title} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={fullTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageHref} />
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&family=Outfit:wght@400;500;600;700&display=swap"
+/>
+
+<script
+  is:inline
+  type="application/ld+json"
+  set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: SITE.title,
+    url: siteUrl.href,
+    logo: new URL('/favicon.svg', siteUrl).href,
+    description,
+  })}
+/>

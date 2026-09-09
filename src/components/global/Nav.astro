@@ -1,0 +1,413 @@
+---
+import GlyvButtons from '@components/ui/GlyvButtons.astro';
+import { NAV_LINKS } from '@utils/constants';
+
+const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+
+<div class="glyv-nav">
+  <button
+    class="glyv-nav__toggle"
+    type="button"
+    aria-expanded="false"
+    aria-controls="glyv-index"
+  >
+    <span class="glyv-nav__x" data-open hidden aria-hidden="true">
+      <span></span>
+      <span></span>
+    </span>
+    <span class="glyv-nav__caption">
+      <span data-closed>Menú</span>
+      <span data-open hidden>Cerrar</span>
+    </span>
+  </button>
+
+  <div id="glyv-index" class="glyv-nav__index" hidden>
+    <aside class="glyv-nav__rail">
+      <p class="glyv-nav__word">Glyv</p>
+      <div class="glyv-nav__dock">
+        <p class="glyv-nav__band">Reposición cada mes.</p>
+        <GlyvButtons
+          primary="Empezar reposición"
+          secondary="Ver Centia"
+          secondaryHref="/#glyv-centia"
+        />
+      </div>
+    </aside>
+
+    <nav class="glyv-nav__list" aria-label="Principal">
+      <ul>
+        {
+          NAV_LINKS.map((link) => {
+            const pathOnly = link.href.split('#')[0] || '/';
+            const active = !link.href.includes('#') && pathname === (pathOnly.replace(/\/$/, '') || '/');
+            return (
+              <li>
+                <a href={link.href} aria-current={active ? 'page' : undefined}>
+                  {link.label}
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<style>
+  .glyv-nav {
+    --cream: #f4efe6;
+    --forest: #1e4a32;
+    --petroleum: #0b4f6c;
+    --ink: #1a2a22;
+    font-family: Outfit, sans-serif;
+  }
+
+  .glyv-nav__toggle {
+    position: fixed;
+    top: 1.15rem;
+    left: 1.15rem;
+    z-index: 90;
+    display: flex;
+    height: 2.75rem;
+    align-items: stretch;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: var(--forest);
+    color: var(--cream);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .glyv-nav.is-open .glyv-nav__toggle {
+    background: var(--cream);
+    color: var(--forest);
+  }
+
+  .glyv-nav__toggle:focus-visible {
+    outline: 2px solid var(--cream);
+    outline-offset: 3px;
+  }
+
+  .glyv-nav.is-open .glyv-nav__toggle:focus-visible {
+    outline-color: var(--forest);
+  }
+
+  .glyv-nav__x {
+    display: grid;
+    width: 2.75rem;
+    place-items: center;
+    border-right: 1.5px solid var(--forest);
+  }
+
+  .glyv-nav__x span {
+    grid-area: 1 / 1;
+    width: 1rem;
+    height: 1.5px;
+    background: currentColor;
+  }
+
+  .glyv-nav__x span:first-child {
+    transform: rotate(45deg);
+  }
+
+  .glyv-nav__x span:last-child {
+    transform: rotate(-45deg);
+  }
+
+  .glyv-nav__caption {
+    display: grid;
+    align-items: center;
+    padding: 0 1.15rem;
+    min-width: 4.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  .glyv-nav__caption span {
+    grid-area: 1 / 1;
+  }
+
+  .glyv-nav__index {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    display: grid;
+    overflow: hidden;
+  }
+
+  .glyv-nav__index.is-settled {
+    overflow: auto;
+  }
+
+  .glyv-nav__rail,
+  .glyv-nav__list {
+    position: relative;
+    will-change: transform;
+  }
+
+  .glyv-nav__rail {
+    display: flex;
+    flex-direction: column;
+    background: var(--cream);
+    color: var(--ink);
+    padding: 5.5rem 1.5rem 0;
+  }
+
+  .glyv-nav__word {
+    margin: 0;
+    font-family: Fraunces, serif;
+    font-size: clamp(2.6rem, 10vw, 4.4rem);
+    font-weight: 600;
+    line-height: 0.82;
+    letter-spacing: -0.045em;
+  }
+
+  .glyv-nav__dock {
+    margin: 1.6rem -1.5rem 0;
+    padding: 1.4rem 1.5rem 1.6rem;
+    background: var(--petroleum);
+    color: var(--cream);
+  }
+
+  .glyv-nav__band {
+    margin: 0;
+    font-family: Fraunces, serif;
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .glyv-nav__dock :global(.glyv-btns) {
+    margin-top: 1rem;
+  }
+
+  .glyv-nav__list {
+    background: var(--forest);
+    color: var(--cream);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.6rem 1.5rem 2rem;
+  }
+
+  .glyv-nav__list ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .glyv-nav__list a {
+    display: block;
+    padding: 0.28rem 0;
+    color: inherit;
+    font-family: Fraunces, serif;
+    font-size: clamp(2rem, 7vw, 3.6rem);
+    font-weight: 500;
+    line-height: 1.05;
+    text-decoration: none;
+  }
+
+  .glyv-nav__list a[aria-current='page'] {
+    opacity: 0.4;
+  }
+
+  .glyv-nav__list a:hover,
+  .glyv-nav__list a:focus-visible {
+    opacity: 0.72;
+  }
+
+  .glyv-nav__list a:focus-visible {
+    outline: 2px solid var(--cream);
+    outline-offset: 4px;
+  }
+
+  @media (min-width: 900px) {
+    .glyv-nav__index.is-settled {
+      overflow: hidden;
+    }
+
+    .glyv-nav__index {
+      grid-template-columns: minmax(16rem, 22rem) 1fr;
+    }
+
+    .glyv-nav__rail {
+      justify-content: space-between;
+      padding: 5.5rem 2rem 0;
+    }
+
+    .glyv-nav__word {
+      font-size: clamp(3.2rem, 4.6vw, 5.2rem);
+    }
+
+    .glyv-nav__dock {
+      margin: 0 -2rem 0;
+      padding: 1.5rem 2rem 1.7rem;
+    }
+
+    .glyv-nav__list {
+      justify-content: center;
+      padding: 3.2rem 3.4rem 3.2rem 3.8rem;
+    }
+
+    .glyv-nav__list a {
+      font-size: clamp(2.6rem, 4.6vw, 4.4rem);
+    }
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+
+  const root = document.querySelector('.glyv-nav');
+  const toggle = root?.querySelector<HTMLButtonElement>('.glyv-nav__toggle');
+  const panel = document.getElementById('glyv-index');
+  const closedBits = root?.querySelectorAll<HTMLElement>('[data-closed]');
+  const openBits = root?.querySelectorAll<HTMLElement>('[data-open]');
+  const rail = panel?.querySelector('.glyv-nav__rail');
+  const list = panel?.querySelector('.glyv-nav__list');
+
+  if (root && toggle && panel && rail && list) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)');
+    let open = false;
+    let hoverLock = false;
+    let tl: gsap.core.Timeline | null = null;
+
+    const lenis = () =>
+      (window as Window & { glyvLenis?: { stop: () => void; start: () => void; scrollTo: (el: Element, vars?: { offset: number }) => void } }).glyvLenis;
+
+    const setInert = (value: boolean) => {
+      document.querySelector('main')?.toggleAttribute('inert', value);
+    };
+
+    const playOpen = (onDone?: () => void) => {
+      if (reduce) {
+        gsap.set([rail, list], { xPercent: 0, yPercent: 0 });
+        onDone?.();
+        return;
+      }
+
+      const stacked = !window.matchMedia('(min-width: 900px)').matches;
+      tl?.kill();
+      tl = gsap.timeline({ onComplete: onDone });
+
+      if (stacked) {
+        tl.fromTo(rail, { yPercent: -100 }, { yPercent: 0, duration: 0.7, ease: 'power3.out' }, 0)
+          .fromTo(list, { yPercent: 100 }, { yPercent: 0, duration: 0.7, ease: 'power3.out' }, 0.05);
+      } else {
+        tl.fromTo(rail, { xPercent: -100 }, { xPercent: 0, duration: 0.75, ease: 'power3.out' }, 0)
+          .fromTo(list, { xPercent: 100 }, { xPercent: 0, duration: 0.75, ease: 'power3.out' }, 0.06);
+      }
+    };
+
+    const playClose = (onDone?: () => void) => {
+      if (reduce) {
+        onDone?.();
+        return;
+      }
+
+      const stacked = !window.matchMedia('(min-width: 900px)').matches;
+      tl?.kill();
+      tl = gsap.timeline({ onComplete: onDone });
+
+      if (stacked) {
+        tl.to(rail, { yPercent: -100, duration: 0.48, ease: 'power3.in' }, 0)
+          .to(list, { yPercent: 100, duration: 0.48, ease: 'power3.in' }, 0);
+      } else {
+        tl.to(rail, { xPercent: -100, duration: 0.5, ease: 'power3.in' }, 0)
+          .to(list, { xPercent: 100, duration: 0.5, ease: 'power3.in' }, 0);
+      }
+    };
+
+    const setOpen = (next: boolean, after?: () => void, fromHover = false) => {
+      if (next === open) {
+        after?.();
+        return;
+      }
+
+      open = next;
+      root.classList.toggle('is-open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      closedBits?.forEach((el) => {
+        el.hidden = open;
+      });
+      openBits?.forEach((el) => {
+        el.hidden = !open;
+      });
+      document.body.style.overflow = open ? 'hidden' : '';
+      setInert(open);
+
+      if (open) {
+        panel.hidden = false;
+        panel.classList.remove('is-settled');
+        lenis()?.stop();
+        requestAnimationFrame(() => {
+          playOpen(() => {
+            panel.classList.add('is-settled');
+            if (!fromHover) panel.querySelector<HTMLElement>('a, button')?.focus();
+            after?.();
+          });
+        });
+      } else {
+        panel.classList.remove('is-settled');
+        playClose(() => {
+          panel.hidden = true;
+          lenis()?.start();
+          if (!fromHover) toggle.focus();
+          after?.();
+        });
+      }
+    };
+
+    toggle.addEventListener('mouseenter', () => {
+      if (!canHover.matches || hoverLock) return;
+      setOpen(true, undefined, true);
+    });
+
+    toggle.addEventListener('mouseleave', () => {
+      hoverLock = false;
+    });
+
+    toggle.addEventListener('click', () => {
+      if (canHover.matches && open) hoverLock = true;
+      setOpen(!open);
+    });
+
+    panel.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', (event) => {
+        const href = link.getAttribute('href') || '';
+        const hashIndex = href.indexOf('#');
+        const hash = hashIndex >= 0 ? href.slice(hashIndex) : '';
+        const target = hash ? document.querySelector(hash) : null;
+        const samePath = link.pathname === window.location.pathname;
+
+        if (target && (href.startsWith('#') || (samePath && hash))) {
+          event.preventDefault();
+          setOpen(false, () => {
+            const instance = lenis();
+            if (instance) instance.scrollTo(target, { offset: 0 });
+            else target.scrollIntoView();
+            history.replaceState(null, '', hash);
+          });
+          return;
+        }
+
+        if (samePath && !hash) {
+          event.preventDefault();
+          setOpen(false);
+        }
+      });
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && open) {
+        if (canHover.matches && toggle.matches(':hover')) hoverLock = true;
+        setOpen(false);
+      }
+    });
+  }
+</script>
