@@ -1,0 +1,90 @@
+---
+import { HOME_PAGE } from '@utils/constants';
+
+const copy = HOME_PAGE.ritual;
+---
+
+<section class="home-ritual" aria-labelledby="home-ritual-title">
+  <h2 id="home-ritual-title">{copy.h2}</h2>
+  <dl>
+    {
+      copy.specs.map((spec) => (
+        <div>
+          <dt>{spec.k}</dt>
+          <dd>{spec.v}</dd>
+        </div>
+      ))
+    }
+  </dl>
+  <p>{copy.note}</p>
+</section>
+
+<style>
+  .home-ritual {
+    --cream: #f4efe6;
+    --petroleum: #0b4f6c;
+    background: var(--petroleum);
+    color: var(--cream);
+    padding: 3.2rem 1.5rem 2.8rem;
+    font-family: Outfit, sans-serif;
+  }
+
+  .home-ritual h2 {
+    margin: 0;
+    font-family: Fraunces, serif;
+    font-size: clamp(2.15rem, 5.4vw, 3.6rem);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  .home-ritual dl {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.1rem 1.4rem;
+    margin: 1.8rem 0 0;
+  }
+
+  .home-ritual dt {
+    font-size: 0.72rem;
+    font-weight: 600;
+    opacity: 0.7;
+  }
+
+  .home-ritual dd {
+    margin: 0.25rem 0 0;
+    font-family: Fraunces, serif;
+    font-size: clamp(1.2rem, 2.4vw, 1.55rem);
+    font-weight: 500;
+  }
+
+  .home-ritual > p {
+    margin: 1.6rem 0 0;
+    max-width: 36rem;
+    font-size: 0.98rem;
+    line-height: 1.5;
+    opacity: 0.86;
+  }
+
+  @media (min-width: 900px) {
+    .home-ritual {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem 2rem;
+      padding: 2.4rem 2.6rem 2.2rem;
+    }
+
+    .home-ritual h2 {
+      grid-column: 1 / -1;
+    }
+
+    .home-ritual dl {
+      margin-top: 0.4rem;
+    }
+
+    .home-ritual > p {
+      margin-top: 0.4rem;
+      align-self: end;
+    }
+  }
+</style>

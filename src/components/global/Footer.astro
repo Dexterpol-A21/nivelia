@@ -1,26 +1,92 @@
 ---
-import { NAV_LINKS, SITE } from '@utils/constants';
+import { DISCLAIMER, NAV_LINKS, SITE } from '@utils/constants';
 ---
 
-<footer class="border-t border-border bg-surface pb-24 md:pb-0">
-  <div class="mx-auto flex max-w-6xl flex-col gap-8 px-5 py-12 md:flex-row md:items-start md:justify-between">
-    <div>
-      <p class="font-heading text-xl font-bold">{SITE.title}</p>
-      <p class="mt-2 max-w-sm text-sm text-text-muted">{SITE.description}</p>
-    </div>
-
-    <nav aria-label="Footer">
-      <ul class="flex flex-col gap-2">
+<footer class="glyv-foot">
+  <div class="glyv-foot__top">
+    <p class="glyv-foot__word">{SITE.title}</p>
+    <nav aria-label="Pie">
+      <ul>
         {
           NAV_LINKS.map((link) => (
             <li>
-              <a href={link.href} class="text-sm text-text-muted transition-colors hover:text-text">
-                {link.label}
-              </a>
+              <a href={link.href}>{link.label}</a>
             </li>
           ))
         }
       </ul>
     </nav>
   </div>
+  <p class="glyv-foot__legal">{DISCLAIMER}</p>
 </footer>
+
+<style>
+  .glyv-foot {
+    --cream: #f4efe6;
+    --forest: #1e4a32;
+    background: var(--forest);
+    color: var(--cream);
+    padding: 2.4rem 1.5rem 2.2rem;
+    font-family: Outfit, sans-serif;
+  }
+
+  .glyv-foot__word {
+    margin: 0;
+    font-family: Fraunces, serif;
+    font-size: clamp(2.4rem, 6vw, 3.6rem);
+    font-weight: 600;
+    line-height: 0.85;
+    letter-spacing: -0.04em;
+  }
+
+  .glyv-foot ul {
+    margin: 1.2rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .glyv-foot a {
+    color: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .glyv-foot a:hover,
+  .glyv-foot a:focus-visible {
+    opacity: 0.72;
+  }
+
+  .glyv-foot a:focus-visible {
+    outline: 2px solid var(--cream);
+    outline-offset: 4px;
+  }
+
+  .glyv-foot__legal {
+    margin: 1.8rem 0 0;
+    max-width: 46rem;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    opacity: 0.78;
+  }
+
+  @media (min-width: 900px) {
+    .glyv-foot {
+      padding: 2.8rem 2.6rem 2.4rem;
+    }
+
+    .glyv-foot__top {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .glyv-foot ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 1.4rem;
+      margin: 0;
+    }
+  }
+</style>

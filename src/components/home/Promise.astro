@@ -1,0 +1,81 @@
+---
+import GlyvButtons from '@components/ui/GlyvButtons.astro';
+import { HOME_PAGE } from '@utils/constants';
+
+const copy = HOME_PAGE.promise;
+---
+
+<section class="home-promise" aria-labelledby="home-promise-title">
+  <div class="home-promise__cream">
+    <p class="home-promise__kicker">{copy.kicker}</p>
+    <h2 id="home-promise-title">{copy.h2}</h2>
+    <p>{copy.left}</p>
+  </div>
+  <div class="home-promise__forest">
+    <p>{copy.right}</p>
+    <GlyvButtons primary="Empezar reposición" secondary="Ver Centia" secondaryHref="/#glyv-centia" />
+  </div>
+</section>
+
+<style>
+  .home-promise {
+    --cream: #f4efe6;
+    --forest: #1e4a32;
+    --ink: #1a2a22;
+    display: grid;
+    font-family: Outfit, sans-serif;
+  }
+
+  .home-promise__cream,
+  .home-promise__forest {
+    padding: 3.2rem 1.5rem 2.6rem;
+  }
+
+  .home-promise__cream {
+    background: var(--cream);
+    color: var(--ink);
+  }
+
+  .home-promise__kicker {
+    margin: 0 0 0.8rem;
+    font-size: 0.95rem;
+    color: var(--forest);
+  }
+
+  .home-promise h2 {
+    margin: 0;
+    max-width: 14ch;
+    font-family: Fraunces, serif;
+    font-size: clamp(2.15rem, 5.4vw, 3.6rem);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  .home-promise p:last-of-type {
+    margin: 1.1rem 0 0;
+    max-width: 32rem;
+    font-size: 1.05rem;
+    line-height: 1.55;
+  }
+
+  .home-promise__forest {
+    background: var(--forest);
+    color: var(--cream);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  @media (min-width: 900px) {
+    .home-promise {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .home-promise__cream,
+    .home-promise__forest {
+      min-height: 28rem;
+      padding: 3.6rem 2.6rem;
+    }
+  }
+</style>

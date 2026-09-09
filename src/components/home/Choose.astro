@@ -1,0 +1,120 @@
+---
+import { HOME_PAGE } from '@utils/constants';
+
+const copy = HOME_PAGE.choose;
+---
+
+<section class="home-choose" aria-labelledby="home-choose-title">
+  <header>
+    <h2 id="home-choose-title">{copy.h2}</h2>
+    <p>{copy.note}</p>
+  </header>
+  <div class="home-choose__row">
+    {
+      copy.items.map((item) => (
+        <a class={`home-choose__plate is-${item.name.toLowerCase()}`} href={item.href}>
+          <h3>{item.name}</h3>
+          <p class="home-choose__claim">{item.claim}</p>
+          <p>{item.body}</p>
+        </a>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .home-choose {
+    --cream: #f4efe6;
+    --forest: #1e4a32;
+    --petroleum: #0b4f6c;
+    --ink: #1a2a22;
+    font-family: Outfit, sans-serif;
+  }
+
+  .home-choose header {
+    background: var(--cream);
+    color: var(--ink);
+    padding: 3.2rem 1.5rem 2rem;
+  }
+
+  .home-choose h2 {
+    margin: 0;
+    font-family: Fraunces, serif;
+    font-size: clamp(2.15rem, 5.4vw, 3.6rem);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  .home-choose header p {
+    margin: 0.9rem 0 0;
+    max-width: 34rem;
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
+
+  .home-choose__row {
+    display: grid;
+  }
+
+  .home-choose__plate {
+    display: block;
+    padding: 2.4rem 1.5rem 2.6rem;
+    color: var(--cream);
+    text-decoration: none;
+  }
+
+  .home-choose__plate.is-centia {
+    background: var(--forest);
+  }
+
+  .home-choose__plate.is-nervia {
+    background: var(--petroleum);
+  }
+
+  .home-choose h3 {
+    margin: 0;
+    font-family: Fraunces, serif;
+    font-size: clamp(2.6rem, 7vw, 4.4rem);
+    font-weight: 500;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+  }
+
+  .home-choose__claim {
+    margin: 1rem 0 0;
+    max-width: 16ch;
+    font-family: Fraunces, serif;
+    font-size: clamp(1.25rem, 3vw, 1.7rem);
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .home-choose__plate p:last-child {
+    margin: 0.9rem 0 0;
+    max-width: 28rem;
+    font-size: 1.02rem;
+    line-height: 1.5;
+    opacity: 0.86;
+  }
+
+  .home-choose__plate:focus-visible {
+    outline: 2px solid var(--cream);
+    outline-offset: -6px;
+  }
+
+  @media (min-width: 900px) {
+    .home-choose header {
+      padding: 3.6rem 2.6rem 2.2rem;
+    }
+
+    .home-choose__row {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .home-choose__plate {
+      min-height: 24rem;
+      padding: 3rem 2.6rem 2.8rem;
+    }
+  }
+</style>

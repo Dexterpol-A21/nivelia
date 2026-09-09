@@ -10,7 +10,12 @@ const root = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   site: 'https://glyv.com',
   integrations: [
-    sitemap({ changefreq: 'weekly', priority: 0.7, lastmod: new Date() }),
+    sitemap({
+      changefreq: 'weekly',
+      priority: 0.7,
+      lastmod: new Date(),
+      filter: (page) => !page.includes('/sistema'),
+    }),
   ],
   vite: {
     plugins: [tailwindcss()],

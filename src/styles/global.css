@@ -5,15 +5,38 @@
   --font-heading: "Fraunces", serif;
   --font-body: "Outfit", sans-serif;
 
-  --color-primary: #171717;
-  --color-primary-dark: #0a0a0a;
-  --color-secondary: #525252;
-  --color-accent: #2563eb;
-  --color-bg: #fafafa;
-  --color-surface: #ffffff;
-  --color-text: #171717;
-  --color-text-muted: #525252;
-  --color-border: #e5e5e5;
+  --color-cream: #f4efe6;
+  --color-cream-deep: #ebe4d4;
+  --color-forest: #1e4a32;
+  --color-petroleum: #0b4f6c;
+  --color-petroleum-deep: #083d54;
+  --color-ink: #1a2a22;
+
+  --color-bg: #f4efe6;
+  --color-surface: #f4efe6;
+  --color-text: #1a2a22;
+  --color-text-muted: #4a5c52;
+  --color-border: #d9d2c6;
+  --color-primary: #1e4a32;
+  --color-primary-dark: #1a2a22;
+  --color-secondary: #0b4f6c;
+  --color-accent: #0b4f6c;
+
+  --ease-glyv: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bloom: cubic-bezier(0.19, 1, 0.22, 1);
+  --radius-glyv: 0;
+}
+
+:root {
+  --cream: #f4efe6;
+  --cream-deep: #ebe4d4;
+  --forest: #1e4a32;
+  --petroleum: #0b4f6c;
+  --petroleum-deep: #083d54;
+  --ink: #1a2a22;
+  --ease-glyv: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bloom: cubic-bezier(0.19, 1, 0.22, 1);
+  --cta-h: 2.75rem;
 }
 
 @layer base {
@@ -53,7 +76,7 @@
   }
 
   body {
-    @apply bg-bg text-text font-body antialiased;
+    @apply bg-cream text-ink font-body antialiased;
   }
 
   h1,
@@ -61,5 +84,10 @@
   h3,
   h4 {
     @apply font-heading;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--cream);
+    outline-offset: 3px;
   }
 }

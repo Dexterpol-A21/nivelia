@@ -1,0 +1,389 @@
+---
+import GlyvButtons from '@components/ui/GlyvButtons.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { PAGES, SYSTEM } from '@utils/constants';
+---
+
+<BaseLayout title={PAGES.sistema.title} description={PAGES.sistema.description} chrome={false}>
+  <meta slot="head" name="robots" content="noindex, nofollow" />
+
+  <article class="sistema">
+    <header class="sistema__intro">
+      <p class="sistema__word">Glyv</p>
+      <div>
+        <h1>Sistema gráfico.</h1>
+        <p>
+          Suplementos para diabetes, reposición cada mes. Campos de color, tipo editorial, botones
+          cuadrados. Esto es lo que se usa; lo demás no entra.
+        </p>
+      </div>
+    </header>
+
+    <section class="sistema__rules" aria-label="Reglas">
+      <ul>
+        {SYSTEM.rules.map((rule) => <li>{rule}</li>)}
+      </ul>
+    </section>
+
+    <section class="sistema__color" aria-label="Color">
+      <h2>Color</h2>
+      <p>Seis valores. Tres campos (crema, bosque, petróleo) y tres apoyos. Nada más.</p>
+      <ul>
+        {
+          SYSTEM.colors.map((color) => (
+            <li style={`background: ${color.hex}`}>
+              <p>{color.name}</p>
+              <p>{color.hex}</p>
+              <p>{color.use}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="sistema__type" aria-label="Tipografía">
+      <div class="sistema__type-meta">
+        <h2>Tipo</h2>
+        <p>
+          {SYSTEM.type.display} para lo que se nombra. {SYSTEM.type.body} para lo que se opera.{' '}
+          {SYSTEM.type.weights}
+        </p>
+      </div>
+      <div class="sistema__specimens">
+        <p class="is-word">Glyv</p>
+        <p class="is-h1">Equilibra tu glucosa.</p>
+        <p class="is-claim">Equilibra tu mente. Recupera tu bienestar.</p>
+        <p class="is-body">Dos cápsulas al día, con los alimentos. Ciencia clara, origen botánico.</p>
+        <p class="is-cta">Empezar reposición</p>
+      </div>
+    </section>
+
+    <section class="sistema__buttons" aria-label="Botones">
+      <div>
+        <h2>Botones</h2>
+        <p>
+          Siempre cuadrados, 2.75 rem de alto. Bloom rellena el recuadro. Tinta cambia letra a letra y
+          endereza la flecha. Van en bosque o petróleo; sobre crema el trazo desaparece.
+        </p>
+      </div>
+      <GlyvButtons primary="Empezar reposición" secondary="Ver Centia" secondaryHref="/#glyv-centia" />
+    </section>
+
+    <section class="sistema__layout" aria-label="Layout">
+      <h2>Layout</h2>
+      <div class="sistema__plates" aria-hidden="true">
+        <div class="is-cream">Crema</div>
+        <div class="is-forest">Bosque</div>
+        <div class="is-petroleum">Petróleo</div>
+      </div>
+      <ul>
+        <li>Hero y productos: placas a sangre, 50 / 50 desde 900 px.</li>
+        <li>Menú: riel estrecho a la izquierda, índice ancho a la derecha. No copia el hero.</li>
+        <li>Alineación a la izquierda. Cajas sin sombra y sin radio.</li>
+        <li>Barra de scroll: riel crema, pulgar bosque, hover petróleo.</li>
+      </ul>
+    </section>
+
+    <section class="sistema__avoid" aria-label="Fuera de marca">
+      <h2>No entra</h2>
+      <ul>
+        {SYSTEM.avoid.map((item) => <li>{item}</li>)}
+      </ul>
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  .sistema {
+    --cream: #f4efe6;
+    --cream-deep: #ebe4d4;
+    --forest: #1e4a32;
+    --petroleum: #0b4f6c;
+    --ink: #1a2a22;
+    font-family: Outfit, sans-serif;
+  }
+
+  .sistema h2 {
+    margin: 0 0 0.8rem;
+    font-family: Fraunces, serif;
+    font-size: clamp(2.1rem, 5vw, 3.4rem);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  .sistema__intro,
+  .sistema__rules,
+  .sistema__color,
+  .sistema__type,
+  .sistema__buttons,
+  .sistema__layout,
+  .sistema__avoid {
+    padding: 4.5rem 1.5rem 3.2rem;
+  }
+
+  .sistema__intro {
+    min-height: 70dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 2rem;
+    background: var(--cream);
+    color: var(--ink);
+  }
+
+  .sistema__word {
+    margin: 0;
+    font-family: Fraunces, serif;
+    font-size: clamp(4.4rem, 16vw, 8.5rem);
+    font-weight: 600;
+    line-height: 0.78;
+    letter-spacing: -0.05em;
+  }
+
+  .sistema__intro h1 {
+    margin: 0;
+    max-width: 12ch;
+    font-size: clamp(2.15rem, 6vw, 3.8rem);
+    font-weight: 500;
+    line-height: 1.05;
+  }
+
+  .sistema__intro p:last-child,
+  .sistema__color > p,
+  .sistema__type-meta p,
+  .sistema__buttons p {
+    margin: 0.9rem 0 0;
+    max-width: 34rem;
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
+
+  .sistema__rules {
+    background: var(--forest);
+    color: var(--cream);
+  }
+
+  .sistema__rules ul,
+  .sistema__layout ul,
+  .sistema__avoid ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sistema__rules li,
+  .sistema__layout li,
+  .sistema__avoid li {
+    max-width: 28rem;
+    padding: 0.85rem 0;
+    border-top: 1.5px solid color-mix(in srgb, currentColor 28%, transparent);
+    font-family: Fraunces, serif;
+    font-size: clamp(1.25rem, 3vw, 1.7rem);
+    font-weight: 500;
+    line-height: 1.25;
+  }
+
+  .sistema__color {
+    background: var(--cream);
+    color: var(--ink);
+  }
+
+  .sistema__color ul {
+    display: grid;
+    gap: 0;
+    margin: 2rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sistema__color li {
+    min-height: 14rem;
+    padding: 1.4rem 1.3rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .sistema__color li p {
+    margin: 0;
+  }
+
+  .sistema__color li p:first-child {
+    font-family: Fraunces, serif;
+    font-size: 1.7rem;
+    font-weight: 500;
+  }
+
+  .sistema__color li p:nth-child(2) {
+    margin-top: 0.25rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .sistema__color li p:last-child {
+    margin-top: 0.7rem;
+    max-width: 22ch;
+    font-size: 0.92rem;
+    line-height: 1.4;
+    opacity: 0.78;
+  }
+
+  .sistema__color li:nth-child(n + 3) {
+    color: var(--cream);
+  }
+
+  .sistema__type {
+    background: var(--forest);
+    color: var(--cream);
+  }
+
+  .sistema__specimens {
+    margin-top: 2.2rem;
+  }
+
+  .sistema__specimens p {
+    margin: 0;
+  }
+
+  .is-word {
+    font-family: Fraunces, serif;
+    font-size: clamp(3.6rem, 12vw, 7rem);
+    font-weight: 600;
+    line-height: 0.8;
+    letter-spacing: -0.05em;
+  }
+
+  .is-h1 {
+    margin-top: 1.4rem;
+    font-family: Fraunces, serif;
+    font-size: clamp(2.15rem, 5vw, 4.2rem);
+    font-weight: 500;
+    line-height: 1.02;
+  }
+
+  .is-claim {
+    margin-top: 1.1rem;
+    max-width: 18ch;
+    font-family: Fraunces, serif;
+    font-size: clamp(1.25rem, 3vw, 1.85rem);
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .is-body {
+    margin-top: 1.1rem;
+    max-width: 28rem;
+    font-size: 1.05rem;
+    line-height: 1.55;
+    opacity: 0.88;
+  }
+
+  .is-cta {
+    margin-top: 1.4rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .sistema__buttons {
+    background: var(--petroleum);
+    color: var(--cream);
+  }
+
+  .sistema__buttons :global(.glyv-btns) {
+    margin-top: 1.6rem;
+  }
+
+  .sistema__layout {
+    background: var(--cream);
+    color: var(--ink);
+  }
+
+  .sistema__plates {
+    display: grid;
+    min-height: 12rem;
+    margin: 1.6rem 0 1.8rem;
+  }
+
+  .sistema__plates div {
+    display: grid;
+    place-items: center;
+    min-height: 5.5rem;
+    font-family: Fraunces, serif;
+    font-size: 1.4rem;
+    font-weight: 500;
+  }
+
+  .sistema__plates .is-cream {
+    background: var(--cream);
+    color: var(--ink);
+    box-shadow: inset 0 0 0 1.5px var(--forest);
+  }
+
+  .sistema__plates .is-forest {
+    background: var(--forest);
+    color: var(--cream);
+  }
+
+  .sistema__plates .is-petroleum {
+    background: var(--petroleum);
+    color: var(--cream);
+  }
+
+  .sistema__avoid {
+    background: var(--ink);
+    color: var(--cream);
+  }
+
+  @media (min-width: 900px) {
+    .sistema__intro,
+    .sistema__rules,
+    .sistema__color,
+    .sistema__type,
+    .sistema__buttons,
+    .sistema__layout,
+    .sistema__avoid {
+      padding: 5rem 2.6rem 3.6rem;
+    }
+
+    .sistema__intro {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: end;
+    }
+
+    .sistema__color ul {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .sistema__color li {
+      min-height: 18rem;
+    }
+
+    .sistema__type {
+      display: grid;
+      grid-template-columns: minmax(16rem, 22rem) 1fr;
+      gap: 2rem 3rem;
+    }
+
+    .sistema__specimens {
+      margin-top: 0;
+    }
+
+    .sistema__buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: end;
+      gap: 2rem;
+    }
+
+    .sistema__plates {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr auto;
+    }
+
+    .sistema__plates .is-petroleum {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

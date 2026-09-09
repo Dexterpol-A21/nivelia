@@ -1,0 +1,67 @@
+---
+import { HOME_PAGE } from '@utils/constants';
+
+const copy = HOME_PAGE.audience;
+---
+
+<section class="home-audience" aria-label="Para quién es Glyv">
+  <div class="is-yes">
+    <h2>{copy.yesTitle}</h2>
+    <p>{copy.yes}</p>
+  </div>
+  <div class="is-no">
+    <h2>{copy.noTitle}</h2>
+    <p>{copy.no}</p>
+  </div>
+</section>
+
+<style>
+  .home-audience {
+    --cream: #f4efe6;
+    --forest: #1e4a32;
+    --ink: #1a2a22;
+    display: grid;
+    font-family: Outfit, sans-serif;
+  }
+
+  .home-audience > div {
+    padding: 3.2rem 1.5rem 2.6rem;
+  }
+
+  .is-yes {
+    background: var(--cream);
+    color: var(--ink);
+  }
+
+  .is-no {
+    background: var(--forest);
+    color: var(--cream);
+  }
+
+  .home-audience h2 {
+    margin: 0;
+    font-family: Fraunces, serif;
+    font-size: clamp(2.15rem, 5vw, 3.2rem);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  .home-audience p {
+    margin: 1.1rem 0 0;
+    max-width: 30rem;
+    font-size: 1.05rem;
+    line-height: 1.55;
+  }
+
+  @media (min-width: 900px) {
+    .home-audience {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .home-audience > div {
+      min-height: 22rem;
+      padding: 3.6rem 2.6rem;
+    }
+  }
+</style>

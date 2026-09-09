@@ -1,0 +1,110 @@
+---
+import GlyvButtons from '@components/ui/GlyvButtons.astro';
+import { HOME_PAGE } from '@utils/constants';
+
+const copy = HOME_PAGE.steps;
+const tones = ['is-cream', 'is-forest', 'is-petroleum'] as const;
+---
+
+<section class="home-steps" id={copy.id} aria-labelledby="home-steps-title">
+  {
+    copy.items.map((item, i) => (
+      <article class={`home-steps__plate ${tones[i]}`}>
+        <p class="home-steps__n">{item.n}</p>
+        <div>
+          {i === 0 && <h2 id="home-steps-title">{copy.h2}</h2>}
+          {i === 0 && <p class="home-steps__lead">{copy.lead}</p>}
+          <h3>{item.title}</h3>
+          <p>{item.body}</p>
+          {i === 2 && (
+            <GlyvButtons
+              primary={copy.cta}
+              secondary={copy.secondary}
+              secondaryHref="/servicios"
+            />
+          )}
+        </div>
+      </article>
+    ))
+  }
+</section>
+
+<style>
+  .home-steps {
+    --cream: #f4efe6;
+    --forest: #1e4a32;
+    --petroleum: #0b4f6c;
+    --ink: #1a2a22;
+    font-family: Outfit, sans-serif;
+  }
+
+  .home-steps__plate {
+    display: grid;
+    gap: 1rem 1.6rem;
+    padding: 2.6rem 1.5rem 2.4rem;
+  }
+
+  .is-cream {
+    background: var(--cream);
+    color: var(--ink);
+  }
+
+  .is-forest {
+    background: var(--forest);
+    color: var(--cream);
+  }
+
+  .is-petroleum {
+    background: var(--petroleum);
+    color: var(--cream);
+  }
+
+  .home-steps__n {
+    margin: 0;
+    font-family: Fraunces, serif;
+    font-size: clamp(3.4rem, 10vw, 5.5rem);
+    font-weight: 600;
+    line-height: 0.8;
+    letter-spacing: -0.05em;
+  }
+
+  .home-steps h2 {
+    margin: 0 0 0.7rem;
+    font-family: Fraunces, serif;
+    font-size: clamp(1.7rem, 3.4vw, 2.4rem);
+    font-weight: 500;
+    line-height: 1.1;
+  }
+
+  .home-steps__lead {
+    margin: 0 0 1.3rem;
+    max-width: 28rem;
+    font-size: 1.02rem;
+    line-height: 1.5;
+    opacity: 0.88;
+  }
+
+  .home-steps h3 {
+    margin: 0;
+    font-family: Fraunces, serif;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 500;
+    line-height: 1.1;
+  }
+
+  .home-steps h3 + p {
+    margin: 0.7rem 0 0;
+    max-width: 28rem;
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
+
+  @media (min-width: 900px) {
+    .home-steps__plate {
+      grid-template-columns: 6.5rem 1fr;
+      align-items: center;
+      min-height: 18rem;
+      padding: 3.2rem 2.6rem;
+    }
+  }
+</style>

@@ -1,0 +1,50 @@
+---
+import GlyvButtons from '@components/ui/GlyvButtons.astro';
+import { HOME_PAGE } from '@utils/constants';
+
+const copy = HOME_PAGE.close;
+---
+
+<section class="home-close" aria-labelledby="home-close-title">
+  <h2 id="home-close-title">{copy.h2}</h2>
+  <p>{copy.body}</p>
+  <GlyvButtons
+    primary={copy.primary}
+    secondary={copy.secondary}
+    secondaryHref="/#glyv-centia"
+  />
+</section>
+
+<style>
+  .home-close {
+    --cream: #f4efe6;
+    --petroleum: #0b4f6c;
+    background: var(--petroleum);
+    color: var(--cream);
+    padding: 4rem 1.5rem 3.2rem;
+    font-family: Outfit, sans-serif;
+  }
+
+  .home-close h2 {
+    margin: 0;
+    max-width: 14ch;
+    font-family: Fraunces, serif;
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    font-weight: 500;
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+  }
+
+  .home-close p {
+    margin: 1.1rem 0 0;
+    max-width: 28rem;
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
+
+  @media (min-width: 900px) {
+    .home-close {
+      padding: 5rem 2.6rem 3.6rem;
+    }
+  }
+</style>
