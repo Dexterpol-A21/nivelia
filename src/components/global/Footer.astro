@@ -1,6 +1,4 @@
 ---
-import GlyvFlora from '@components/home/GlyvFlora.astro';
-import GlyvNerves from '@components/home/GlyvNerves.astro';
 import { DISCLAIMER, FACEBOOK, FOOTER_LINKS, LEGAL_LINKS, SITE } from '@utils/constants';
 
 interface Props {
@@ -8,13 +6,10 @@ interface Props {
 }
 
 const { tone = 'site' } = Astro.props;
-const isCentia = tone === 'centia';
 ---
 
 <div data-slide-host>
   <footer class:list={['glyv-foot', `is-${tone}`]} data-slide="right">
-    <GlyvFlora variant="seam" ink="light" />
-    {!isCentia && <GlyvNerves />}
     <p class="glyv-foot__word">{SITE.title}</p>
     <nav class="glyv-foot__nav" aria-label="Pie">
       <ul>
@@ -52,10 +47,9 @@ const isCentia = tone === 'centia';
     --cream: #f4efe6;
     --forest: #1e4a32;
     --petroleum: #0b4f6c;
-    --flora-seam-h: 3.6rem;
     background: var(--petroleum);
     color: var(--cream);
-    padding: 4.2rem 1.5rem 1.7rem;
+    padding: 2.8rem 1.5rem 1.7rem;
     position: relative;
     overflow: hidden;
     font-family: Outfit, sans-serif;
@@ -63,11 +57,6 @@ const isCentia = tone === 'centia';
 
   .glyv-foot.is-centia {
     background: var(--forest);
-  }
-
-  .glyv-foot > :not(.glyv-flora):not(.glyv-nerves) {
-    position: relative;
-    z-index: 1;
   }
 
   .glyv-foot__word {
@@ -132,8 +121,7 @@ const isCentia = tone === 'centia';
 
   @media (min-width: 900px) {
     .glyv-foot {
-      --flora-seam-h: 4rem;
-      padding: 4.6rem 2.6rem 1.9rem;
+      padding: 3.2rem 2.6rem 1.9rem;
     }
 
     .glyv-foot__nav ul {

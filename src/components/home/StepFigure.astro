@@ -161,12 +161,15 @@ const { step } = Astro.props;
     height: 4.4rem;
     place-items: center;
     border: 2px solid var(--mark);
+    border-top-color: transparent;
     border-radius: 50%;
+    transform: rotate(-35deg);
   }
 
   .cycle .jar {
     width: 1.35rem;
     height: 2rem;
+    transform: rotate(35deg);
   }
 
   .cycle .jar::before {
@@ -175,32 +178,15 @@ const { step } = Astro.props;
     height: 0.34rem;
   }
 
-  .cycle::before,
   .cycle::after {
     content: '';
     position: absolute;
-    box-sizing: border-box;
-  }
-
-  .cycle::before {
-    top: -0.12rem;
-    right: 0.55rem;
-    width: 1.55rem;
-    height: 1.55rem;
-    border: 2px solid transparent;
-    border-top-color: var(--mark);
-    border-right-color: var(--mark);
-    border-radius: 50%;
-    transform: rotate(18deg);
-  }
-
-  .cycle::after {
-    top: 0.18rem;
-    right: 0.42rem;
-    width: 0.48rem;
-    height: 0.48rem;
+    top: 0.12rem;
+    left: 0.72rem;
+    width: 0.55rem;
+    height: 0.55rem;
     border-top: 2px solid var(--mark);
     border-right: 2px solid var(--mark);
-    transform: rotate(55deg);
+    transform: rotate(-10deg);
   }
 </style>

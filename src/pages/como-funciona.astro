@@ -71,7 +71,6 @@ const copy = HOW_PAGE;
 
     <div data-slide-host>
       <section class="works__close" data-slide="right" aria-labelledby="works-close-title">
-        <GlyvFlora variant="seam" ink="light" />
         <h2 id="works-close-title">{copy.closeTitle}</h2>
         <p>{copy.closeBody}</p>
         <GlyvButtons
@@ -111,7 +110,6 @@ const copy = HOW_PAGE;
 
   .works__intro > :not(.glyv-flora),
   .works__cycle > :not(.glyv-flora),
-  .works__close > :not(.glyv-flora),
   .works__cycle-copy > :not(.glyv-flora) {
     position: relative;
     z-index: 1;
@@ -178,10 +176,10 @@ const copy = HOW_PAGE;
     grid-row: 1;
     margin: 0;
     font-family: Fraunces, serif;
-    font-size: clamp(6.4rem, 22vw, 8.5rem);
+    font-size: clamp(2.4rem, 6vw, 3.6rem);
     font-weight: 600;
-    line-height: 0.78;
-    letter-spacing: -0.06em;
+    line-height: 0.8;
+    letter-spacing: -0.05em;
   }
 
   .works__copy {
@@ -241,17 +239,20 @@ const copy = HOW_PAGE;
   }
 
   .works__close {
-    --flora-seam-h: 3.4rem;
     background: var(--forest);
     color: var(--cream);
+    padding: 2.8rem 1.5rem 2.4rem;
   }
 
   @media (min-width: 900px) {
     .works__intro,
-    .works__cycle,
-    .works__close {
+    .works__cycle {
       --flora-seam-h: 3.8rem;
       padding: 5.2rem 2.6rem 2.8rem;
+    }
+
+    .works__close {
+      padding: 3.2rem 2.6rem 2.8rem;
     }
 
     .works__step {
@@ -265,10 +266,6 @@ const copy = HOW_PAGE;
     .works__figure {
       grid-column: auto;
       grid-row: auto;
-    }
-
-    .works__step .works__n {
-      font-size: clamp(8rem, 12vw, 11rem);
     }
 
     .works__cycle {
