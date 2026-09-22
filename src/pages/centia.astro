@@ -1,0 +1,17 @@
+---
+import ProductPage from '@components/product/ProductPage.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { getProduct, PAGES } from '@utils/constants';
+
+const product = getProduct('centia');
+if (!product) throw new Error('Centia no está en el catálogo.');
+---
+
+<BaseLayout
+  title={PAGES.centia.title}
+  description={PAGES.centia.description}
+  image={product.photo}
+  footTone="centia"
+>
+  <ProductPage {product} />
+</BaseLayout>

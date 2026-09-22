@@ -1,17 +1,28 @@
 ---
+import GlyvFlora from '@components/home/GlyvFlora.astro';
+import GlyvNerves from '@components/home/GlyvNerves.astro';
 import { HOME_PAGE } from '@utils/constants';
 
 const copy = HOME_PAGE.audience;
 ---
 
-<section class="home-audience" aria-label="Para quién es Glyv">
-  <div class="is-yes">
-    <h2>{copy.yesTitle}</h2>
-    <p>{copy.yes}</p>
+<section class="home-audience" data-slide-host aria-label="Para quién es Glyv">
+  <GlyvFlora variant="seam" ink="light" />
+  <div class="is-yes" data-slide="left">
+    <GlyvFlora variant="leaves" />
+    <div class="home-audience__copy">
+      <h2>{copy.yesTitle}</h2>
+      <p>{copy.yes}</p>
+    </div>
+    <span class="home-audience__mark" aria-hidden="true"></span>
   </div>
-  <div class="is-no">
-    <h2>{copy.noTitle}</h2>
-    <p>{copy.no}</p>
+  <div class="is-no" data-slide="right">
+    <GlyvNerves />
+    <div class="home-audience__copy">
+      <h2>{copy.noTitle}</h2>
+      <p>{copy.no}</p>
+    </div>
+    <span class="home-audience__mark" aria-hidden="true"></span>
   </div>
 </section>
 
@@ -19,23 +30,89 @@ const copy = HOME_PAGE.audience;
   .home-audience {
     --cream: #f4efe6;
     --forest: #1e4a32;
-    --ink: #1a2a22;
+    --petroleum: #0b4f6c;
     display: grid;
+    position: relative;
+    overflow: hidden;
     font-family: Outfit, sans-serif;
   }
 
+  .home-audience > .glyv-flora {
+    z-index: 4;
+  }
+
+  .home-audience > :not(.glyv-flora) {
+    position: relative;
+    z-index: 1;
+  }
+
   .home-audience > div {
-    padding: 3.2rem 1.5rem 2.6rem;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2.4rem;
+    padding: 7.6rem 1.5rem 2.6rem;
+  }
+
+  .home-audience > div > :not(.glyv-flora):not(.glyv-nerves) {
+    position: relative;
+    z-index: 1;
   }
 
   .is-yes {
-    background: var(--cream);
-    color: var(--ink);
+    background: var(--forest);
+    color: var(--cream);
   }
 
   .is-no {
-    background: var(--forest);
+    background: var(--petroleum);
     color: var(--cream);
+  }
+
+  .home-audience__copy {
+    max-width: 30rem;
+  }
+
+  .home-audience__mark {
+    display: block;
+    box-sizing: border-box;
+    width: 6.4rem;
+    height: 7.8rem;
+    position: relative;
+    border: 2px solid currentColor;
+    border-top: 0;
+    flex: none;
+  }
+
+  .home-audience__mark::before {
+    content: '';
+    position: absolute;
+    box-sizing: border-box;
+    left: 1.15rem;
+    right: 1.15rem;
+    top: -1.7rem;
+    height: 1.7rem;
+    border: 2px solid currentColor;
+  }
+
+  .is-no .home-audience__mark,
+  .is-no .home-audience__mark::before {
+    background: var(--petroleum);
+  }
+
+  .is-no .home-audience__mark::after {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    left: 2.625rem;
+    top: 3.05rem;
+    width: 11.4rem;
+    height: 2px;
+    background: currentColor;
+    transform: translate(-50%, -50%) rotate(-61deg);
+    transform-origin: center;
   }
 
   .home-audience h2 {
@@ -49,7 +126,6 @@ const copy = HOME_PAGE.audience;
 
   .home-audience p {
     margin: 1.1rem 0 0;
-    max-width: 30rem;
     font-size: 1.05rem;
     line-height: 1.55;
   }
@@ -60,8 +136,32 @@ const copy = HOME_PAGE.audience;
     }
 
     .home-audience > div {
+      flex-direction: row;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 2.2rem;
       min-height: 22rem;
-      padding: 3.6rem 2.6rem;
+      padding: 8.4rem 2.6rem;
+    }
+
+    .home-audience__mark {
+      width: 8.2rem;
+      height: 10rem;
+    }
+
+    .home-audience__mark::before {
+      left: 1.45rem;
+      right: 1.45rem;
+      top: -2.05rem;
+      height: 2.05rem;
+    }
+
+    .is-no .home-audience__mark::after {
+      left: 3.375rem;
+      top: 3.975rem;
+      width: 14.4rem;
+      transform: translate(-50%, -50%) rotate(-60.8deg);
     }
   }
 </style>
+

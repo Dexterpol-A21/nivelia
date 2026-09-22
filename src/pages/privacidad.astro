@@ -1,0 +1,86 @@
+---
+import LegalPage from '@components/global/LegalPage.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { PAGES } from '@utils/constants';
+
+const sections = [
+  {
+    title: 'Este es el aviso',
+    paragraphs: [
+      'Esta página es el aviso de privacidad integral de Glyv, responsable del tratamiento de datos personales en glyv.com, en términos de la Ley Federal de Protección de Datos Personales en Posesión de los Particulares.',
+      'Identidad: Glyv. Domicilio: el domicilio fiscal se publicará en esta misma página en cuanto quede registrado. Hasta entonces, y también después, toda solicitud se presenta desde Contacto. Ese es el medio para limitar el uso de tus datos y para ejercer tus derechos.',
+    ],
+  },
+  {
+    title: 'Qué datos',
+    paragraphs: [
+      'Identificación y contacto: nombre, correo y, si lo das, teléfono. Cuenta: el correo con el que entras y el registro de esa sesión.',
+      'Entrega y pedido: domicilio, producto, ciclo, historial de envíos y el estado del pago. El número de tarjeta no entra a Glyv. Lo trata el proveedor de pagos, y Glyv solo recibe la confirmación del cobro.',
+      'Mensajes: lo que escribes por Contacto y el medio para responderte.',
+      'Datos técnicos del sitio: dirección IP, fecha y navegador, solo en los registros necesarios para que la página funcione y para atender un abuso.',
+      'Glyv no pide datos sensibles. No pide diagnóstico, historial clínico ni estudios de laboratorio. Si los escribes por tu cuenta en un mensaje, se usan únicamente para contestar ese mensaje y no se arman en un expediente de salud.',
+    ],
+  },
+  {
+    title: 'Para qué',
+    paragraphs: [
+      'Finalidades necesarias para la relación, que no requieren un consentimiento aparte: crear tu cuenta, cobrar el ciclo, preparar y entregar el envase, avisarte de un envío, una pausa o un cobro que no pasó, responder una duda y conservar pedidos y comprobantes el tiempo que la ley exige.',
+      'Finalidades que sí piden tu consentimiento: ninguna hoy. Glyv no vende tus datos, no los cede para publicidad de terceros y no te manda publicidad ajena. Si más adelante hubiera una finalidad distinta, se te pide consentimiento antes de usarla.',
+      'Los datos de pago, que son patrimoniales, se recaban con tu consentimiento expreso en el checkout, ante el proveedor de pagos.',
+    ],
+  },
+  {
+    title: 'Con quién',
+    paragraphs: [
+      'Se comparten solo para cumplir la reposición: con el proveedor de pagos, para cobrar; con la paquetería, para entregar; con quien aloja el sitio y guarda la cuenta y los pedidos, para operar el servicio. Esos encargados los usan para ese fin y no para el suyo.',
+      'Esas comunicaciones son necesarias para el contrato y para mantener la relación. Por eso no piden un consentimiento extra. El proveedor de pagos puede tratar el cobro fuera de México. En ese caso se aplican las medidas que exige la ley mexicana, y el tercero queda sujeto a este aviso.',
+      'Glyv no transfiere tus datos para que un tercero te contacte con fines propios.',
+    ],
+  },
+  {
+    title: 'Cuánto tiempo',
+    paragraphs: [
+      'Mientras la cuenta y la reposición sigan activas. Después, el tiempo que la ley exige para pedidos y comprobantes. Los datos de un incumplimiento contractual se bloquean y se eliminan a los setenta y dos meses, contados desde la fecha de ese incumplimiento.',
+      'Un mensaje de contacto se conserva hasta cerrar el asunto y el tiempo necesario para acreditar qué se respondió. Los registros técnicos se conservan el tiempo necesario para la seguridad del sitio.',
+      'Cuando el dato ya no hace falta para la finalidad ni para una obligación legal, se suprime.',
+    ],
+  },
+  {
+    title: 'Tus derechos',
+    paragraphs: [
+      'Puedes pedir acceso, rectificación, cancelación u oposición, y revocar el consentimiento cuando la ley lo permita. La revocación no borra lo ya hecho con base en ese consentimiento, ni el comprobante que la ley obliga a guardar.',
+      'La solicitud se presenta desde Contacto. Debe decir qué derecho ejerces y cómo quieres que te respondamos. Para entregarte datos, o para cambiarlos, hay que acreditar que eres el titular o su representante.',
+      'Glyv responde en un máximo de veinte días. Si procede, lo hace efectivo dentro de los quince días siguientes. Esos plazos pueden ampliarse una sola vez por un periodo igual, si el caso lo justifica, y se te avisa.',
+      'Puedes limitar el uso o la divulgación por el mismo medio. Los avisos de envío y de cobro no se apagan mientras el ciclo siga activo: son parte del pedido.',
+      'Si la respuesta no llega en plazo, o no te satisface, puedes acudir a la Secretaría Anticorrupción y Buen Gobierno. El plazo para esa solicitud de protección es de quince días desde la respuesta o, si no hubo respuesta, desde que venció el plazo de Glyv.',
+    ],
+  },
+  {
+    title: 'Cookies, menores y seguridad',
+    paragraphs: [
+      'Este sitio no usa cookies de publicidad ni de medición. Solo lo necesario para que la página y la sesión funcionen. Si eso cambia, esta página cambia antes.',
+      'La reposición es para mayores de edad. Glyv no recaba a sabiendas datos de menores. Si aparece un dato de un menor, se elimina.',
+      'Tú das datos ciertos y actualizados. Un dato falso o un domicilio incompleto es tu responsabilidad, y puede impedir el envío.',
+      'Glyv aplica medidas administrativas y técnicas para cuidar los datos. Ningún sistema es infalible. Un incidente se atiende y, si la ley lo exige, se comunica.',
+    ],
+  },
+  {
+    title: 'Cambios',
+    paragraphs: [
+      'Los cambios a este aviso se publican en esta página, con la fecha nueva. Ese es el medio de aviso. Si el cambio pide un consentimiento nuevo, se te pide antes de aplicar esa finalidad.',
+      'Seguir usando el sitio después de la fecha nueva implica que conoces el texto vigente.',
+    ],
+  },
+] as const;
+---
+
+<BaseLayout title={PAGES.privacidad.title} description={PAGES.privacidad.description}>
+  <LegalPage
+    title="Política de privacidad."
+    lead="Aviso de privacidad de Glyv: qué datos se piden, para qué, con quién y cómo ejercer tus derechos."
+    updated="Vigente desde el 21 de septiembre de 2026."
+    sections={sections}
+    relatedHref="/terminos"
+    relatedLabel="Términos y condiciones"
+  />
+</BaseLayout>

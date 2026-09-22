@@ -90,4 +90,9 @@
     outline: 2px solid var(--cream);
     outline-offset: 3px;
   }
+
+  [data-slide-host] {
+    overflow: hidden;
+    width: 100%;
+  }
 }

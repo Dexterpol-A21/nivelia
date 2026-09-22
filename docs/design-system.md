@@ -121,7 +121,7 @@ Columnas `1fr 1fr`. Franja de petróleo a todo el ancho. Enredaderas (`GlyvFlora
 - **Centia:** foto crema | copy bosque. Flora detrás de la foto, visible en el bosque.
 - **Nervia:** copy petróleo | foto petróleo profundo. Nervios solo en el copy, franja ~34% a la derecha.
 
-Las placas entran desde los lados (`xPercent`, `power3.out`, una vez).
+Las placas entran desde los lados (`xPercent`, `power3.out`, 1.15s, una vez). Host: `data-slide-host`. Pane: `data-slide="left|right"`. Cada placa apilada es su propio host. Hero no entra.
 
 ### Menú
 
@@ -150,7 +150,7 @@ Barra nativa oculta en `html`. Barra propia a la derecha: riel crema, pulgar bos
 | --- | --- | --- |
 | `--ease-glyv` | `cubic-bezier(0.4, 0, 0.2, 1)` | Tinta, menú, UI |
 | `--ease-bloom` | `cubic-bezier(0.19, 1, 0.22, 1)` | Bloom |
-| Placas | `power3.out`, ~1.15s | Productos |
+| Placas | `power3.out`, 1.15s | Toda placa de color (`data-slide`) |
 | Flora / nervios | 3.4s, delay 0.55s / 0.95s | Trazos SVG |
 
 Lenis en scroll (no si `prefers-reduced-motion`). Un momento orquestado al entrar; el hover de botones y el menú sí responden a la persona.

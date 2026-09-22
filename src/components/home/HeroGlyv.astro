@@ -1,5 +1,6 @@
 ---
 import GlyvFlora from '@components/home/GlyvFlora.astro';
+import GlyvNerves from '@components/home/GlyvNerves.astro';
 import GlyvButtons from '@components/ui/GlyvButtons.astro';
 import { HERO } from '@utils/constants';
 
@@ -19,7 +20,11 @@ const copy = HERO;
   </div>
 
   <div class="hero-glyv__petroleum">
-    <p class="hero-glyv__band">{copy.band}</p>
+    <GlyvNerves />
+    <div class="hero-glyv__lead">
+      <p class="hero-glyv__band">{copy.band}</p>
+      <p class="hero-glyv__note">{copy.bandNote}</p>
+    </div>
     <dl>
       {
         copy.specs.map((spec) => (
@@ -60,6 +65,16 @@ const copy = HERO;
     padding: 1.5rem 1.35rem;
   }
 
+  .hero-glyv__forest > :not(.glyv-flora),
+  .hero-glyv__petroleum > :not(.glyv-nerves) {
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-glyv__petroleum {
+    overflow: hidden;
+  }
+
   .hero-glyv__cream {
     background: var(--cream);
     color: var(--ink);
@@ -82,9 +97,9 @@ const copy = HERO;
   .hero-glyv__forest {
     background: var(--forest);
     color: var(--cream);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    overflow: hidden;
+    display: grid;
+    align-content: center;
   }
 
   .hero-glyv__eyebrow {
@@ -121,10 +136,20 @@ const copy = HERO;
 
   .hero-glyv__band {
     margin: 0;
+    max-width: 16ch;
     font-family: Fraunces, serif;
-    font-size: clamp(1.35rem, 3.4vw, 2rem);
+    font-size: clamp(1.7rem, 3.8vw, 2.5rem);
     font-weight: 500;
-    line-height: 1.15;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  .hero-glyv__note {
+    margin: 0.7rem 0 0;
+    max-width: 36rem;
+    font-size: 1.02rem;
+    line-height: 1.45;
+    opacity: 0.88;
   }
 
   .hero-glyv dl {
@@ -168,6 +193,10 @@ const copy = HERO;
       gap: 1.5rem 2rem;
       padding: 1.6rem 2.2rem 1.8rem;
       align-items: center;
+    }
+
+    .hero-glyv :global(.glyv-flora.is-bottom) {
+      display: none;
     }
 
     .hero-glyv__band {

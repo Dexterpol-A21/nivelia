@@ -10,9 +10,10 @@ interface Props {
   description: string;
   image?: string;
   chrome?: boolean;
+  footTone?: 'site' | 'centia' | 'nervia';
 }
 
-const { title, description, image, chrome = true } = Astro.props;
+const { title, description, image, chrome = true, footTone = 'site' } = Astro.props;
 ---
 
 <!doctype html>
@@ -34,16 +35,18 @@ const { title, description, image, chrome = true } = Astro.props;
     <main class="flex-1">
       <slot />
     </main>
-    {chrome && <Footer />}
+    {chrome && <Footer tone={footTone} />}
 
     <script>
       import { gsap } from 'gsap';
       import { ScrollTrigger } from 'gsap/ScrollTrigger';
       import Lenis from 'lenis';
+      import { initSlidePlates } from '../scripts/slide-plates';
 
       gsap.registerPlugin(ScrollTrigger);
 
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      initSlidePlates();
 
       if (!reduceMotion) {
         const lenis = new Lenis({
@@ -81,6 +84,8 @@ const { title, description, image, chrome = true } = Astro.props;
           scrollTrigger: { trigger: el, start: 'top 85%' },
         });
       });
+
+      ScrollTrigger.refresh();
     </script>
   </body>
 </html>

@@ -1,11 +1,306 @@
 ---
+import GlyvFlora from '@components/home/GlyvFlora.astro';
+import GlyvNerves from '@components/home/GlyvNerves.astro';
+import GlyvButtons from '@components/ui/GlyvButtons.astro';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { PAGES } from '@utils/constants';
+
+const beliefs = [
+  {
+    title: 'Un hábito, no un trámite.',
+    body: 'El frasco vuelve cada mes. Tú no tienes que acordarte de pedirlo otra vez.',
+  },
+  {
+    title: 'La etiqueta habla.',
+    body: 'Cada ingrediente va con su miligramo. Sin misterio en la fórmula.',
+  },
+  {
+    title: 'Hecho en México.',
+    body: 'Cápsula vegetal, origen botánico. Complemento de la alimentación, no un recambio de receta.',
+  },
+] as const;
+
+const nots = [
+  {
+    title: 'No es farmacia.',
+    body: 'No diagnosticamos, no recetamos, no sustituimos lo que te indicó tu médico.',
+  },
+  {
+    title: 'No es un milagro.',
+    body: 'No prometemos resultados en días ni resultados garantizados. Es un suplemento alimenticio.',
+  },
+  {
+    title: 'No es un medicamento.',
+    body: 'No trata, cura ni previene enfermedades. Si estás bajo tratamiento, consulta a tu médico.',
+  },
+] as const;
 ---
 
 <BaseLayout title={PAGES.about.title} description={PAGES.about.description}>
-  <section class="mx-auto max-w-6xl px-5 py-24 md:py-32">
-    <h1 class="text-4xl font-extrabold md:text-6xl">{PAGES.about.title}</h1>
-    <p class="mt-6 max-w-xl text-lg text-text-muted">{PAGES.about.description}</p>
-  </section>
+  <article class="about">
+    <header class="about__intro">
+      <h1>Nosotros.</h1>
+      <p>Glyv existe para que el suplemento sea un ritmo: dos cápsulas al día, otro frasco al mes.</p>
+    </header>
+
+    <section class="about__why" aria-labelledby="about-why">
+      <GlyvFlora variant="seam" ink="light" />
+      <h2 id="about-why">Por qué Glyv.</h2>
+      <p>
+        Porque un buen hábito se sostiene solo. Centia y Nervia son fórmulas distintas, con el mismo pacto:
+        claridad en el envase y reposición sin drama.
+      </p>
+    </section>
+
+    <section class="about__beliefs" aria-label="En qué creemos">
+      <ul>
+        {
+          beliefs.map((item) => (
+            <li>
+              <h2>{item.title}</h2>
+              <p>{item.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="about__not" aria-labelledby="about-not">
+      <GlyvFlora variant="seam" ink="light" />
+      <GlyvNerves />
+      <h2 id="about-not">Qué no somos.</h2>
+      <ul>
+        {
+          nots.map((item) => (
+            <li>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+
+    <section class="about__close" aria-labelledby="about-close">
+      <h2 id="about-close">El siguiente frasco, sin pedirlo.</h2>
+      <p>Empieza con Centia o Nervia. Cada mes, en tu puerta.</p>
+      <GlyvButtons
+        primary="Empezar reposición"
+        secondary="Ver Centia"
+        primaryHref="/centia"
+        secondaryHref="/centia"
+      />
+    </section>
+  </article>
 </BaseLayout>
+
+<style>
+  .about {
+    --cream: #f4efe6;
+    --forest: #1e4a32;
+    --petroleum: #0b4f6c;
+    --ink: #1a2a22;
+    font-family: Outfit, sans-serif;
+  }
+
+  .about__intro,
+  .about__why,
+  .about__beliefs,
+  .about__not,
+  .about__close {
+    padding: 6.5rem 1.5rem 2.8rem;
+  }
+
+  .about__intro {
+    background: var(--cream);
+    color: var(--ink);
+    padding-bottom: 2.4rem;
+  }
+
+  .about h1,
+  .about h2,
+  .about h3 {
+    margin: 0;
+    font-family: Fraunces, serif;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+  }
+
+  .about h1 {
+    font-size: clamp(3.2rem, 9vw, 5.6rem);
+    line-height: 0.92;
+  }
+
+  .about__intro p,
+  .about__why p,
+  .about__beliefs p,
+  .about__not p,
+  .about__close p {
+    margin: 0.7rem 0 0;
+    max-width: 32rem;
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
+
+  .about__intro p {
+    margin-top: 1.15rem;
+  }
+
+  .about__why {
+    --flora-seam-h: 2.4rem;
+    position: relative;
+    overflow: hidden;
+    background: var(--forest);
+    color: var(--cream);
+    padding-top: 2.8rem;
+    padding-bottom: 2.6rem;
+  }
+
+  .about__why > :not(.glyv-flora),
+  .about__not > :not(.glyv-flora):not(.glyv-nerves),
+  .about__close > :not(.glyv-flora) {
+    position: relative;
+    z-index: 1;
+  }
+
+  .about__why h2,
+  .about__not h2,
+  .about__close h2 {
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    line-height: 0.95;
+  }
+
+  .about__beliefs {
+    background: var(--petroleum);
+    color: var(--cream);
+    padding-top: 3.2rem;
+    padding-bottom: 2.6rem;
+  }
+
+  .about__beliefs ul,
+  .about__not ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .about__beliefs li {
+    max-width: 34rem;
+    padding: 1.15rem 0 1.2rem;
+    border-top: 1.5px solid color-mix(in srgb, var(--cream) 28%, transparent);
+  }
+
+  .about__beliefs li:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .about__beliefs h2 {
+    font-size: clamp(1.7rem, 4vw, 2.4rem);
+    line-height: 1.05;
+  }
+
+  .about__beliefs p,
+  .about__not p {
+    opacity: 0.86;
+  }
+
+  .about__not {
+    --flora-seam-h: 4.2rem;
+    position: relative;
+    overflow: hidden;
+    background: var(--forest);
+    color: var(--cream);
+    padding-top: 4.6rem;
+    padding-bottom: 1.4rem;
+  }
+
+  .about__not li {
+    max-width: 34rem;
+    padding: 1.05rem 0 1.1rem;
+    border-top: 1.5px solid color-mix(in srgb, var(--cream) 28%, transparent);
+  }
+
+  .about__not li:first-of-type {
+    margin-top: 1.4rem;
+  }
+
+  .about__not h3 {
+    font-size: clamp(1.45rem, 3.2vw, 1.9rem);
+    line-height: 1.1;
+  }
+
+  .about__close {
+    position: relative;
+    background: var(--cream);
+    color: var(--ink);
+    padding-top: 2.8rem;
+    padding-bottom: 3rem;
+  }
+
+  .about__close h2 {
+    max-width: 14ch;
+  }
+
+  .about__close :global(.glyv-btns__btn.is-bloom) {
+    color: var(--forest);
+    box-shadow: inset 0 0 0 2px var(--forest);
+  }
+
+  .about__close :global(.glyv-btns__btn.is-bloom .glyv-btns__layer) {
+    background: var(--forest);
+  }
+
+  .about__close :global(.glyv-btns__btn.is-bloom .glyv-btns__hover-label) {
+    color: var(--cream);
+  }
+
+  .about__close :global(.glyv-btns__btn.is-tinta) {
+    color: var(--forest);
+  }
+
+  .about__close :global(.glyv-btns__btn:focus-visible) {
+    outline-color: var(--forest);
+  }
+
+  @media (min-width: 900px) {
+    .about__intro,
+    .about__why,
+    .about__beliefs,
+    .about__not,
+    .about__close {
+      padding-left: 2.6rem;
+      padding-right: 2.6rem;
+    }
+
+    .about__intro {
+      padding-top: 8rem;
+      padding-bottom: 3rem;
+    }
+
+    .about__why {
+      --flora-seam-h: 2.6rem;
+      padding-top: 3rem;
+      padding-bottom: 3rem;
+    }
+
+    .about__not {
+      --flora-seam-h: 4.6rem;
+      padding-top: 5.2rem;
+    }
+
+    .about__beliefs {
+      padding-top: 3.6rem;
+      padding-bottom: 3rem;
+    }
+
+    .about__not {
+      padding-bottom: 1.8rem;
+    }
+
+    .about__close {
+      padding-top: 3.2rem;
+      padding-bottom: 3.6rem;
+    }
+  }
+</style>

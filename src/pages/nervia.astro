@@ -1,0 +1,17 @@
+---
+import ProductPage from '@components/product/ProductPage.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { getProduct, PAGES } from '@utils/constants';
+
+const product = getProduct('nervia');
+if (!product) throw new Error('Nervia no está en el catálogo.');
+---
+
+<BaseLayout
+  title={PAGES.nervia.title}
+  description={PAGES.nervia.description}
+  image={product.photo}
+  footTone="nervia"
+>
+  <ProductPage {product} />
+</BaseLayout>

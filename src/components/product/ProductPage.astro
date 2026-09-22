@@ -1,0 +1,636 @@
+---
+import GlyvFlora from '@components/home/GlyvFlora.astro';
+import GlyvNerves from '@components/home/GlyvNerves.astro';
+import GlyvButtons from '@components/ui/GlyvButtons.astro';
+import type { Product } from '@utils/constants';
+
+interface Props {
+  product: Product;
+}
+
+const { product } = Astro.props;
+const isCentia = product.tone === 'centia';
+const [, toma, formulaShot] = product.gallery;
+---
+
+<article class:list={['product-page', `is-${product.tone}`]}>
+  <section class="product-page__hero" data-slide-host aria-labelledby="product-title">
+    <div class="product-page__figure" data-slide={isCentia ? 'left' : 'right'}>
+      <img src={product.photo} alt={product.photoAlt} width="2000" height="2000" />
+    </div>
+    <div class="product-page__intro" data-slide={isCentia ? 'right' : 'left'}>
+      {!isCentia && <GlyvNerves />}
+      <p class="product-page__focus">{product.focus}</p>
+      <h1 id="product-title">{product.name}</h1>
+      <p class="product-page__claim" set:html={product.claim.replace('. ', '.<br />')} />
+      <p class="product-page__pack">{product.use} {product.pack}</p>
+      <GlyvButtons
+        primary={product.cta}
+        secondary={product.sister.label}
+        primaryHref="/contacto"
+        secondaryHref={product.sister.href}
+      />
+    </div>
+  </section>
+
+  <div data-slide-host>
+    <section class="product-page__benefits" data-slide="right" aria-labelledby="product-benefits">
+      <GlyvFlora variant="seam" ink="dark" />
+      <h2 id="product-benefits">Para qué sirve.</h2>
+      <ul class="product-page__benefit-row">
+        {
+          product.benefits.map((item) => (
+            <li>
+              <span class:list={['benefit-mark', `is-${item.icon}`]} aria-hidden="true" />
+              <span>{item.label}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
+
+  <div data-slide-host>
+    <section class="product-page__pair" aria-labelledby="product-use">
+      <div class="product-page__pair-copy is-field" data-slide="left">
+        <GlyvFlora variant="seam" ink="light" />
+        {!isCentia && <GlyvNerves />}
+        <h2 id="product-use">Así se toma.</h2>
+        <dl>
+          {
+            product.specs.map((spec) => (
+              <div>
+                <dt>{spec.k}</dt>
+                <dd>{spec.v}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+      <figure class="product-page__pair-photo" data-slide="right">
+        <img src={toma.src} alt={toma.alt} width="1000" height="750" />
+      </figure>
+    </section>
+  </div>
+
+  <div data-slide-host>
+    <section
+      class="product-page__formula"
+      id="ingredientes"
+      data-slide="right"
+      aria-labelledby="product-formula"
+    >
+      <GlyvFlora variant="seam" ink="dark" />
+      <div class="product-page__formula-copy">
+        <h2 id="product-formula">Qué trae.</h2>
+        <p>{product.ingredients}</p>
+        <p class="product-page__other">{product.other}</p>
+        <figure class="product-page__formula-shot">
+          <img src={formulaShot.src} alt={formulaShot.alt} width="900" height="675" />
+        </figure>
+      </div>
+      <div class="product-page__table">
+        <p>
+          Porción {product.nutrition.serving}. {product.nutrition.servings} porciones por envase.
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Ingrediente</th>
+              <th scope="col">Cantidad</th>
+              <th scope="col">% VNR</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              product.nutrition.rows.map((row) => (
+                <tr>
+                  <td>{row.name}</td>
+                  <td>{row.amount}</td>
+                  <td>{row.vnr}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+        <p class="product-page__vnr">* Valor nutrimental de referencia. ** No establecido.</p>
+      </div>
+    </section>
+  </div>
+
+  <div data-slide-host>
+    <section class="product-page__marks" data-slide="left" aria-labelledby="product-marks">
+      <GlyvFlora variant="seam" ink="light" />
+      {!isCentia && <GlyvNerves />}
+      <h2 id="product-marks">En el envase.</h2>
+      <dl>
+        {
+          product.marks.map((mark) => (
+            <div>
+              <dt>{mark.k}</dt>
+              <dd>{mark.v}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+  </div>
+
+  <div data-slide-host>
+    <section class="product-page__close" data-slide="left" aria-labelledby="product-close">
+      <GlyvFlora variant="seam" ink="dark" />
+      <h2 id="product-close">Empieza la reposición.</h2>
+      <p>{product.caution}</p>
+      <GlyvButtons
+        primary={product.cta}
+        secondary={product.sister.label}
+        primaryHref="/contacto"
+        secondaryHref={product.sister.href}
+      />
+    </section>
+  </div>
+</article>
+
+<style>
+  .product-page {
+    --cream: #f4efe6;
+    --forest: #1e4a32;
+    --petroleum: #0b4f6c;
+    --petroleum-deep: #083d54;
+    --ink: #1a2a22;
+    --field: var(--forest);
+    --field-deep: var(--forest);
+    font-family: Outfit, sans-serif;
+  }
+
+  .product-page.is-nervia {
+    --field: var(--petroleum);
+    --field-deep: var(--petroleum-deep);
+  }
+
+  .product-page__hero,
+  .product-page__pair {
+    display: grid;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .product-page__figure {
+    position: relative;
+    background: var(--cream);
+    min-height: 16rem;
+    align-self: stretch;
+  }
+
+  .product-page.is-nervia .product-page__figure {
+    background: var(--field-deep);
+  }
+
+  .product-page__figure img {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .product-page__pair-photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .product-page__intro,
+  .product-page__pair-copy,
+  .product-page__benefits,
+  .product-page__formula,
+  .product-page__marks,
+  .product-page__close {
+    position: relative;
+    overflow: hidden;
+    padding: 4.6rem 1.5rem 2.6rem;
+  }
+
+  .product-page__intro,
+  .product-page__pair-copy.is-field,
+  .product-page__marks {
+    background: var(--field);
+    color: var(--cream);
+  }
+
+  .product-page__intro > :not(.glyv-flora):not(.glyv-nerves),
+  .product-page__pair-copy > :not(.glyv-flora):not(.glyv-nerves),
+  .product-page__benefits > :not(.glyv-flora),
+  .product-page__formula > :not(.glyv-flora),
+  .product-page__marks > :not(.glyv-flora):not(.glyv-nerves),
+  .product-page__close > :not(.glyv-flora) {
+    position: relative;
+    z-index: 1;
+  }
+
+  .product-page__focus {
+    margin: 0 0 0.7rem;
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    opacity: 0.72;
+  }
+
+  .product-page h1 {
+    margin: 0;
+    font-family: Fraunces, serif;
+    font-size: clamp(3rem, 10vw, 5.2rem);
+    font-weight: 500;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+  }
+
+  .product-page__claim {
+    margin: 1rem 0 0;
+    max-width: 14ch;
+    font-family: Fraunces, serif;
+    font-size: clamp(1.35rem, 3.2vw, 1.85rem);
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .product-page__pack {
+    margin: 1rem 0 0;
+    max-width: 28rem;
+    font-size: 1.02rem;
+    line-height: 1.5;
+    opacity: 0.88;
+  }
+
+  .product-page__pair-photo {
+    position: relative;
+    margin: 0;
+    background: var(--cream);
+    min-height: 14rem;
+    align-self: stretch;
+  }
+
+  .product-page__pair-photo img {
+    position: absolute;
+    inset: 0;
+    min-height: 0;
+  }
+
+  .product-page__benefits,
+  .product-page__formula,
+  .product-page__close {
+    background: var(--cream);
+    color: var(--ink);
+  }
+
+  .product-page h2 {
+    margin: 0;
+    font-family: Fraunces, serif;
+    font-size: clamp(2.15rem, 5.4vw, 3.4rem);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  .product-page__benefit-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    margin: 1.6rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .product-page__benefit-row li {
+    display: grid;
+    justify-items: start;
+    gap: 0.7rem;
+    max-width: none;
+    padding: 0;
+    border-top: 0;
+    font-family: Fraunces, serif;
+    font-size: clamp(1.15rem, 2.4vw, 1.45rem);
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .benefit-mark {
+    --mark: var(--field);
+    position: relative;
+    display: block;
+    width: 2.6rem;
+    height: 2.6rem;
+    color: var(--mark);
+  }
+
+  .benefit-mark.is-balance::before {
+    content: '';
+    position: absolute;
+    inset: 0.35rem;
+    border: 2px solid var(--mark);
+    border-radius: 50%;
+  }
+
+  .benefit-mark.is-balance::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0.55rem;
+    bottom: 0.55rem;
+    width: 2px;
+    background: var(--mark);
+    transform: translateX(-50%);
+  }
+
+  .benefit-mark.is-crave::before {
+    content: '';
+    position: absolute;
+    left: 0.35rem;
+    right: 0.35rem;
+    bottom: 0.45rem;
+    height: 1.15rem;
+    border: 2px solid var(--mark);
+    border-radius: 0 0 1rem 1rem;
+  }
+
+  .benefit-mark.is-crave::after {
+    content: '';
+    position: absolute;
+    left: 0.7rem;
+    right: 0.7rem;
+    top: 0.55rem;
+    height: 2px;
+    background: var(--mark);
+  }
+
+  .benefit-mark.is-energy::before {
+    content: '';
+    position: absolute;
+    inset: 0.7rem;
+    border: 2px solid var(--mark);
+    border-radius: 50%;
+  }
+
+  .benefit-mark.is-energy::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0.25rem;
+    width: 2px;
+    height: 2.1rem;
+    background: var(--mark);
+    transform: translateX(-50%);
+    box-shadow:
+      0.75rem 0.55rem 0 -0.05rem currentColor,
+      -0.75rem 0.55rem 0 -0.05rem currentColor,
+      0.75rem -0.55rem 0 -0.05rem currentColor,
+      -0.75rem -0.55rem 0 -0.05rem currentColor;
+  }
+
+  .benefit-mark.is-rest::before {
+    content: '';
+    position: absolute;
+    inset: 0.4rem 0.55rem 0.4rem 0.35rem;
+    border: 2px solid var(--mark);
+    border-radius: 50%;
+    border-left-color: transparent;
+    transform: rotate(-30deg);
+  }
+
+  .benefit-mark.is-calm::before,
+  .benefit-mark.is-calm::after {
+    content: '';
+    position: absolute;
+    left: 0.3rem;
+    right: 0.3rem;
+    height: 0.55rem;
+    border-top: 2px solid var(--mark);
+    border-radius: 50%;
+  }
+
+  .benefit-mark.is-calm::before {
+    top: 0.75rem;
+  }
+
+  .benefit-mark.is-calm::after {
+    top: 1.35rem;
+  }
+
+  .benefit-mark.is-nerve::before {
+    content: '';
+    position: absolute;
+    left: 1.2rem;
+    top: 0.35rem;
+    bottom: 0.35rem;
+    width: 2px;
+    background: var(--mark);
+  }
+
+  .benefit-mark.is-nerve::after {
+    content: '';
+    position: absolute;
+    left: 0.45rem;
+    right: 0.45rem;
+    top: 0.85rem;
+    height: 0.9rem;
+    border-left: 2px solid var(--mark);
+    border-right: 2px solid var(--mark);
+    border-radius: 0 0 0.7rem 0.7rem;
+  }
+
+  .product-page__pair-copy dl,
+  .product-page__marks dl {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.1rem 1.4rem;
+    margin: 1.5rem 0 0;
+  }
+
+  .product-page__marks dl {
+    grid-template-columns: 1fr 1fr;
+    max-width: 36rem;
+  }
+
+  .product-page dt {
+    font-size: 0.72rem;
+    font-weight: 600;
+    opacity: 0.7;
+  }
+
+  .product-page dd {
+    margin: 0.25rem 0 0;
+    font-family: Fraunces, serif;
+    font-size: clamp(1.2rem, 2.4vw, 1.55rem);
+    font-weight: 500;
+  }
+
+  .product-page__formula-copy p {
+    margin: 1rem 0 0;
+    max-width: 34rem;
+    font-size: 1.05rem;
+    line-height: 1.55;
+  }
+
+  .product-page__other {
+    opacity: 0.78;
+    font-size: 0.95rem !important;
+  }
+
+  .product-page__formula-shot {
+    margin: 1.4rem 0 0;
+    max-width: 22rem;
+  }
+
+  .product-page__formula-shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .product-page__table {
+    margin-top: 1.8rem;
+  }
+
+  .product-page__table > p {
+    margin: 0 0 0.9rem;
+    font-size: 0.95rem;
+    line-height: 1.45;
+  }
+
+  .product-page table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .product-page th,
+  .product-page td {
+    padding: 0.75rem 0;
+    border-top: 1.5px solid color-mix(in srgb, var(--field) 28%, transparent);
+    text-align: left;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+
+  .product-page th {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--field);
+  }
+
+  .product-page td:nth-child(2),
+  .product-page th:nth-child(2),
+  .product-page td:nth-child(3),
+  .product-page th:nth-child(3) {
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .product-page__vnr {
+    margin-top: 0.8rem !important;
+    font-size: 0.82rem !important;
+    opacity: 0.72;
+  }
+
+  .product-page__close p {
+    margin: 1rem 0 0;
+    max-width: 36rem;
+    font-size: 1.02rem;
+    line-height: 1.5;
+  }
+
+  .product-page__close :global(.glyv-btns__btn.is-bloom) {
+    color: var(--field);
+    box-shadow: inset 0 0 0 2px var(--field);
+  }
+
+  .product-page__close :global(.glyv-btns__btn.is-bloom .glyv-btns__layer) {
+    background: var(--field);
+  }
+
+  .product-page__close :global(.glyv-btns__btn.is-bloom .glyv-btns__hover-label) {
+    color: var(--cream);
+  }
+
+  .product-page__close :global(.glyv-btns__btn.is-tinta) {
+    color: var(--field);
+  }
+
+  .product-page__close :global(.glyv-btns__btn:focus-visible) {
+    outline-color: var(--field);
+  }
+
+  @media (min-width: 900px) {
+    .product-page__hero,
+    .product-page__pair {
+      grid-template-columns: 1fr 1fr;
+      min-height: 0;
+    }
+
+    .product-page.is-nervia .product-page__figure {
+      order: 2;
+    }
+
+    .product-page.is-nervia .product-page__intro {
+      order: 1;
+    }
+
+    .product-page__figure {
+      min-height: 22rem;
+    }
+
+    .product-page__pair-photo {
+      min-height: 18rem;
+    }
+
+    .product-page__figure img,
+    .product-page__pair-photo img {
+      max-height: none;
+    }
+
+    .product-page__intro,
+    .product-page__pair-copy,
+    .product-page__marks {
+      padding: 4rem 2.6rem;
+      display: grid;
+      align-content: center;
+    }
+
+    .product-page__benefits,
+    .product-page__formula,
+    .product-page__close {
+      padding: 4.5rem 2.6rem;
+    }
+
+    .product-page__formula {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.2rem;
+      align-items: start;
+    }
+
+    .product-page__formula-shot {
+      margin-top: 1.6rem;
+      max-width: 20rem;
+    }
+
+    .product-page__table {
+      margin-top: 0.3rem;
+    }
+
+    .product-page__benefit-row {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem 2rem;
+      margin-top: 2rem;
+    }
+
+    .product-page__marks dl {
+      grid-template-columns: repeat(3, 1fr);
+      max-width: 48rem;
+    }
+  }
+</style>

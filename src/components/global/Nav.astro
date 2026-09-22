@@ -1,54 +1,67 @@
 ---
-import GlyvButtons from '@components/ui/GlyvButtons.astro';
-import { NAV_LINKS } from '@utils/constants';
+import { NAV_PAGES, NAV_PRODUCTS, SITE } from '@utils/constants';
 
 const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
+const hash = Astro.url.hash;
+
+const isCurrent = (href: string) => {
+  const [pathOnly = '/', fragment] = href.split('#');
+  const clean = pathOnly.replace(/\/$/, '') || '/';
+  if (fragment) return pathname === '/' && hash === `#${fragment}`;
+  return pathname === clean;
+};
 ---
 
 <div class="glyv-nav">
-  <button
-    class="glyv-nav__toggle"
-    type="button"
-    aria-expanded="false"
-    aria-controls="glyv-index"
-  >
-    <span class="glyv-nav__x" data-open hidden aria-hidden="true">
-      <span></span>
-      <span></span>
-    </span>
-    <span class="glyv-nav__caption">
-      <span data-closed>Menú</span>
-      <span data-open hidden>Cerrar</span>
-    </span>
-  </button>
+  <div class="glyv-nav__chrome">
+    <a class="glyv-nav__home" href="/" aria-current={pathname === '/' ? 'page' : undefined}>
+      {SITE.title}
+    </a>
+    <button
+      class="glyv-nav__toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="glyv-index"
+    >
+      <span class="glyv-nav__caption">
+        <span data-closed>
+          <span class="glyv-nav__static">Menú</span>
+          <span class="glyv-nav__hover" aria-hidden="true">Menú</span>
+        </span>
+        <span data-open hidden>
+          <span class="glyv-nav__static">Cerrar</span>
+          <span class="glyv-nav__hover" aria-hidden="true">Cerrar</span>
+        </span>
+      </span>
+    </button>
+  </div>
 
-  <div id="glyv-index" class="glyv-nav__index" hidden>
-    <aside class="glyv-nav__rail">
-      <p class="glyv-nav__word">Glyv</p>
-      <div class="glyv-nav__dock">
-        <p class="glyv-nav__band">Reposición cada mes.</p>
-        <GlyvButtons
-          primary="Empezar reposición"
-          secondary="Ver Centia"
-          secondaryHref="/#glyv-centia"
-        />
-      </div>
-    </aside>
+  <div id="glyv-index" class="glyv-nav__index" hidden role="dialog" aria-modal="true" aria-label="Índice">
+    <nav class="glyv-nav__formulas" aria-label="Fórmulas">
+      {
+        NAV_PRODUCTS.map((link) => (
+          <a
+            class={`glyv-nav__plate is-${link.tone}`}
+            href={link.href}
+            aria-current={isCurrent(link.href) ? 'page' : undefined}
+          >
+            <span class="glyv-nav__name">{link.label}</span>
+            <span class="glyv-nav__claim">{link.claim}</span>
+          </a>
+        ))
+      }
+      </nav>
 
-    <nav class="glyv-nav__list" aria-label="Principal">
+    <nav class="glyv-nav__plate is-cream" aria-label="Páginas">
       <ul>
         {
-          NAV_LINKS.map((link) => {
-            const pathOnly = link.href.split('#')[0] || '/';
-            const active = !link.href.includes('#') && pathname === (pathOnly.replace(/\/$/, '') || '/');
-            return (
-              <li>
-                <a href={link.href} aria-current={active ? 'page' : undefined}>
-                  {link.label}
-                </a>
-              </li>
-            );
-          })
+          NAV_PAGES.map((link) => (
+            <li>
+              <a href={link.href} aria-current={isCurrent(link.href) ? 'page' : undefined}>
+                {link.label}
+              </a>
+            </li>
+          ))
         }
       </ul>
     </nav>
@@ -61,74 +74,132 @@ const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
     --forest: #1e4a32;
     --petroleum: #0b4f6c;
     --ink: #1a2a22;
+    --hover: 0.48s cubic-bezier(0.4, 0, 0.2, 1);
     font-family: Outfit, sans-serif;
   }
 
-  .glyv-nav__toggle {
+  .glyv-nav__chrome {
     position: fixed;
     top: 1.15rem;
     left: 1.15rem;
     z-index: 90;
     display: flex;
     height: 2.75rem;
-    align-items: stretch;
-    padding: 0;
-    border: 0;
-    border-radius: 0;
     background: var(--forest);
     color: var(--cream);
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
   }
 
-  .glyv-nav.is-open .glyv-nav__toggle {
+  .glyv-nav.is-open .glyv-nav__chrome {
     background: var(--cream);
     color: var(--forest);
   }
 
+  .glyv-nav__home,
+  .glyv-nav__toggle {
+    display: grid;
+    place-items: center;
+    padding: 0 1.05rem;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .glyv-nav__home {
+    font-family: Fraunces, serif;
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    border-right: 1.5px solid color-mix(in srgb, currentColor 28%, transparent);
+  }
+
+  .glyv-nav__toggle {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    padding: 0 1.15rem;
+  }
+
+  .glyv-nav__home:focus-visible,
   .glyv-nav__toggle:focus-visible {
     outline: 2px solid var(--cream);
     outline-offset: 3px;
   }
 
+  .glyv-nav.is-open .glyv-nav__home:focus-visible,
   .glyv-nav.is-open .glyv-nav__toggle:focus-visible {
     outline-color: var(--forest);
   }
 
-  .glyv-nav__x {
-    display: grid;
-    width: 2.75rem;
-    place-items: center;
-    border-right: 1.5px solid var(--forest);
-  }
-
-  .glyv-nav__x span {
-    grid-area: 1 / 1;
-    width: 1rem;
-    height: 1.5px;
-    background: currentColor;
-  }
-
-  .glyv-nav__x span:first-child {
-    transform: rotate(45deg);
-  }
-
-  .glyv-nav__x span:last-child {
-    transform: rotate(-45deg);
-  }
-
   .glyv-nav__caption {
+    position: relative;
+    z-index: 1;
     display: grid;
     align-items: center;
-    padding: 0 1.15rem;
-    min-width: 4.4rem;
     font-size: 0.85rem;
     font-weight: 600;
     letter-spacing: 0.01em;
   }
 
-  .glyv-nav__caption span {
+  .glyv-nav__caption > span {
     grid-area: 1 / 1;
+    display: grid;
+    grid-template: 1fr / max-content;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .glyv-nav__static,
+  .glyv-nav__hover {
+    grid-area: 1 / 1;
+    white-space: nowrap;
+    transition:
+      transform 1.1s cubic-bezier(0.19, 1, 0.22, 1),
+      opacity 0.35s linear;
+  }
+
+  .glyv-nav__hover {
+    opacity: 0;
+    user-select: none;
+    transform: translateY(70%);
+  }
+
+  .glyv-nav__toggle:hover .glyv-nav__static,
+  .glyv-nav__toggle:focus-visible .glyv-nav__static {
+    opacity: 0;
+    transform: translateY(-70%);
+  }
+
+  .glyv-nav__toggle:hover .glyv-nav__hover,
+  .glyv-nav__toggle:focus-visible .glyv-nav__hover {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .glyv-nav__toggle::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 2;
+    width: 100%;
+    height: 2px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform var(--hover);
+  }
+
+  .glyv-nav__toggle:hover::before,
+  .glyv-nav__toggle:focus-visible::before {
+    transform: scaleX(1);
+    transform-origin: left;
   }
 
   .glyv-nav__index {
@@ -136,6 +207,7 @@ const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
     inset: 0;
     z-index: 80;
     display: grid;
+    grid-template-rows: 1fr 1fr auto;
     overflow: hidden;
   }
 
@@ -143,85 +215,122 @@ const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
     overflow: auto;
   }
 
-  .glyv-nav__rail,
-  .glyv-nav__list {
+  .glyv-nav__formulas {
+    display: contents;
+  }
+
+  .glyv-nav__plate {
     position: relative;
-    will-change: transform;
-  }
-
-  .glyv-nav__rail {
-    display: flex;
-    flex-direction: column;
-    background: var(--cream);
-    color: var(--ink);
-    padding: 5.5rem 1.5rem 0;
-  }
-
-  .glyv-nav__word {
-    margin: 0;
-    font-family: Fraunces, serif;
-    font-size: clamp(2.6rem, 10vw, 4.4rem);
-    font-weight: 600;
-    line-height: 0.82;
-    letter-spacing: -0.045em;
-  }
-
-  .glyv-nav__dock {
-    margin: 1.6rem -1.5rem 0;
-    padding: 1.4rem 1.5rem 1.6rem;
-    background: var(--petroleum);
-    color: var(--cream);
-  }
-
-  .glyv-nav__band {
-    margin: 0;
-    font-family: Fraunces, serif;
-    font-size: 1.25rem;
-    font-weight: 500;
-    line-height: 1.2;
-  }
-
-  .glyv-nav__dock :global(.glyv-btns) {
-    margin-top: 1rem;
-  }
-
-  .glyv-nav__list {
-    background: var(--forest);
-    color: var(--cream);
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding: 1.6rem 1.5rem 2rem;
-  }
-
-  .glyv-nav__list ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .glyv-nav__list a {
-    display: block;
-    padding: 0.28rem 0;
-    color: inherit;
-    font-family: Fraunces, serif;
-    font-size: clamp(2rem, 7vw, 3.6rem);
-    font-weight: 500;
-    line-height: 1.05;
+    min-height: 0;
+    padding: 1.6rem 1.5rem 1.7rem;
+    color: var(--cream);
     text-decoration: none;
   }
 
-  .glyv-nav__list a[aria-current='page'] {
-    opacity: 0.4;
+  .glyv-nav__plate.is-centia {
+    background: var(--forest);
+    padding-top: 5.4rem;
   }
 
-  .glyv-nav__list a:hover,
-  .glyv-nav__list a:focus-visible {
-    opacity: 0.72;
+  .glyv-nav__plate.is-nervia {
+    background: var(--petroleum);
   }
 
-  .glyv-nav__list a:focus-visible {
+  .glyv-nav__plate.is-cream {
+    background: var(--cream);
+    color: var(--ink);
+    justify-content: center;
+    padding: 1.5rem 1.5rem 1.8rem;
+  }
+
+  .glyv-nav__name {
+    position: relative;
+    width: fit-content;
+    padding-bottom: 0.18em;
+    font-family: Fraunces, serif;
+    font-size: clamp(2.6rem, 10vw, 3.8rem);
+    font-weight: 500;
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+  }
+
+  .glyv-nav__name::after,
+  .glyv-nav__plate.is-cream a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform var(--hover);
+  }
+
+  .glyv-nav__name::after {
+    height: 3px;
+  }
+
+  .glyv-nav__plate.is-centia:hover .glyv-nav__name::after,
+  .glyv-nav__plate.is-centia:focus-visible .glyv-nav__name::after,
+  .glyv-nav__plate.is-nervia:hover .glyv-nav__name::after,
+  .glyv-nav__plate.is-nervia:focus-visible .glyv-nav__name::after,
+  .glyv-nav__plate.is-cream a:hover::after,
+  .glyv-nav__plate.is-cream a:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .glyv-nav__claim {
+    margin-top: 0.55rem;
+    max-width: 16rem;
+    font-size: 0.98rem;
+    line-height: 1.4;
+    opacity: 0.78;
+  }
+
+  .glyv-nav__plate.is-centia[aria-current='page'],
+  .glyv-nav__plate.is-nervia[aria-current='page'] {
+    box-shadow: inset 4px 0 0 var(--cream);
+  }
+
+  .glyv-nav__plate.is-cream ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .glyv-nav__plate.is-cream a {
+    position: relative;
+    display: block;
+    width: fit-content;
+    padding: 0.45rem 0 0.35rem;
+    color: inherit;
+    font-size: 1.05rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .glyv-nav__plate.is-cream a[aria-current='page'] {
+    box-shadow: inset 3px 0 0 var(--forest);
+    padding-left: 0.7rem;
+  }
+
+  .glyv-nav__plate.is-centia:focus-visible,
+  .glyv-nav__plate.is-nervia:focus-visible {
     outline: 2px solid var(--cream);
+    outline-offset: -6px;
+  }
+
+  .glyv-nav__plate.is-cream a:focus-visible {
+    outline: 2px solid var(--forest);
     outline-offset: 4px;
   }
 
@@ -231,30 +340,50 @@ const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
     }
 
     .glyv-nav__index {
-      grid-template-columns: minmax(16rem, 22rem) 1fr;
+      grid-template-columns: 1fr 1fr minmax(16rem, 22rem);
+      grid-template-rows: 1fr;
     }
 
-    .glyv-nav__rail {
-      justify-content: space-between;
-      padding: 5.5rem 2rem 0;
+    .glyv-nav__plate {
+      justify-content: flex-end;
+      padding: 5.5rem 2.2rem 2.4rem;
     }
 
-    .glyv-nav__word {
-      font-size: clamp(3.2rem, 4.6vw, 5.2rem);
+    .glyv-nav__plate.is-cream {
+      justify-content: flex-end;
     }
 
-    .glyv-nav__dock {
-      margin: 0 -2rem 0;
-      padding: 1.5rem 2rem 1.7rem;
+    .glyv-nav__name {
+      font-size: clamp(3.4rem, 5.6vw, 5.4rem);
     }
 
-    .glyv-nav__list {
-      justify-content: center;
-      padding: 3.2rem 3.4rem 3.2rem 3.8rem;
+    .glyv-nav__claim {
+      max-width: 18rem;
+      font-size: 1.08rem;
     }
 
-    .glyv-nav__list a {
-      font-size: clamp(2.6rem, 4.6vw, 4.4rem);
+    .glyv-nav__plate.is-cream a {
+      font-size: 1.12rem;
+      padding: 0.5rem 0 0.4rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .glyv-nav__static,
+    .glyv-nav__hover,
+    .glyv-nav__toggle::before,
+    .glyv-nav__name::after,
+    .glyv-nav__plate.is-cream a::after {
+      transition: none;
+    }
+
+    .glyv-nav__static,
+    .glyv-nav__hover {
+      transform: none !important;
+    }
+
+    .glyv-nav__hover {
+      display: none;
     }
   }
 </style>
@@ -267,26 +396,41 @@ const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
   const panel = document.getElementById('glyv-index');
   const closedBits = root?.querySelectorAll<HTMLElement>('[data-closed]');
   const openBits = root?.querySelectorAll<HTMLElement>('[data-open]');
-  const rail = panel?.querySelector('.glyv-nav__rail');
-  const list = panel?.querySelector('.glyv-nav__list');
+  const plates = panel ? [...panel.querySelectorAll<HTMLElement>('.glyv-nav__plate')] : [];
 
-  if (root && toggle && panel && rail && list) {
+  if (root && toggle && panel && plates.length >= 3) {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const canHover = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const [centia, nervia, pages] = plates;
     let open = false;
-    let hoverLock = false;
     let tl: gsap.core.Timeline | null = null;
 
     const lenis = () =>
       (window as Window & { glyvLenis?: { stop: () => void; start: () => void; scrollTo: (el: Element, vars?: { offset: number }) => void } }).glyvLenis;
+
+    const markHash = () => {
+      panel.querySelectorAll<HTMLAnchorElement>('.glyv-nav__formulas a').forEach((link) => {
+        const href = link.getAttribute('href') || '';
+        const id = href.includes('#') ? href.slice(href.indexOf('#')) : '';
+        if (id && id === window.location.hash) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
+      });
+    };
+
+    const focusables = () => {
+      const inPanel = [...panel.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')];
+      const home = root.querySelector<HTMLElement>('.glyv-nav__home');
+      return [home, toggle, ...inPanel].filter((el): el is HTMLElement => Boolean(el));
+    };
 
     const setInert = (value: boolean) => {
       document.querySelector('main')?.toggleAttribute('inert', value);
     };
 
     const playOpen = (onDone?: () => void) => {
+      gsap.set(plates, { clearProps: 'transform' });
+
       if (reduce) {
-        gsap.set([rail, list], { xPercent: 0, yPercent: 0 });
+        gsap.set(plates, { xPercent: 0, yPercent: 0 });
         onDone?.();
         return;
       }
@@ -296,11 +440,11 @@ const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
       tl = gsap.timeline({ onComplete: onDone });
 
       if (stacked) {
-        tl.fromTo(rail, { yPercent: -100 }, { yPercent: 0, duration: 0.7, ease: 'power3.out' }, 0)
-          .fromTo(list, { yPercent: 100 }, { yPercent: 0, duration: 0.7, ease: 'power3.out' }, 0.05);
+        tl.fromTo(plates, { yPercent: 100 }, { yPercent: 0, duration: 0.68, stagger: 0.07, ease: 'power3.out' });
       } else {
-        tl.fromTo(rail, { xPercent: -100 }, { xPercent: 0, duration: 0.75, ease: 'power3.out' }, 0)
-          .fromTo(list, { xPercent: 100 }, { xPercent: 0, duration: 0.75, ease: 'power3.out' }, 0.06);
+        tl.fromTo(centia, { xPercent: -100 }, { xPercent: 0, duration: 0.75, ease: 'power3.out' }, 0)
+          .fromTo(nervia, { yPercent: -100 }, { yPercent: 0, duration: 0.75, ease: 'power3.out' }, 0.05)
+          .fromTo(pages, { xPercent: 100 }, { xPercent: 0, duration: 0.75, ease: 'power3.out' }, 0.08);
       }
     };
 
@@ -315,15 +459,15 @@ const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
       tl = gsap.timeline({ onComplete: onDone });
 
       if (stacked) {
-        tl.to(rail, { yPercent: -100, duration: 0.48, ease: 'power3.in' }, 0)
-          .to(list, { yPercent: 100, duration: 0.48, ease: 'power3.in' }, 0);
+        tl.to(plates, { yPercent: 100, duration: 0.42, stagger: 0.04, ease: 'power3.in' });
       } else {
-        tl.to(rail, { xPercent: -100, duration: 0.5, ease: 'power3.in' }, 0)
-          .to(list, { xPercent: 100, duration: 0.5, ease: 'power3.in' }, 0);
+        tl.to(centia, { xPercent: -100, duration: 0.48, ease: 'power3.in' }, 0)
+          .to(nervia, { yPercent: -100, duration: 0.48, ease: 'power3.in' }, 0)
+          .to(pages, { xPercent: 100, duration: 0.48, ease: 'power3.in' }, 0);
       }
     };
 
-    const setOpen = (next: boolean, after?: () => void, fromHover = false) => {
+    const setOpen = (next: boolean, after?: () => void) => {
       if (next === open) {
         after?.();
         return;
@@ -342,40 +486,30 @@ const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
       setInert(open);
 
       if (open) {
+        markHash();
         panel.hidden = false;
         panel.classList.remove('is-settled');
         lenis()?.stop();
         requestAnimationFrame(() => {
           playOpen(() => {
             panel.classList.add('is-settled');
-            if (!fromHover) panel.querySelector<HTMLElement>('a, button')?.focus();
+            centia.focus();
             after?.();
           });
         });
       } else {
         panel.classList.remove('is-settled');
         playClose(() => {
+          gsap.set(plates, { clearProps: 'transform' });
           panel.hidden = true;
           lenis()?.start();
-          if (!fromHover) toggle.focus();
+          toggle.focus();
           after?.();
         });
       }
     };
 
-    toggle.addEventListener('mouseenter', () => {
-      if (!canHover.matches || hoverLock) return;
-      setOpen(true, undefined, true);
-    });
-
-    toggle.addEventListener('mouseleave', () => {
-      hoverLock = false;
-    });
-
-    toggle.addEventListener('click', () => {
-      if (canHover.matches && open) hoverLock = true;
-      setOpen(!open);
-    });
+    toggle.addEventListener('click', () => setOpen(!open));
 
     panel.querySelectorAll('a').forEach((link) => {
       link.addEventListener('click', (event) => {
@@ -403,10 +537,36 @@ const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
       });
     });
 
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && open) {
-        if (canHover.matches && toggle.matches(':hover')) hoverLock = true;
+    root.querySelector('.glyv-nav__home')?.addEventListener('click', (event) => {
+      if (window.location.pathname === '/') {
+        event.preventDefault();
         setOpen(false);
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (!open) return;
+
+      if (event.key === 'Escape') {
+        setOpen(false);
+        return;
+      }
+
+      if (event.key !== 'Tab') return;
+
+      const cycle = focusables();
+      if (cycle.length === 0) return;
+
+      const first = cycle[0];
+      const last = cycle[cycle.length - 1];
+      const active = document.activeElement;
+
+      if (event.shiftKey && active === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
       }
     });
   }

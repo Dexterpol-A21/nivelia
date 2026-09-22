@@ -1,0 +1,92 @@
+---
+import LegalPage from '@components/global/LegalPage.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { DISCLAIMER, PAGES } from '@utils/constants';
+
+const sections = [
+  {
+    title: 'Aceptación',
+    paragraphs: [
+      'Estos términos rigen el uso de glyv.com y la reposición de Centia y Nervia. Si usas el sitio, los aceptas. Si empiezas una reposición, los aceptas otra vez, de forma expresa, en el checkout.',
+      'Sin esa aceptación no hay reposición. Al marcarla declaras tres cosas: que eres mayor de edad, que entiendes que se trata de un suplemento alimenticio, y que consultaste a tu médico antes de empezar si estás bajo supervisión médica o tomas fármacos, incluidos fármacos relacionados con la glucosa.',
+    ],
+  },
+  {
+    title: 'Qué es y qué no es',
+    paragraphs: [
+      DISCLAIMER,
+      'Centia y Nervia son suplementos alimenticios. No tienen acción terapéutica. No diagnostican, tratan, curan, controlan ni previenen ninguna enfermedad. No sustituyen un fármaco, una dieta indicada ni la consulta con tu médico.',
+      'Glyv no es farmacia, ni clínica, ni un médico. Nada en el sitio —textos, fotos, reseñas o redes— es consejo médico ni promesa de un resultado. La etiqueta del envase manda. Si un texto del sitio y la etiqueta no coinciden, vale la etiqueta.',
+      'El consumo es responsabilidad de quien lo recomienda y de quien lo usa. Glyv no garantiza un efecto, un plazo ni un resultado. Lo que notes depende de tu cuerpo, tu alimentación y tu tratamiento, y puede no notarse.',
+    ],
+  },
+  {
+    title: 'Cómo se toma',
+    paragraphs: [
+      'Cada envase trae 60 cápsulas, para 30 días. La porción es dos cápsulas al día, con los alimentos. No excedas esa porción.',
+      'No se use en embarazo o lactancia. No se dé a menores de edad. Si estás bajo tratamiento médico, habla con tu médico antes de empezar y no suspendas lo que ya te recetaron.',
+      'Tú revisas alergias, otras cápsulas y los fármacos que tomas. Si el envase no te sienta, dejas de tomarlo y consultas a tu médico. Glyv no responde por un uso distinto al de la etiqueta.',
+    ],
+  },
+  {
+    title: 'La reposición',
+    paragraphs: [
+      'Eliges Centia, Nervia o ambos. Cada ciclo dura 30 días y, si el pago se confirma, sale un envase. No es una compra suelta: el ciclo siguiente se prepara salvo que pauses o canceles.',
+      'No hay permanencia. Pausas o cancelas cuando lo indiques, desde tu cuenta o por Contacto. La cancelación detiene el ciclo que todavía no se ha cobrado. El envase ya pagado se entrega.',
+      'Glyv puede negar o detener una reposición si los datos son falsos, el domicilio está fuera de México, hay un cobro sin confirmar, un uso indebido, reventa sin permiso, o un riesgo para el cumplimiento de estos términos.',
+    ],
+  },
+  {
+    title: 'Cuenta y pago',
+    paragraphs: [
+      'La reposición va ligada a una cuenta. Tú cuidas el acceso a tu correo. Un pedido hecho desde tu cuenta se tiene por tuyo.',
+      'Cada ciclo se cobra al precio que ves al empezar o al renovar. El cobro lo procesa el proveedor de pagos. Glyv no guarda el número de tu tarjeta. Si el cobro no se confirma, ese envase no sale y la reposición puede pausarse hasta que el pago quede hecho.',
+      'Un contracargo o un desconocimiento de un cargo que sí autorizaste no cancela por sí solo la deuda del ciclo ya enviado.',
+    ],
+  },
+  {
+    title: 'Envío',
+    paragraphs: [
+      'El envío cubre México. Plazo y costo se confirman al empezar la reposición. Tú respondes de que el domicilio esté completo y sea el correcto. Un error en la dirección, o una ausencia en la entrega, no obliga a Glyv a reponer el envase por su cuenta.',
+      'Si el envase llega dañado, incompleto o no es el que pediste, escríbenos desde Contacto en cuanto lo recibas, con foto del empaque, y lo reponemos.',
+      'Un frasco abierto no se cambia, por higiene, salvo ese caso de daño, faltante o error. Esta regla no quita los derechos que la ley de protección al consumidor no permite renunciar.',
+    ],
+  },
+  {
+    title: 'Reseñas y marca',
+    paragraphs: [
+      'Una reseña es la opinión de quien la escribe. No es una afirmación de Glyv. Glyv puede retirar una reseña falsa, ofensiva, o que atribuya al producto un diagnóstico, un tratamiento, una cura o el abandono de un fármaco.',
+      'El sitio, los textos, las fotos y los nombres Glyv, Centia y Nervia son de Glyv. No se copian, no se revenden y no se usan para decir que el producto hace algo que estos términos niegan.',
+    ],
+  },
+  {
+    title: 'Hasta dónde responde Glyv',
+    paragraphs: [
+      'Glyv responde por un envase dañado, incompleto o distinto al pedido, reponiéndolo. En cualquier otro caso, y solo hasta donde la ley lo permite, la responsabilidad de Glyv se limita al precio que pagaste por el ciclo afectado.',
+      'Glyv no responde por dejar un tratamiento, por tomar más de la porción, por dárselo a un menor o a alguien en embarazo o lactancia, ni por un resultado que el sitio no promete.',
+      'Si usas el producto contra la etiqueta, o publicas que Glyv cura o trata una enfermedad, respondes por el daño que eso cause a Glyv, incluidos reclamos de un tercero.',
+      'Una falla de paquetería, de pago, de hosting o un hecho fuera del control de Glyv excusa el retraso mientras dura. No excusa un envase que sí llegó mal.',
+    ],
+  },
+  {
+    title: 'Ley y cambios',
+    paragraphs: [
+      'Si una frase de estos términos no puede aplicarse, el resto sigue en pie. Lo que no esté escrito aquí no se sobreentiende como promesa.',
+      'Glyv puede cambiar precios, fórmulas o estos términos. La fecha de esta página cambia con el texto. El ciclo siguiente se rige por el texto vigente entonces. Si no estás de acuerdo, cancelas antes de ese ciclo.',
+      'Estos términos se rigen por las leyes de México. Las controversias se resuelven ante los tribunales competentes en México, sin perjuicio de las vías que la ley de protección al consumidor te reconoce.',
+      'Una duda sobre estos términos se escribe desde Contacto.',
+    ],
+  },
+] as const;
+---
+
+<BaseLayout title={PAGES.terminos.title} description={PAGES.terminos.description}>
+  <LegalPage
+    title="Términos y condiciones."
+    lead="Qué aceptas al usar Glyv, qué es el suplemento, cómo corre la reposición y hasta dónde responde Glyv."
+    updated="Vigente desde el 21 de septiembre de 2026."
+    sections={sections}
+    relatedHref="/privacidad"
+    relatedLabel="Política de privacidad"
+  />
+</BaseLayout>

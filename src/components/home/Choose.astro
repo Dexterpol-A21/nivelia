@@ -1,18 +1,30 @@
 ---
+import GlyvFlora from '@components/home/GlyvFlora.astro';
+import GlyvNerves from '@components/home/GlyvNerves.astro';
 import { HOME_PAGE } from '@utils/constants';
 
 const copy = HOME_PAGE.choose;
 ---
 
 <section class="home-choose" aria-labelledby="home-choose-title">
-  <header>
-    <h2 id="home-choose-title">{copy.h2}</h2>
-    <p>{copy.note}</p>
-  </header>
-  <div class="home-choose__row">
+  <div data-slide-host>
+    <header data-slide="left">
+      <GlyvFlora variant="seam" ink="dark" />
+      <h2 id="home-choose-title">{copy.h2}</h2>
+      <p>{copy.note}</p>
+    </header>
+  </div>
+  <div class="home-choose__row" data-slide-host>
     {
       copy.items.map((item) => (
-        <a class={`home-choose__plate is-${item.name.toLowerCase()}`} href={item.href}>
+        <a
+          class={`home-choose__plate is-${item.name.toLowerCase()}`}
+          href={item.href}
+          data-slide={item.name === 'Nervia' ? 'right' : 'left'}
+        >
+          <GlyvFlora variant="seam" ink="light" />
+          {item.name === 'Centia' && <GlyvFlora variant="leaves" />}
+          {item.name === 'Nervia' && <GlyvNerves />}
           <h3>{item.name}</h3>
           <p class="home-choose__claim">{item.claim}</p>
           <p>{item.body}</p>
@@ -32,9 +44,15 @@ const copy = HOME_PAGE.choose;
   }
 
   .home-choose header {
+    position: relative;
     background: var(--cream);
     color: var(--ink);
-    padding: 3.2rem 1.5rem 2rem;
+    padding: 7.6rem 1.5rem 2rem;
+  }
+
+  .home-choose header > :not(.glyv-flora) {
+    position: relative;
+    z-index: 1;
   }
 
   .home-choose h2 {
@@ -58,10 +76,17 @@ const copy = HOME_PAGE.choose;
   }
 
   .home-choose__plate {
+    position: relative;
+    overflow: hidden;
     display: block;
-    padding: 2.4rem 1.5rem 2.6rem;
+    padding: 7.6rem 1.5rem 2.6rem;
     color: var(--cream);
     text-decoration: none;
+  }
+
+  .home-choose__plate > :not(.glyv-flora):not(.glyv-nerves) {
+    position: relative;
+    z-index: 1;
   }
 
   .home-choose__plate.is-centia {
@@ -105,7 +130,7 @@ const copy = HOME_PAGE.choose;
 
   @media (min-width: 900px) {
     .home-choose header {
-      padding: 3.6rem 2.6rem 2.2rem;
+      padding: 8.4rem 2.6rem 2.2rem;
     }
 
     .home-choose__row {
@@ -114,7 +139,7 @@ const copy = HOME_PAGE.choose;
 
     .home-choose__plate {
       min-height: 24rem;
-      padding: 3rem 2.6rem 2.8rem;
+      padding: 8.4rem 2.6rem 2.8rem;
     }
   }
 </style>

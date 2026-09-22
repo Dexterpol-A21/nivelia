@@ -1,10 +1,13 @@
 ---
+import GlyvFlora from '@components/home/GlyvFlora.astro';
 import { HOME_PAGE } from '@utils/constants';
 
 const copy = HOME_PAGE.reviews;
 ---
 
-<section class="home-reviews" id="resenas" aria-labelledby="home-reviews-title">
+<div data-slide-host>
+<section class="home-reviews" id="resenas" data-slide="left" aria-labelledby="home-reviews-title">
+  <GlyvFlora variant="seam" ink="dark" />
   <h2 id="home-reviews-title">{copy.h2}</h2>
   <ul>
     {
@@ -22,15 +25,23 @@ const copy = HOME_PAGE.reviews;
     }
   </ul>
 </section>
+</div>
 
 <style>
   .home-reviews {
     --cream: #f4efe6;
     --forest: #1e4a32;
-    background: var(--forest);
-    color: var(--cream);
-    padding: 3.2rem 1.5rem 2.8rem;
+    --ink: #1a2a22;
+    background: var(--cream);
+    color: var(--ink);
+    padding: 7.6rem 1.5rem 2.8rem;
+    position: relative;
     font-family: Outfit, sans-serif;
+  }
+
+  .home-reviews > :not(.glyv-flora) {
+    position: relative;
+    z-index: 1;
   }
 
   .home-reviews h2 {
@@ -50,7 +61,7 @@ const copy = HOME_PAGE.reviews;
 
   .home-reviews li {
     padding: 1.4rem 0;
-    border-top: 1.5px solid color-mix(in srgb, var(--cream) 28%, transparent);
+    border-top: 1.5px solid color-mix(in srgb, var(--forest) 28%, transparent);
   }
 
   .home-reviews blockquote {
@@ -68,6 +79,7 @@ const copy = HOME_PAGE.reviews;
 
   .home-reviews footer {
     display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
     gap: 0.35rem 0.7rem;
     margin-top: 0.9rem;
@@ -85,7 +97,7 @@ const copy = HOME_PAGE.reviews;
 
   @media (min-width: 900px) {
     .home-reviews {
-      padding: 3.6rem 2.6rem 3rem;
+      padding: 8.4rem 2.6rem 3rem;
     }
 
     .home-reviews ul {
@@ -97,7 +109,7 @@ const copy = HOME_PAGE.reviews;
     .home-reviews li {
       padding: 0;
       border-top: 0;
-      border-left: 1.5px solid color-mix(in srgb, var(--cream) 28%, transparent);
+      border-left: 1.5px solid color-mix(in srgb, var(--forest) 28%, transparent);
       padding-left: 1.6rem;
     }
 

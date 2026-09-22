@@ -1,20 +1,17 @@
 ---
-import { Image } from 'astro:assets';
 import GlyvFlora from '@components/home/GlyvFlora.astro';
 import GlyvNerves from '@components/home/GlyvNerves.astro';
 import GlyvButtons from '@components/ui/GlyvButtons.astro';
-import photo100 from '../../assets/products/glyv-100.png';
-import photoNervia from '../../assets/products/glyv-nervia.png';
 import { PRODUCTS } from '@utils/constants';
 
 const photos = {
-  glucose: {
-    src: photo100,
-    alt: 'Nopal, canela y cápsulas de Glyv >100',
+  centia: {
+    src: '/centia.jpg',
+    alt: 'Frasco Glyv Centia con nopal, canela y cápsulas',
   },
   nervia: {
-    src: photoNervia,
-    alt: 'Passiflora, valeriana y cápsulas de Glyv Nervia',
+    src: '/nervia.jpg',
+    alt: 'Frasco Glyv Nervia con pasiflora y cápsulas',
   },
 } as const;
 ---
@@ -22,30 +19,34 @@ const photos = {
 <section class="home-products" aria-label="Productos Glyv">
   {
     PRODUCTS.map((product) => (
-      <article class={`product-plate is-${product.tone}`} id={product.id}>
-        <div class="product-plate__figure">
-          <Image
+      <article class={`product-plate is-${product.tone}`} id={product.id} data-slide-host>
+        <div class="product-plate__figure" data-slide={product.tone === 'nervia' ? 'right' : 'left'}>
+          <img
             class="product-plate__photo"
             src={photos[product.tone].src}
             alt={photos[product.tone].alt}
-            widths={[640, 960, 1280]}
-            sizes="(min-width: 900px) 50vw, 100vw"
+            width="2000"
+            height="2000"
           />
         </div>
 
-        <div class="product-plate__copy">
+        <div class="product-plate__copy" data-slide={product.tone === 'nervia' ? 'left' : 'right'}>
           {product.tone === 'nervia' && <GlyvNerves />}
-          <p class="product-plate__line">{product.line}</p>
           <h2>{product.name}</h2>
-          <p class="product-plate__claim">{product.claim}</p>
+          <p class="product-plate__claim" set:html={product.claim.replace('. ', '.<br />')} />
           <p class="product-plate__use">
             {product.use} {product.pack}
           </p>
           <p class="product-plate__ings">{product.ingredients}</p>
-          <GlyvButtons primary={product.cta} secondary={product.formula} />
+          <GlyvButtons
+            primary={product.cta}
+            secondary={product.formula}
+            primaryHref={`/${product.slug}`}
+            secondaryHref={`/${product.slug}#ingredientes`}
+          />
         </div>
 
-        {product.tone === 'glucose' && <GlyvFlora variant="plate" />}
+        {product.tone === 'centia' && <GlyvFlora variant="plate" />}
       </article>
     ))
   }
@@ -67,7 +68,7 @@ const photos = {
     overflow: hidden;
   }
 
-  .product-plate.is-glucose {
+  .product-plate.is-centia {
     background: var(--forest);
     color: var(--cream);
   }
@@ -80,13 +81,13 @@ const photos = {
   .product-plate__figure {
     position: relative;
     z-index: 1;
-    min-height: 22rem;
+    min-height: 24rem;
     overflow: hidden;
     background: var(--cream);
   }
 
   .product-plate.is-nervia .product-plate__figure {
-    background: #083d54;
+    background: #d7eaf3;
   }
 
   .product-plate__photo {
@@ -95,6 +96,7 @@ const photos = {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
   }
 
   .product-plate__copy {
@@ -108,14 +110,6 @@ const photos = {
   .product-plate__copy > :not(.glyv-nerves) {
     position: relative;
     z-index: 1;
-  }
-
-  .product-plate__line {
-    margin: 0 0 0.7rem;
-    font-size: 0.78rem;
-    letter-spacing: 0.04em;
-    color: var(--cream);
-    opacity: 0.72;
   }
 
   .product-plate h2 {
@@ -171,55 +165,3 @@ const photos = {
   }
 </style>
 
-<script>
-  import { gsap } from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-  gsap.registerPlugin(ScrollTrigger);
-
-  const mm = gsap.matchMedia();
-
-  mm.add('(prefers-reduced-motion: no-preference)', () => {
-    const desktop = window.matchMedia('(min-width: 900px)').matches;
-
-    document.querySelectorAll('.product-plate').forEach((plate) => {
-      const figure = plate.querySelector('.product-plate__figure');
-      const copy = plate.querySelector('.product-plate__copy');
-      if (!figure || !copy) return;
-
-      const figureFromRight = desktop && plate.classList.contains('is-nervia');
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: plate,
-          start: 'top 82%',
-          once: true,
-        },
-      });
-
-      tl.from(
-        figure,
-        {
-          xPercent: figureFromRight ? 100 : -100,
-          duration: 1.15,
-          ease: 'power3.out',
-        },
-        0,
-      )
-        .from(
-          copy,
-          {
-            xPercent: figureFromRight ? -100 : 100,
-            duration: 1.15,
-            ease: 'power3.out',
-          },
-          0.06,
-        )
-        .add(() => {
-          plate.querySelectorAll('.is-scroll').forEach((el) => {
-            el.classList.add('is-auto');
-          });
-        });
-    });
-  });
-</script>

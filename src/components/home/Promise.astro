@@ -1,19 +1,24 @@
 ---
-import GlyvButtons from '@components/ui/GlyvButtons.astro';
+import GlyvFlora from '@components/home/GlyvFlora.astro';
 import { HOME_PAGE } from '@utils/constants';
 
 const copy = HOME_PAGE.promise;
 ---
 
-<section class="home-promise" aria-labelledby="home-promise-title">
-  <div class="home-promise__cream">
-    <p class="home-promise__kicker">{copy.kicker}</p>
+<section class="home-promise" data-slide-host aria-labelledby="home-promise-title">
+  <GlyvFlora variant="seam" ink="split" />
+  <div class="home-promise__cream" data-slide="left">
     <h2 id="home-promise-title">{copy.h2}</h2>
     <p>{copy.left}</p>
   </div>
-  <div class="home-promise__forest">
-    <p>{copy.right}</p>
-    <GlyvButtons primary="Empezar reposición" secondary="Ver Centia" secondaryHref="/#glyv-centia" />
+  <div class="home-promise__forest" data-slide="right">
+    <div class="home-promise__lead">
+      <h3>{copy.rightTitle}</h3>
+      <p class="home-promise__claim">{copy.rightClaim}</p>
+    </div>
+    <div class="home-promise__act">
+      <p>{copy.right}</p>
+    </div>
   </div>
 </section>
 
@@ -23,23 +28,28 @@ const copy = HOME_PAGE.promise;
     --forest: #1e4a32;
     --ink: #1a2a22;
     display: grid;
+    position: relative;
+    overflow: hidden;
     font-family: Outfit, sans-serif;
+  }
+
+  .home-promise > .glyv-flora {
+    z-index: 4;
+  }
+
+  .home-promise > :not(.glyv-flora) {
+    position: relative;
+    z-index: 1;
   }
 
   .home-promise__cream,
   .home-promise__forest {
-    padding: 3.2rem 1.5rem 2.6rem;
+    padding: 7.6rem 1.5rem 2.6rem;
   }
 
   .home-promise__cream {
     background: var(--cream);
     color: var(--ink);
-  }
-
-  .home-promise__kicker {
-    margin: 0 0 0.8rem;
-    font-size: 0.95rem;
-    color: var(--forest);
   }
 
   .home-promise h2 {
@@ -52,19 +62,49 @@ const copy = HOME_PAGE.promise;
     letter-spacing: -0.03em;
   }
 
-  .home-promise p:last-of-type {
-    margin: 1.1rem 0 0;
+  .home-promise__cream > p:last-of-type,
+  .home-promise__act > p {
+    margin: 0;
     max-width: 32rem;
     font-size: 1.05rem;
     line-height: 1.55;
   }
 
+  .home-promise__cream > p:last-of-type {
+    margin-top: 1.1rem;
+  }
+
   .home-promise__forest {
     background: var(--forest);
     color: var(--cream);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+    display: grid;
+    align-content: space-between;
+    gap: 1.8rem;
+    overflow: hidden;
+  }
+
+  .home-promise__forest > :not(.glyv-flora) {
+    position: relative;
+    z-index: 1;
+  }
+
+  .home-promise__forest h3 {
+    margin: 0;
+    max-width: 10ch;
+    font-family: Fraunces, serif;
+    font-size: clamp(2.15rem, 5.4vw, 3.6rem);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  .home-promise__claim {
+    margin: 1rem 0 0;
+    max-width: 16ch;
+    font-family: Fraunces, serif;
+    font-size: clamp(1.25rem, 3vw, 1.7rem);
+    font-weight: 500;
+    line-height: 1.2;
   }
 
   @media (min-width: 900px) {
@@ -75,7 +115,8 @@ const copy = HOME_PAGE.promise;
     .home-promise__cream,
     .home-promise__forest {
       min-height: 28rem;
-      padding: 3.6rem 2.6rem;
+      padding: 8.4rem 2.6rem;
     }
   }
 </style>
+

@@ -1,0 +1,298 @@
+---
+import GlyvFlora from '@components/home/GlyvFlora.astro';
+import StepFigure from '@components/home/StepFigure.astro';
+import GlyvButtons from '@components/ui/GlyvButtons.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { HOW_PAGE, PAGES } from '@utils/constants';
+
+const tones = ['is-forest', 'is-petroleum', 'is-forest'] as const;
+const copy = HOW_PAGE;
+---
+
+<BaseLayout title={PAGES.servicios.title} description={PAGES.servicios.description}>
+  <article class="works">
+    <div data-slide-host>
+      <header class="works__intro" data-slide="left">
+        <GlyvFlora variant="seam" ink="dark" />
+        <h1>{copy.h1}</h1>
+        <p>{copy.lead}</p>
+      </header>
+    </div>
+
+    {
+      copy.steps.map((step, i) => (
+        <div data-slide-host>
+          <section
+            class={`works__step ${tones[i]}`}
+            data-slide={i % 2 === 0 ? 'right' : 'left'}
+            aria-labelledby={`works-step-${step.n}`}
+          >
+            <p class="works__n">{step.n}</p>
+            <div class="works__copy">
+              <h2 id={`works-step-${step.n}`}>{step.title}</h2>
+              <p>{step.body}</p>
+            </div>
+            <div class="works__figure">
+              <StepFigure step={step.figure} />
+            </div>
+          </section>
+        </div>
+      ))
+    }
+
+    <div data-slide-host>
+      <section class="works__cycle" data-slide="left" aria-labelledby="works-cycle-title">
+        <GlyvFlora variant="seam" ink="dark" />
+        <div class="works__cycle-copy">
+          <h2 id="works-cycle-title">{copy.cycleTitle}</h2>
+          <p class="works__same">{copy.cycleLead}</p>
+          <dl>
+            {
+              copy.specs.map((spec) => (
+                <div>
+                  <dt>{spec.k}</dt>
+                  <dd>{spec.v}</dd>
+                </div>
+              ))
+            }
+          </dl>
+          <p>{copy.note}</p>
+        </div>
+        <figure class="works__photo">
+          <img
+            src="/ritual-toma.png"
+            alt="Dos cápsulas en un plato, junto al pan y las hojas"
+            width="1200"
+            height="900"
+          />
+        </figure>
+      </section>
+    </div>
+
+    <div data-slide-host>
+      <section class="works__close" data-slide="right" aria-labelledby="works-close-title">
+        <GlyvFlora variant="seam" ink="light" />
+        <h2 id="works-close-title">{copy.closeTitle}</h2>
+        <p>{copy.closeBody}</p>
+        <GlyvButtons
+          primary={copy.primary}
+          primaryHref="/#glyv-centia"
+          secondary={copy.secondary}
+          secondaryHref="/contacto"
+        />
+      </section>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .works {
+    --cream: #f4efe6;
+    --forest: #1e4a32;
+    --petroleum: #0b4f6c;
+    --ink: #1a2a22;
+    font-family: Outfit, sans-serif;
+  }
+
+  .works__intro,
+  .works__cycle,
+  .works__close {
+    position: relative;
+    overflow: hidden;
+    padding: 4.6rem 1.5rem 2.4rem;
+  }
+
+  .works__intro,
+  .works__cycle {
+    --flora-seam-h: 3.4rem;
+    background: var(--cream);
+    color: var(--ink);
+  }
+
+  .works__intro > :not(.glyv-flora),
+  .works__cycle > :not(.glyv-flora),
+  .works__close > :not(.glyv-flora),
+  .works__cycle-copy > :not(.glyv-flora) {
+    position: relative;
+    z-index: 1;
+  }
+
+  .works h1,
+  .works h2 {
+    margin: 0;
+    font-family: Fraunces, serif;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+  }
+
+  .works h1 {
+    max-width: 12ch;
+    font-size: clamp(2.8rem, 8vw, 5.2rem);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+  }
+
+  .works__intro p,
+  .works__close p,
+  .works__cycle-copy > p:last-of-type {
+    margin: 1rem 0 0;
+    max-width: 34rem;
+    font-size: 1.05rem;
+    line-height: 1.55;
+  }
+
+  .works__photo {
+    margin: 1.6rem 0 0;
+  }
+
+  .works__photo img {
+    display: block;
+    width: 100%;
+    height: 16rem;
+    object-fit: cover;
+    object-position: center 62%;
+  }
+
+  .works__step {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 0.8rem;
+    align-items: center;
+    padding: 2.4rem 1.5rem;
+  }
+
+  .works__step.is-forest {
+    background: var(--forest);
+    color: var(--cream);
+  }
+
+  .works__step.is-petroleum {
+    background: var(--petroleum);
+    color: var(--cream);
+  }
+
+  .works__step .works__n {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0;
+    font-family: Fraunces, serif;
+    font-size: clamp(6.4rem, 22vw, 8.5rem);
+    font-weight: 600;
+    line-height: 0.78;
+    letter-spacing: -0.06em;
+  }
+
+  .works__copy {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .works__figure {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    z-index: 5;
+    align-self: center;
+    justify-self: end;
+  }
+
+  .works__step h2,
+  .works__cycle h2,
+  .works__close h2 {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    line-height: 1.1;
+  }
+
+  .works__step p {
+    margin: 0.6rem 0 0;
+    max-width: 28rem;
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
+
+  .works__same {
+    margin: 0.85rem 0 0;
+    max-width: 28rem;
+    font-family: Fraunces, serif;
+    font-size: clamp(1.2rem, 2.4vw, 1.45rem);
+    font-weight: 500;
+    line-height: 1.25;
+  }
+
+  .works dl {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.1rem 1.4rem;
+    margin: 1.5rem 0 0;
+  }
+
+  .works dt {
+    font-size: 0.72rem;
+    font-weight: 600;
+    opacity: 0.7;
+  }
+
+  .works dd {
+    margin: 0.25rem 0 0;
+    font-family: Fraunces, serif;
+    font-size: clamp(1.2rem, 2.4vw, 1.55rem);
+    font-weight: 500;
+  }
+
+  .works__close {
+    --flora-seam-h: 3.4rem;
+    background: var(--forest);
+    color: var(--cream);
+  }
+
+  @media (min-width: 900px) {
+    .works__intro,
+    .works__cycle,
+    .works__close {
+      --flora-seam-h: 3.8rem;
+      padding: 5.2rem 2.6rem 2.8rem;
+    }
+
+    .works__step {
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      column-gap: 2rem;
+      padding: 2.6rem;
+    }
+
+    .works__step .works__n,
+    .works__copy,
+    .works__figure {
+      grid-column: auto;
+      grid-row: auto;
+    }
+
+    .works__step .works__n {
+      font-size: clamp(8rem, 12vw, 11rem);
+    }
+
+    .works__cycle {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 1.4rem 2.4rem;
+      align-items: stretch;
+    }
+
+    .works__photo {
+      grid-column: 2;
+      grid-row: 1;
+      margin: 0;
+      align-self: stretch;
+    }
+
+    .works__photo img {
+      height: 100%;
+      min-height: 18rem;
+    }
+
+    .works dl {
+      grid-template-columns: 1fr 1fr;
+      max-width: none;
+    }
+  }
+</style>

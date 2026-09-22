@@ -9,6 +9,9 @@ const root = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   site: 'https://glyv.com',
+  redirects: {
+    '/servicios': '/como-funciona',
+  },
   integrations: [
     sitemap({
       changefreq: 'weekly',
@@ -24,6 +27,7 @@ export default defineConfig({
         '@components': path.resolve(root, 'src/components'),
         '@layouts': path.resolve(root, 'src/layouts'),
         '@utils': path.resolve(root, 'src/utils'),
+        '@scripts': path.resolve(root, 'src/scripts'),
       },
     },
   },

@@ -1,32 +1,49 @@
 ---
+import GlyvFlora from '@components/home/GlyvFlora.astro';
 import { HOME_PAGE } from '@utils/constants';
 
 const copy = HOME_PAGE.faq;
 ---
 
-<section class="home-faq" id="faq" aria-labelledby="home-faq-title">
+<div data-slide-host>
+<section class="home-faq" id="faq" data-slide="right" aria-labelledby="home-faq-title">
+  <GlyvFlora variant="seam" ink="light" />
+  <GlyvFlora variant="leaves" />
   <h2 id="home-faq-title">{copy.h2}</h2>
   <div>
     {
       copy.items.map((item) => (
         <details>
           <summary>{item.q}</summary>
-          <p>{item.a}</p>
+          <div class="faq-a">
+            <div>
+              <p>{item.a}</p>
+            </div>
+          </div>
         </details>
       ))
     }
   </div>
 </section>
+</div>
 
 <style>
   .home-faq {
     --cream: #f4efe6;
     --forest: #1e4a32;
     --ink: #1a2a22;
-    background: var(--cream);
-    color: var(--ink);
-    padding: 3.2rem 1.5rem 3rem;
+    --flora-seam-h: 4.2rem;
+    background: var(--forest);
+    color: var(--cream);
+    padding: 4.8rem 1.5rem 3rem;
+    position: relative;
+    overflow: hidden;
     font-family: Outfit, sans-serif;
+  }
+
+  .home-faq > :not(.glyv-flora) {
+    position: relative;
+    z-index: 1;
   }
 
   .home-faq h2 {
@@ -39,11 +56,11 @@ const copy = HOME_PAGE.faq;
   }
 
   .home-faq details {
-    border-top: 1.5px solid var(--forest);
+    border-top: 1.5px solid color-mix(in srgb, var(--cream) 28%, transparent);
   }
 
   .home-faq details:last-child {
-    border-bottom: 1.5px solid var(--forest);
+    border-bottom: 1.5px solid color-mix(in srgb, var(--cream) 28%, transparent);
   }
 
   .home-faq summary {
@@ -74,12 +91,41 @@ const copy = HOME_PAGE.faq;
     position: relative;
   }
 
-  .home-faq details[open] summary::after {
+  .home-faq details.is-open summary::after {
     content: '–';
   }
 
+  .home-faq details.is-closing summary::after {
+    content: '+';
+  }
+
+  .home-faq details::details-content {
+    content-visibility: visible;
+  }
+
+  .home-faq .faq-a {
+    display: block;
+    height: 0;
+    overflow: hidden;
+    opacity: 0;
+  }
+
+  .home-faq .faq-a p {
+    transform: translateY(-0.4rem);
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .home-faq details.is-open > .faq-a p {
+    transform: none;
+  }
+
+  .home-faq details.is-closing > .faq-a p {
+    transform: translateY(-0.4rem);
+    transition-duration: 0.36s;
+  }
+
   .home-faq summary:focus-visible {
-    outline: 2px solid var(--forest);
+    outline: 2px solid var(--cream);
     outline-offset: 4px;
   }
 
@@ -91,9 +137,27 @@ const copy = HOME_PAGE.faq;
     line-height: 1.55;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    .home-faq details[open] > .faq-a {
+      height: auto;
+      opacity: 1;
+      overflow: visible;
+    }
+
+    .home-faq details[open] summary::after {
+      content: '–';
+    }
+
+    .home-faq .faq-a p {
+      transform: none;
+      transition: none;
+    }
+  }
+
   @media (min-width: 900px) {
     .home-faq {
-      padding: 3.6rem 2.6rem 3.2rem;
+      --flora-seam-h: 4.6rem;
+      padding: 5.3rem 2.6rem 3.2rem;
     }
 
     .home-faq summary::after {
@@ -101,3 +165,87 @@ const copy = HOME_PAGE.faq;
     }
   }
 </style>
+
+<script>
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const openEase = 'height 0.5s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.34s ease 0.04s';
+  const closeEase = 'height 0.36s cubic-bezier(0.4, 0, 1, 1), opacity 0.22s ease';
+
+  if (!reduceMotion) {
+    document.querySelectorAll('.home-faq details').forEach((details) => {
+      const summary = details.querySelector('summary');
+      const body = details.querySelector('.faq-a');
+      const inner = body?.firstElementChild;
+      if (!summary || !body || !inner) return;
+
+      let generation = 0;
+
+      const paintOpen = (run: number) => {
+        if (run !== generation) return;
+        const target = inner.scrollHeight;
+        body.style.transition = openEase;
+        body.style.height = `${target}px`;
+        body.style.opacity = '1';
+        details.classList.add('is-open');
+      };
+
+      const open = () => {
+        const run = ++generation;
+        details.classList.remove('is-closing');
+        details.open = true;
+        body.style.transition = 'none';
+        body.style.height = '0px';
+        body.style.opacity = '0';
+        body.style.overflow = 'hidden';
+        void body.offsetHeight;
+        requestAnimationFrame(() => requestAnimationFrame(() => paintOpen(run)));
+
+        const onEnd = (event: TransitionEvent) => {
+          if (event.target !== body || event.propertyName !== 'height' || run !== generation) return;
+          body.removeEventListener('transitionend', onEnd);
+          body.style.height = 'auto';
+        };
+        body.addEventListener('transitionend', onEnd);
+      };
+
+      const close = () => {
+        const run = ++generation;
+        let settled = false;
+        const current = body.getBoundingClientRect().height;
+        details.classList.remove('is-open');
+        details.classList.add('is-closing');
+        body.style.transition = 'none';
+        body.style.height = `${current}px`;
+        body.style.overflow = 'hidden';
+        void body.offsetHeight;
+        body.style.transition = closeEase;
+        body.style.height = '0px';
+        body.style.opacity = '0';
+
+        const finish = () => {
+          if (settled || run !== generation) return;
+          settled = true;
+          details.open = false;
+          details.classList.remove('is-closing');
+          body.style.transition = 'none';
+          body.style.height = '0px';
+          body.style.opacity = '0';
+        };
+
+        const onEnd = (event: TransitionEvent) => {
+          if (event.target !== body || event.propertyName !== 'height') return;
+          body.removeEventListener('transitionend', onEnd);
+          finish();
+        };
+        body.addEventListener('transitionend', onEnd);
+        window.setTimeout(finish, 420);
+      };
+
+      summary.addEventListener('click', (event) => {
+        event.preventDefault();
+        if (details.open) close();
+        else open();
+      });
+    });
+  }
+</script>

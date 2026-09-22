@@ -66,19 +66,22 @@ import { PAGES, SYSTEM } from '@utils/constants';
           endereza la flecha. Van en bosque o petróleo; sobre crema el trazo desaparece.
         </p>
       </div>
-      <GlyvButtons primary="Empezar reposición" secondary="Ver Centia" secondaryHref="/#glyv-centia" />
+      <GlyvButtons primary="Empezar reposición" secondary="Ver Centia" secondaryHref="/centia" />
     </section>
 
     <section class="sistema__layout" aria-label="Layout">
       <h2>Layout</h2>
-      <div class="sistema__plates" aria-hidden="true">
-        <div class="is-cream">Crema</div>
-        <div class="is-forest">Bosque</div>
-        <div class="is-petroleum">Petróleo</div>
+      <div class="sistema__plates" data-slide-host aria-hidden="true">
+        <div class="is-cream" data-slide="left">Crema</div>
+        <div class="is-forest" data-slide="right">Bosque</div>
+      </div>
+      <div class="sistema__bar-host" data-slide-host aria-hidden="true">
+        <div class="is-petroleum" data-slide="left">Petróleo</div>
       </div>
       <ul>
         <li>Hero y productos: placas a sangre, 50 / 50 desde 900 px.</li>
-        <li>Menú: riel estrecho a la izquierda, índice ancho a la derecha. No copia el hero.</li>
+        <li>Las placas entran desde los lados, una vez. Host recorta; el color va en el pane. Cada placa apilada es su propio host. Hero no entra.</li>
+        <li>Menú: se abre al clic, no al hover. Riel estrecho (reposición) a la izquierda; índice a la derecha, fórmulas en Fraunces y páginas en Outfit. No copia el hero.</li>
         <li>Alineación a la izquierda. Cajas sin sombra y sin radio.</li>
         <li>Barra de scroll: riel crema, pulgar bosque, hover petróleo.</li>
       </ul>
@@ -302,7 +305,7 @@ import { PAGES, SYSTEM } from '@utils/constants';
   .sistema__plates {
     display: grid;
     min-height: 12rem;
-    margin: 1.6rem 0 1.8rem;
+    margin: 1.6rem 0 0;
   }
 
   .sistema__plates div {
@@ -325,9 +328,19 @@ import { PAGES, SYSTEM } from '@utils/constants';
     color: var(--cream);
   }
 
-  .sistema__plates .is-petroleum {
+  .sistema__bar-host {
+    margin: 0 0 1.8rem;
+  }
+
+  .sistema__bar-host .is-petroleum {
+    display: grid;
+    place-items: center;
+    min-height: 5.5rem;
     background: var(--petroleum);
     color: var(--cream);
+    font-family: Fraunces, serif;
+    font-size: 1.4rem;
+    font-weight: 500;
   }
 
   .sistema__avoid {
@@ -379,11 +392,6 @@ import { PAGES, SYSTEM } from '@utils/constants';
 
     .sistema__plates {
       grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr auto;
-    }
-
-    .sistema__plates .is-petroleum {
-      grid-column: 1 / -1;
     }
   }
 </style>

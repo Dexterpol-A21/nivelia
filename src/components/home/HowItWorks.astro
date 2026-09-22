@@ -1,30 +1,36 @@
 ---
-import GlyvButtons from '@components/ui/GlyvButtons.astro';
+import StepFigure from '@components/home/StepFigure.astro';
 import { HOME_PAGE } from '@utils/constants';
 
 const copy = HOME_PAGE.steps;
-const tones = ['is-cream', 'is-forest', 'is-petroleum'] as const;
+const tones = ['is-forest', 'is-petroleum', 'is-forest'] as const;
+const figures = ['eliges', 'llega', 'repite'] as const;
 ---
 
 <section class="home-steps" id={copy.id} aria-labelledby="home-steps-title">
+  <div data-slide-host>
+    <header class="home-steps__title" data-slide="left">
+      <h2 id="home-steps-title">{copy.h2}</h2>
+      <p>{copy.lead}</p>
+    </header>
+  </div>
   {
     copy.items.map((item, i) => (
-      <article class={`home-steps__plate ${tones[i]}`}>
-        <p class="home-steps__n">{item.n}</p>
-        <div>
-          {i === 0 && <h2 id="home-steps-title">{copy.h2}</h2>}
-          {i === 0 && <p class="home-steps__lead">{copy.lead}</p>}
-          <h3>{item.title}</h3>
-          <p>{item.body}</p>
-          {i === 2 && (
-            <GlyvButtons
-              primary={copy.cta}
-              secondary={copy.secondary}
-              secondaryHref="/servicios"
-            />
-          )}
-        </div>
-      </article>
+      <div data-slide-host>
+        <article
+          class={`home-steps__plate ${tones[i]}`}
+          data-slide={i % 2 === 0 ? 'right' : 'left'}
+        >
+          <p class="home-steps__n">{item.n}</p>
+          <div class="home-steps__copy">
+            <h3>{item.title}</h3>
+            <p>{item.body}</p>
+          </div>
+          <div class="home-steps__figure">
+            <StepFigure step={figures[i]} />
+          </div>
+        </article>
+      </div>
     ))
   }
 </section>
@@ -38,15 +44,60 @@ const tones = ['is-cream', 'is-forest', 'is-petroleum'] as const;
     font-family: Outfit, sans-serif;
   }
 
-  .home-steps__plate {
-    display: grid;
-    gap: 1rem 1.6rem;
-    padding: 2.6rem 1.5rem 2.4rem;
-  }
-
-  .is-cream {
+  .home-steps__title {
     background: var(--cream);
     color: var(--ink);
+    padding: 2.8rem 1.5rem 2rem;
+  }
+
+  .home-steps h2 {
+    margin: 0;
+    font-family: Fraunces, serif;
+    font-size: clamp(2.15rem, 5.4vw, 3.6rem);
+    font-weight: 500;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  .home-steps__title p {
+    margin: 0.9rem 0 0;
+    max-width: 34rem;
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
+
+  .home-steps__plate {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 0.8rem;
+    align-items: center;
+    padding: 2.2rem 1.5rem;
+  }
+
+  .home-steps__n {
+    grid-column: 1;
+    grid-row: 1;
+    margin: 0;
+    font-family: Fraunces, serif;
+    font-size: clamp(3.4rem, 10vw, 5.5rem);
+    font-weight: 600;
+    line-height: 0.8;
+    letter-spacing: -0.05em;
+  }
+
+  .home-steps__copy {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .home-steps__figure {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    z-index: 5;
+    align-self: center;
+    justify-self: end;
   }
 
   .is-forest {
@@ -59,31 +110,6 @@ const tones = ['is-cream', 'is-forest', 'is-petroleum'] as const;
     color: var(--cream);
   }
 
-  .home-steps__n {
-    margin: 0;
-    font-family: Fraunces, serif;
-    font-size: clamp(3.4rem, 10vw, 5.5rem);
-    font-weight: 600;
-    line-height: 0.8;
-    letter-spacing: -0.05em;
-  }
-
-  .home-steps h2 {
-    margin: 0 0 0.7rem;
-    font-family: Fraunces, serif;
-    font-size: clamp(1.7rem, 3.4vw, 2.4rem);
-    font-weight: 500;
-    line-height: 1.1;
-  }
-
-  .home-steps__lead {
-    margin: 0 0 1.3rem;
-    max-width: 28rem;
-    font-size: 1.02rem;
-    line-height: 1.5;
-    opacity: 0.88;
-  }
-
   .home-steps h3 {
     margin: 0;
     font-family: Fraunces, serif;
@@ -93,18 +119,28 @@ const tones = ['is-cream', 'is-forest', 'is-petroleum'] as const;
   }
 
   .home-steps h3 + p {
-    margin: 0.7rem 0 0;
-    max-width: 28rem;
+    margin: 0.55rem 0 0;
+    max-width: 22rem;
     font-size: 1.05rem;
-    line-height: 1.5;
+    line-height: 1.45;
   }
 
   @media (min-width: 900px) {
+    .home-steps__title {
+      padding: 3.2rem 2.6rem 2.2rem;
+    }
+
     .home-steps__plate {
-      grid-template-columns: 6.5rem 1fr;
-      align-items: center;
-      min-height: 18rem;
-      padding: 3.2rem 2.6rem;
+      grid-template-columns: 6.5rem minmax(0, 1fr) auto;
+      column-gap: 2rem;
+      padding: 2.4rem 2.6rem;
+    }
+
+    .home-steps__n,
+    .home-steps__copy,
+    .home-steps__figure {
+      grid-column: auto;
+      grid-row: auto;
     }
   }
 </style>

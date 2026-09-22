@@ -98,3 +98,28 @@ const twigs = [
     }
   }
 </style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll('.glyv-nerves.is-scroll').forEach((nerves) => {
+    if (reduceMotion) {
+      nerves.classList.add('is-auto');
+      return;
+    }
+
+    if (nerves.closest('[data-slide-host]')) return;
+
+    ScrollTrigger.create({
+      trigger: nerves.parentElement ?? nerves,
+      start: 'top 82%',
+      once: true,
+      onEnter: () => nerves.classList.add('is-auto'),
+    });
+  });
+</script>

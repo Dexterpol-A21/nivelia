@@ -1,10 +1,13 @@
 ---
+import GlyvFlora from '@components/home/GlyvFlora.astro';
 import { HOME_PAGE } from '@utils/constants';
 
 const copy = HOME_PAGE.formula;
 ---
 
-<section class="home-formula" aria-labelledby="home-formula-title">
+<div data-slide-host>
+<section class="home-formula" id="formula" data-slide="right" aria-labelledby="home-formula-title">
+  <GlyvFlora variant="seam" ink="dark" />
   <div class="home-formula__copy">
     <h2 id="home-formula-title">{copy.h2}</h2>
     <p>{copy.body}</p>
@@ -20,6 +23,7 @@ const copy = HOME_PAGE.formula;
     }
   </dl>
 </section>
+</div>
 
 <style>
   .home-formula {
@@ -28,8 +32,14 @@ const copy = HOME_PAGE.formula;
     --ink: #1a2a22;
     background: var(--cream);
     color: var(--ink);
-    padding: 3.2rem 1.5rem 2.8rem;
+    padding: 7.6rem 1.5rem 2.8rem;
+    position: relative;
     font-family: Outfit, sans-serif;
+  }
+
+  .home-formula > :not(.glyv-flora) {
+    position: relative;
+    z-index: 1;
   }
 
   .home-formula h2 {
@@ -74,7 +84,7 @@ const copy = HOME_PAGE.formula;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 2rem;
-      padding: 3.6rem 2.6rem;
+      padding: 8.4rem 2.6rem;
     }
 
     .home-formula dl {

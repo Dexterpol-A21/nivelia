@@ -1,14 +1,42 @@
 ---
-import { DISCLAIMER, NAV_LINKS, SITE } from '@utils/constants';
+import GlyvFlora from '@components/home/GlyvFlora.astro';
+import GlyvNerves from '@components/home/GlyvNerves.astro';
+import { DISCLAIMER, FACEBOOK, FOOTER_LINKS, LEGAL_LINKS, SITE } from '@utils/constants';
+
+interface Props {
+  tone?: 'site' | 'centia' | 'nervia';
+}
+
+const { tone = 'site' } = Astro.props;
+const isCentia = tone === 'centia';
 ---
 
-<footer class="glyv-foot">
-  <div class="glyv-foot__top">
+<div data-slide-host>
+  <footer class:list={['glyv-foot', `is-${tone}`]} data-slide="right">
+    <GlyvFlora variant="seam" ink="light" />
+    {!isCentia && <GlyvNerves />}
     <p class="glyv-foot__word">{SITE.title}</p>
-    <nav aria-label="Pie">
+    <nav class="glyv-foot__nav" aria-label="Pie">
       <ul>
         {
-          NAV_LINKS.map((link) => (
+          FOOTER_LINKS.map((link) => (
+            <li>
+              <a href={link.href}>{link.label}</a>
+            </li>
+          ))
+        }
+        <li>
+          <a href={FACEBOOK.href} target="_blank" rel="noopener noreferrer">
+            {FACEBOOK.label}
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <p class="glyv-foot__legal">{DISCLAIMER}</p>
+    <nav class="glyv-foot__meta" aria-label="Legal">
+      <ul>
+        {
+          LEGAL_LINKS.map((link) => (
             <li>
               <a href={link.href}>{link.label}</a>
             </li>
@@ -16,31 +44,43 @@ import { DISCLAIMER, NAV_LINKS, SITE } from '@utils/constants';
         }
       </ul>
     </nav>
-  </div>
-  <p class="glyv-foot__legal">{DISCLAIMER}</p>
-</footer>
+  </footer>
+</div>
 
 <style>
   .glyv-foot {
     --cream: #f4efe6;
     --forest: #1e4a32;
-    background: var(--forest);
+    --petroleum: #0b4f6c;
+    --flora-seam-h: 3.6rem;
+    background: var(--petroleum);
     color: var(--cream);
-    padding: 2.4rem 1.5rem 2.2rem;
+    padding: 4.2rem 1.5rem 1.7rem;
+    position: relative;
+    overflow: hidden;
     font-family: Outfit, sans-serif;
+  }
+
+  .glyv-foot.is-centia {
+    background: var(--forest);
+  }
+
+  .glyv-foot > :not(.glyv-flora):not(.glyv-nerves) {
+    position: relative;
+    z-index: 1;
   }
 
   .glyv-foot__word {
     margin: 0;
     font-family: Fraunces, serif;
-    font-size: clamp(2.4rem, 6vw, 3.6rem);
+    font-size: clamp(2.2rem, 5vw, 3rem);
     font-weight: 600;
-    line-height: 0.85;
+    line-height: 0.9;
     letter-spacing: -0.04em;
   }
 
   .glyv-foot ul {
-    margin: 1.2rem 0 0;
+    margin: 0;
     padding: 0;
     list-style: none;
   }
@@ -62,31 +102,52 @@ import { DISCLAIMER, NAV_LINKS, SITE } from '@utils/constants';
     outline-offset: 4px;
   }
 
+  .glyv-foot__nav ul {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 0.55rem 1.15rem;
+    margin-top: 1rem;
+  }
+
   .glyv-foot__legal {
-    margin: 1.8rem 0 0;
-    max-width: 46rem;
+    margin: 1.25rem 0 0;
+    max-width: 40rem;
     font-size: 0.82rem;
     line-height: 1.5;
     opacity: 0.78;
   }
 
+  .glyv-foot__meta ul {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 0.45rem 1.15rem;
+    margin-top: 0.9rem;
+  }
+
+  .glyv-foot__meta a {
+    font-size: 0.82rem;
+    font-weight: 600;
+    opacity: 0.78;
+  }
+
   @media (min-width: 900px) {
     .glyv-foot {
-      padding: 2.8rem 2.6rem 2.4rem;
+      --flora-seam-h: 4rem;
+      padding: 4.6rem 2.6rem 1.9rem;
     }
 
-    .glyv-foot__top {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 2rem;
+    .glyv-foot__nav ul {
+      margin-top: 1.15rem;
+      gap: 0.45rem 1.4rem;
     }
 
-    .glyv-foot ul {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem 1.4rem;
-      margin: 0;
+    .glyv-foot__legal {
+      margin-top: 1.4rem;
+    }
+
+    .glyv-foot__meta ul {
+      margin-top: 1rem;
+      gap: 0.35rem 1.4rem;
     }
   }
 </style>
