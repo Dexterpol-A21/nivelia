@@ -14,7 +14,8 @@ import { PAGES, SYSTEM } from '@utils/constants';
         <h1>Sistema gráfico.</h1>
         <p>
           Suplementos para diabetes, reposición cada mes. Campos de color, tipo editorial, botones
-          cuadrados. Esto es lo que se usa; lo demás no entra.
+          cuadrados. Esto es lo que se usa; lo demás no entra. Los archivos para bajar están en
+          <a href="/marca">Marca</a>.
         </p>
       </div>
     </header>
@@ -152,6 +153,11 @@ import { PAGES, SYSTEM } from '@utils/constants';
     line-height: 1.05;
   }
 
+  .sistema__intro a {
+    color: inherit;
+    font-weight: 600;
+  }
+
   .sistema__intro p:last-child,
   .sistema__color > p,
   .sistema__type-meta p,
@@ -164,7 +170,7 @@ import { PAGES, SYSTEM } from '@utils/constants';
 
   .sistema__rules {
     background: var(--forest);
-    color: var(--cream);
+    color: var(--on-dark, var(--cream));
   }
 
   .sistema__rules ul,
@@ -233,12 +239,12 @@ import { PAGES, SYSTEM } from '@utils/constants';
   }
 
   .sistema__color li:nth-child(n + 3) {
-    color: var(--cream);
+    color: var(--on-dark, var(--cream));
   }
 
   .sistema__type {
     background: var(--forest);
-    color: var(--cream);
+    color: var(--on-dark, var(--cream));
   }
 
   .sistema__specimens {
@@ -290,7 +296,7 @@ import { PAGES, SYSTEM } from '@utils/constants';
 
   .sistema__buttons {
     background: var(--petroleum);
-    color: var(--cream);
+    color: var(--on-dark, var(--cream));
   }
 
   .sistema__buttons :global(.glyv-btns) {
@@ -325,7 +331,7 @@ import { PAGES, SYSTEM } from '@utils/constants';
 
   .sistema__plates .is-forest {
     background: var(--forest);
-    color: var(--cream);
+    color: var(--on-dark, var(--cream));
   }
 
   .sistema__bar-host {
@@ -337,7 +343,7 @@ import { PAGES, SYSTEM } from '@utils/constants';
     place-items: center;
     min-height: 5.5rem;
     background: var(--petroleum);
-    color: var(--cream);
+    color: var(--on-dark, var(--cream));
     font-family: Fraunces, serif;
     font-size: 1.4rem;
     font-weight: 500;
@@ -345,7 +351,7 @@ import { PAGES, SYSTEM } from '@utils/constants';
 
   .sistema__avoid {
     background: var(--ink);
-    color: var(--cream);
+    color: var(--on-dark, var(--cream));
   }
 
   @media (min-width: 900px) {

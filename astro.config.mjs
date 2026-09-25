@@ -17,7 +17,7 @@ export default defineConfig({
       changefreq: 'weekly',
       priority: 0.7,
       lastmod: new Date(),
-      filter: (page) => !page.includes('/sistema'),
+      filter: (page) => !page.includes('/sistema') && !page.includes('/marca'),
     }),
   ],
   vite: {

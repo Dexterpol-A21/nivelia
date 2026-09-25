@@ -86,7 +86,7 @@ const isCurrent = (href: string) => {
     display: flex;
     height: 2.75rem;
     background: var(--forest);
-    color: var(--cream);
+    color: var(--on-dark, var(--cream));
   }
 
   .glyv-nav.is-open .glyv-nav__chrome {
@@ -226,7 +226,7 @@ const isCurrent = (href: string) => {
     justify-content: flex-end;
     min-height: 0;
     padding: 1.6rem 1.5rem 1.7rem;
-    color: var(--cream);
+    color: var(--on-dark, var(--cream));
     text-decoration: none;
   }
 

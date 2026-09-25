@@ -238,6 +238,10 @@ export const PAGES = {
     title: 'Sistema',
     description: 'Sistema gráfico de Glyv. Color, tipo, botones y reglas de uso.',
   },
+  marca: {
+    title: 'Marca',
+    description: 'Wordmark, nombres y fotos de Glyv para descargar, con fondo y sin fondo.',
+  },
   terminos: {
     title: 'Términos y condiciones',
     description:

@@ -96,3 +96,101 @@
     width: 100%;
   }
 }
+
+html[data-paleta='clara'] body {
+  background-color: #f6f0e6;
+  color: #2a332c;
+}
+
+html[data-paleta='clara'] * {
+  --cream: #f6f0e6 !important;
+  --cream-deep: #ebe3d4 !important;
+  --forest: #c5d5c2 !important;
+  --petroleum: #e4c2a4 !important;
+  --petroleum-deep: #d4b090 !important;
+  --ink: #2a332c !important;
+  --on-dark: #2a332c !important;
+}
+
+html[data-paleta='sol'] body {
+  background-color: #fff6d4;
+  color: #3e2e0c;
+}
+
+html[data-paleta='sol'] * {
+  --cream: #fff6d4 !important;
+  --cream-deep: #ffe9a0 !important;
+  --forest: #ffd84a !important;
+  --petroleum: #f5a34a !important;
+  --petroleum-deep: #e8923a !important;
+  --ink: #3e2e0c !important;
+  --on-dark: #3e2e0c !important;
+}
+
+html[data-paleta='violeta'] body {
+  background-color: #f5f1fb;
+  color: #2c2440;
+}
+
+html[data-paleta='violeta'] * {
+  --cream: #f5f1fb !important;
+  --cream-deep: #e6dcf6 !important;
+  --forest: #cdbbea !important;
+  --petroleum: #a8ddd6 !important;
+  --petroleum-deep: #8fcfc6 !important;
+  --ink: #2c2440 !important;
+  --on-dark: #2c2440 !important;
+}
+
+html[data-paleta='jardin'] body {
+  background-color: #fbf7f4;
+  color: #2a241c;
+}
+
+html[data-paleta='jardin'] * {
+  --cream: #fbf7f4 !important;
+  --cream-deep: #f3e6e0 !important;
+  --forest: #f3c3cf !important;
+  --petroleum: #a3c98e !important;
+  --petroleum-deep: #8fb87a !important;
+  --ink: #2a241c !important;
+  --on-dark: #2a241c !important;
+}
+
+html[data-paleta='nube'] body {
+  background-color: #f4f6fb;
+  color: #1e2438;
+}
+
+html[data-paleta='nube'] * {
+  --cream: #f4f6fb !important;
+  --cream-deep: #e4e8f6 !important;
+  --forest: #c5cef5 !important;
+  --petroleum: #f6c09a !important;
+  --petroleum-deep: #e8a87a !important;
+  --ink: #1e2438 !important;
+  --on-dark: #1e2438 !important;
+}
+
+html[data-paleta='noche'] body {
+  background-color: #f4f0fa;
+  color: #1a1228;
+}
+
+html[data-paleta='noche'] * {
+  --cream: #f4f0fa !important;
+  --cream-deep: #e6dcf4 !important;
+  --forest: #3e2770 !important;
+  --petroleum: #0f6468 !important;
+  --petroleum-deep: #0b4c50 !important;
+  --ink: #1a1228 !important;
+}
+
+html[data-paleta]:not([data-paleta='noche']) .glyv-btns__btn.is-bloom {
+  box-shadow: inset 0 0 0 2px var(--ink);
+}
+
+html[data-paleta] .glyv-btns__hover-label,
+html[data-paleta] .glyv-nav.is-open .glyv-nav__chrome {
+  color: var(--ink) !important;
+}

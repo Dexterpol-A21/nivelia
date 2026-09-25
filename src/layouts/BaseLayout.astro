@@ -3,6 +3,7 @@ import Footer from '@components/global/Footer.astro';
 import Nav from '@components/global/Nav.astro';
 import Scrollbar from '@components/global/Scrollbar.astro';
 import SEO from '@components/global/SEO.astro';
+import { PALETTES } from '@utils/palettes';
 import '../styles/global.css';
 
 interface Props {
@@ -28,6 +29,10 @@ const { title, description, image, chrome = true, footTone = 'site' } = Astro.pr
       href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Outfit:wght@400;500;600;700&display=swap"
     />
     <slot name="head" />
+    <script is:inline define:vars={{ ids: PALETTES.map((item) => item.id).filter((id) => id !== 'campos') }}>
+      const paleta = new URLSearchParams(location.search).get('paleta');
+      if (ids.includes(paleta)) document.documentElement.dataset.paleta = paleta;
+    </script>
   </head>
   <body class="flex min-h-dvh flex-col">
     <Nav />
