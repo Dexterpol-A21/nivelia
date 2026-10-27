@@ -1,7 +1,7 @@
 ---
-import GlyvFlora from '@components/home/GlyvFlora.astro';
 import StepFigure from '@components/home/StepFigure.astro';
-import GlyvButtons from '@components/ui/GlyvButtons.astro';
+import Grainient from '@components/ui/Grainient.astro';
+import EkiliaButtons from '@components/ui/EkiliaButtons.astro';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { HOW_PAGE, PAGES } from '@utils/constants';
 
@@ -12,8 +12,8 @@ const copy = HOW_PAGE;
 <BaseLayout title={PAGES.servicios.title} description={PAGES.servicios.description}>
   <article class="works">
     <div data-slide-host>
-      <header class="works__intro" data-slide="left">
-        <GlyvFlora variant="seam" ink="dark" />
+      <header class="works__intro grain-host" data-slide="left">
+        <Grainient tone="cream" />
         <h1>{copy.h1}</h1>
         <p>{copy.lead}</p>
       </header>
@@ -23,10 +23,11 @@ const copy = HOW_PAGE;
       copy.steps.map((step, i) => (
         <div data-slide-host>
           <section
-            class={`works__step ${tones[i]}`}
+            class={`works__step ${tones[i]} grain-host`}
             data-slide={i % 2 === 0 ? 'right' : 'left'}
             aria-labelledby={`works-step-${step.n}`}
           >
+            <Grainient tone={tones[i] === 'is-petroleum' ? 'petroleum' : 'forest'} />
             <p class="works__n">{step.n}</p>
             <div class="works__copy">
               <h2 id={`works-step-${step.n}`}>{step.title}</h2>
@@ -41,8 +42,8 @@ const copy = HOW_PAGE;
     }
 
     <div data-slide-host>
-      <section class="works__cycle" data-slide="left" aria-labelledby="works-cycle-title">
-        <GlyvFlora variant="seam" ink="dark" />
+      <section class="works__cycle grain-host" data-slide="left" aria-labelledby="works-cycle-title">
+        <Grainient tone="cream" />
         <div class="works__cycle-copy">
           <h2 id="works-cycle-title">{copy.cycleTitle}</h2>
           <p class="works__same">{copy.cycleLead}</p>
@@ -70,12 +71,13 @@ const copy = HOW_PAGE;
     </div>
 
     <div data-slide-host>
-      <section class="works__close" data-slide="right" aria-labelledby="works-close-title">
+      <section class="works__close grain-host" data-slide="right" aria-labelledby="works-close-title">
+        <Grainient tone="forest" />
         <h2 id="works-close-title">{copy.closeTitle}</h2>
         <p>{copy.closeBody}</p>
-        <GlyvButtons
+        <EkiliaButtons
           primary={copy.primary}
-          primaryHref="/#glyv-centia"
+          primaryHref="/reposicion"
           secondary={copy.secondary}
           secondaryHref="/contacto"
         />
@@ -86,11 +88,11 @@ const copy = HOW_PAGE;
 
 <style>
   .works {
-    --cream: #f4efe6;
-    --forest: #1e4a32;
-    --petroleum: #0b4f6c;
-    --ink: #1a2a22;
     font-family: Outfit, sans-serif;
+    --cream: #f6f3ee;
+    --forest: #0e6e9e;
+    --petroleum: #3e2770;
+    --ink: #1A1228;
   }
 
   .works__intro,
@@ -108,17 +110,17 @@ const copy = HOW_PAGE;
     color: var(--ink);
   }
 
-  .works__intro > :not(.glyv-flora),
-  .works__cycle > :not(.glyv-flora),
-  .works__cycle-copy > :not(.glyv-flora) {
+  .works__intro > :not(.ekilia-flora),
+  .works__cycle > :not(.ekilia-flora),
+  .works__cycle-copy > :not(.ekilia-flora) {
     position: relative;
     z-index: 1;
   }
 
   .works h1,
   .works h2 {
-    margin: 0;
     font-family: Fraunces, serif;
+    margin: 0;
     font-weight: 500;
     letter-spacing: -0.03em;
   }
@@ -172,10 +174,10 @@ const copy = HOW_PAGE;
   }
 
   .works__step .works__n {
+    font-family: Fraunces, serif;
     grid-column: 1;
     grid-row: 1;
     margin: 0;
-    font-family: Fraunces, serif;
     font-size: clamp(2.4rem, 6vw, 3.6rem);
     font-weight: 600;
     line-height: 0.8;
@@ -210,9 +212,9 @@ const copy = HOW_PAGE;
   }
 
   .works__same {
+    font-family: Fraunces, serif;
     margin: 0.85rem 0 0;
     max-width: 28rem;
-    font-family: Fraunces, serif;
     font-size: clamp(1.2rem, 2.4vw, 1.45rem);
     font-weight: 500;
     line-height: 1.25;
@@ -232,13 +234,14 @@ const copy = HOW_PAGE;
   }
 
   .works dd {
-    margin: 0.25rem 0 0;
     font-family: Fraunces, serif;
+    margin: 0.25rem 0 0;
     font-size: clamp(1.2rem, 2.4vw, 1.55rem);
     font-weight: 500;
   }
 
   .works__close {
+    --bloom: var(--forest);
     background: var(--forest);
     color: var(--on-dark, var(--cream));
     padding: 2.8rem 1.5rem 2.4rem;

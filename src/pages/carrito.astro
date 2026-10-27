@@ -1,0 +1,536 @@
+---
+import Grainient from '@components/ui/Grainient.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { PAGES, PRODUCTS } from '@utils/constants';
+
+const jars = PRODUCTS.map((product) => ({
+  id: product.slug,
+  name: product.name,
+  href: `/${product.slug}`,
+  ingredients: product.ingredients,
+  tone: product.tone === 'nervia' ? 'petroleum' : 'forest',
+}));
+---
+
+<BaseLayout title={PAGES.carrito.title} description={PAGES.carrito.description}>
+  <article class="jars" data-jars>
+    <header class="grain-host">
+      <Grainient tone="cream" />
+      <h1>Qué envase.</h1>
+      <p>Son dos fórmulas. Incluyes Centia, Nervia, o las dos. Cada 30 días llega otro.</p>
+    </header>
+
+    <div class="jars__pair">
+      {
+        jars.map((jar) => (
+          <section class:list={['jars__plate', 'grain-host', `is-${jar.id}`]} data-plate={jar.id}>
+            <Grainient tone={jar.tone as 'forest' | 'petroleum'} />
+            <div class="jars__copy">
+              <h2>{jar.name}</h2>
+              <p>Suplemento alimenticio. 60 cápsulas, dos al día con los alimentos.</p>
+              <p class="jars__ings">{jar.ingredients}</p>
+              <div class="jars__actions">
+                <button
+                  class="jars__pick"
+                  type="button"
+                  data-pick={jar.id}
+                  data-name={jar.name}
+                  aria-pressed="false"
+                >
+                  <span class="jars__wash" aria-hidden="true">
+                    <span class="jars__layers">
+                      <span class="jars__layer is-1"></span>
+                      <span class="jars__layer is-2"></span>
+                      <span class="jars__layer is-3"></span>
+                    </span>
+                  </span>
+                  <span class="jars__inner">
+                    <span class="jars__static" data-face>Incluir {jar.name}</span>
+                    <span class="jars__swap" data-face aria-hidden="true">
+                      Incluir {jar.name}
+                    </span>
+                  </span>
+                </button>
+                <a class="jars__formula" href={jar.href}>
+                  <span class="jars__inner">
+                    <span class="jars__static">Ver fórmula</span>
+                    <span class="jars__swap" aria-hidden="true">Ver fórmula</span>
+                  </span>
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M5 12h14M13 6l6 6-6 6"></path>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </section>
+        ))
+      }
+    </div>
+
+    <section class="jars__both grain-host">
+      <Grainient tone="turquoise" />
+      <div>
+        <h2>Las dos.</h2>
+        <p>Un envase de cada fórmula. El mismo ciclo.</p>
+      </div>
+      <button class="jars__pick" type="button" data-both aria-pressed="false">
+        <span class="jars__wash" aria-hidden="true">
+          <span class="jars__layers">
+            <span class="jars__layer is-1"></span>
+            <span class="jars__layer is-2"></span>
+            <span class="jars__layer is-3"></span>
+          </span>
+        </span>
+        <span class="jars__inner">
+          <span class="jars__static" data-face>Incluir las dos</span>
+          <span class="jars__swap" data-face aria-hidden="true">Incluir las dos</span>
+        </span>
+      </button>
+    </section>
+  </article>
+</BaseLayout>
+
+<script>
+  import { emptyRepo, readRepo, writeRepo, type FormulaId } from '@utils/reposicion';
+
+  const root = document.querySelector<HTMLElement>('[data-jars]');
+  if (root) {
+    const picks = [...root.querySelectorAll<HTMLButtonElement>('[data-pick]')];
+    const both = root.querySelector<HTMLButtonElement>('[data-both]');
+
+    const selected = () =>
+      picks.filter((button) => button.getAttribute('aria-pressed') === 'true').map((button) => button.dataset.pick);
+
+    const formulaOf = (ids: string[]): FormulaId | null => {
+      const centia = ids.includes('centia');
+      const nervia = ids.includes('nervia');
+      if (centia && nervia) return 'both';
+      if (centia) return 'centia';
+      if (nervia) return 'nervia';
+      return null;
+    };
+
+    const paint = () => {
+      const ids = selected();
+      const formula = formulaOf(ids);
+      picks.forEach((button) => {
+        const on = button.getAttribute('aria-pressed') === 'true';
+        const name = button.dataset.name ?? 'fórmula';
+        const label = on ? `${name} entra` : `Incluir ${name}`;
+        button.querySelectorAll<HTMLElement>('[data-face]').forEach((face) => {
+          face.textContent = label;
+        });
+      });
+      if (both) {
+        const on = formula === 'both';
+        both.setAttribute('aria-pressed', on ? 'true' : 'false');
+        const label = on ? 'Las dos entran' : 'Incluir las dos';
+        both.querySelectorAll<HTMLElement>('[data-face]').forEach((face) => {
+          face.textContent = label;
+        });
+      }
+    };
+
+    const persist = () => {
+      const prev = readRepo() ?? emptyRepo();
+      const formula = formulaOf(selected());
+      writeRepo({
+        ...prev,
+        formula,
+        complete: Boolean(formula && prev.stance && prev.habit && prev.complete),
+      });
+    };
+
+    const stored = readRepo();
+    if (stored?.formula) {
+      const on = stored.formula === 'both' ? ['centia', 'nervia'] : [stored.formula];
+      picks.forEach((button) => {
+        button.setAttribute('aria-pressed', on.includes(button.dataset.pick ?? '') ? 'true' : 'false');
+      });
+    }
+    paint();
+
+    picks.forEach((button) => {
+      button.addEventListener('click', () => {
+        const on = button.getAttribute('aria-pressed') === 'true';
+        button.setAttribute('aria-pressed', on ? 'false' : 'true');
+        paint();
+        persist();
+      });
+    });
+
+    both?.addEventListener('click', () => {
+      const turnOn = both.getAttribute('aria-pressed') !== 'true';
+      picks.forEach((button) => {
+        button.setAttribute('aria-pressed', turnOn ? 'true' : 'false');
+      });
+      paint();
+      persist();
+    });
+  }
+</script>
+
+<style>
+  .jars {
+    font-family: Outfit, sans-serif;
+    --cream: #f6f3ee;
+    --forest: #0e6e9e;
+    --petroleum: #3e2770;
+    --turquoise: #0f6468;
+    --ink: #1a1228;
+  }
+
+  .jars header {
+    padding: 2.2rem 1.5rem 2.2rem;
+    padding-top: calc(var(--nav-clearance) + 0.4rem);
+    background: var(--cream);
+    color: var(--ink);
+  }
+
+  .jars h1,
+  .jars h2 {
+    font-family: Fraunces, serif;
+    margin: 0;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+  }
+
+  .jars h1 {
+    font-size: clamp(3.2rem, 9vw, 5.6rem);
+    line-height: 0.92;
+  }
+
+  .jars header p {
+    margin: 1.05rem 0 0;
+    max-width: 34rem;
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
+
+  .jars__pair {
+    display: grid;
+  }
+
+  .jars__both {
+    --bloom: var(--turquoise);
+    --bloom-fill: var(--cream);
+    --bloom-ink: var(--turquoise);
+    --pressed-ink: var(--turquoise);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.2rem 2rem;
+    padding: 1.8rem 1.5rem;
+    background: var(--turquoise);
+    color: var(--cream);
+  }
+
+  .jars__both h2 {
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    line-height: 0.95;
+  }
+
+  .jars__both p {
+    margin: 0.55rem 0 0;
+    max-width: 28rem;
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
+
+  .jars__plate {
+    display: grid;
+    color: var(--cream);
+  }
+
+  .jars__plate.is-centia {
+    --bloom: var(--forest);
+    --bloom-fill: var(--cream);
+    --bloom-ink: var(--forest);
+    --pressed-ink: var(--forest);
+    background: var(--forest);
+  }
+
+  .jars__plate.is-nervia {
+    --bloom: var(--petroleum);
+    --bloom-fill: var(--cream);
+    --bloom-ink: var(--petroleum);
+    --pressed-ink: var(--petroleum);
+    background: var(--petroleum);
+  }
+
+  .jars__copy {
+    position: relative;
+    z-index: 1;
+    padding: 1.8rem 1.5rem 2.2rem;
+  }
+
+  .jars h2 {
+    font-size: clamp(2.6rem, 8vw, 4.4rem);
+    line-height: 0.9;
+  }
+
+  .jars__copy p {
+    margin: 0.9rem 0 0;
+    max-width: 28rem;
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
+
+  .jars__ings {
+    font-size: 0.95rem;
+  }
+
+  .jars__actions {
+    --hover: 0.48s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.7rem 1.2rem;
+    margin-top: 1.5rem;
+  }
+
+  .jars__pick,
+  .jars__formula {
+    font-family: Outfit, sans-serif;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--cream);
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .jars__pick {
+    padding: 0.8rem 1.5rem;
+    box-shadow: inset 0 0 0 2px var(--cream);
+  }
+
+  .jars__wash {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .jars__layers {
+    position: absolute;
+    left: 50%;
+    top: -60%;
+    width: max(220%, 10rem);
+    aspect-ratio: 1;
+    transform: translate(-50%);
+  }
+
+  .jars__layer {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  .jars__layer.is-1 {
+    background: var(--bloom);
+  }
+
+  .jars__layer.is-2,
+  .jars__layer.is-3 {
+    background: var(--bloom-fill);
+  }
+
+  .jars__pick[aria-pressed='true'] .jars__layer.is-2,
+  .jars__pick[aria-pressed='true'] .jars__layer.is-3 {
+    background: var(--cream);
+  }
+
+  .jars__pick:hover .jars__layer.is-1,
+  .jars__pick:focus-visible .jars__layer.is-1,
+  .jars__pick[aria-pressed='true'] .jars__layer.is-1 {
+    transform: scale(1);
+  }
+
+  .jars__pick:hover .jars__layer.is-2,
+  .jars__pick:focus-visible .jars__layer.is-2,
+  .jars__pick[aria-pressed='true'] .jars__layer.is-2 {
+    transform: scale(1);
+    transition-delay: 0.12s;
+  }
+
+  .jars__pick:hover .jars__layer.is-3,
+  .jars__pick:focus-visible .jars__layer.is-3,
+  .jars__pick[aria-pressed='true'] .jars__layer.is-3 {
+    transform: scale(1);
+    transition-delay: 0.24s;
+  }
+
+  .jars__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template: 1fr / max-content;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .jars__static,
+  .jars__swap {
+    grid-area: 1 / 1;
+    white-space: nowrap;
+    transition:
+      transform 1.1s cubic-bezier(0.19, 1, 0.22, 1),
+      opacity 0.35s linear;
+  }
+
+  .jars__swap {
+    opacity: 0;
+    color: var(--bloom-ink);
+    transform: translateY(70%);
+    user-select: none;
+  }
+
+  .jars__pick[aria-pressed='true'] .jars__swap {
+    color: var(--pressed-ink);
+  }
+
+  .jars__pick:hover .jars__static,
+  .jars__pick:focus-visible .jars__static,
+  .jars__pick[aria-pressed='true'] .jars__static,
+  .jars__formula:hover .jars__static,
+  .jars__formula:focus-visible .jars__static {
+    opacity: 0;
+    transform: translateY(-70%);
+  }
+
+  .jars__pick:hover .jars__swap,
+  .jars__pick:focus-visible .jars__swap,
+  .jars__pick[aria-pressed='true'] .jars__swap,
+  .jars__formula:hover .jars__swap,
+  .jars__formula:focus-visible .jars__swap {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .jars__formula {
+    gap: 0.45rem;
+    padding: 0.8rem 0.2rem 0.55rem 0.15rem;
+  }
+
+  .jars__formula .jars__swap {
+    color: inherit;
+  }
+
+  .jars__formula svg {
+    position: relative;
+    z-index: 2;
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transform: rotate(-50deg);
+    transition: transform var(--hover);
+  }
+
+  .jars__formula:hover svg,
+  .jars__formula:focus-visible svg {
+    transform: rotate(0deg);
+  }
+
+  .jars__formula::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 2;
+    width: 100%;
+    height: 2px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform var(--hover);
+  }
+
+  .jars__formula:hover::before,
+  .jars__formula:focus-visible::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .jars :focus-visible {
+    outline: 2px solid var(--cream);
+    outline-offset: 3px;
+  }
+
+  .jars header :focus-visible {
+    outline-color: var(--forest);
+  }
+
+  @media (min-width: 900px) {
+    .jars header,
+    .jars__copy,
+    .jars__both {
+      padding-left: 2.6rem;
+      padding-right: 2.6rem;
+    }
+
+    .jars__pair {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .jars__plate {
+      min-height: 100%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .jars__static,
+    .jars__swap,
+    .jars__layer,
+    .jars__formula svg,
+    .jars__formula::before {
+      transform: none !important;
+      transition: none;
+      transition-delay: 0s !important;
+    }
+
+    .jars__swap {
+      display: none;
+    }
+
+    .jars__pick:hover,
+    .jars__pick:focus-visible {
+      background: var(--bloom-fill);
+      color: var(--bloom-ink);
+    }
+
+    .jars__pick[aria-pressed='true'] {
+      background: var(--cream);
+      color: var(--pressed-ink);
+    }
+
+    .jars__pick:hover .jars__static,
+    .jars__pick:focus-visible .jars__static,
+    .jars__pick[aria-pressed='true'] .jars__static,
+    .jars__formula:hover .jars__static,
+    .jars__formula:focus-visible .jars__static {
+      opacity: 1;
+    }
+  }
+</style>

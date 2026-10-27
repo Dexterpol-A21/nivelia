@@ -1,4 +1,4 @@
-# Glyv
+# Ekilia
 
 Tienda de suplementos para diabetes. Astro 7 + Tailwind CSS 4.
 

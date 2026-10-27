@@ -1,17 +1,16 @@
 export const SITE = {
-  title: 'Glyv',
-  description: 'Suplementos para diabetes. Reposición periódica.',
-  url: 'https://glyv.com',
+  title: 'Ekilia',
+  description: 'Nutrición para tu bienestar. Reposición periódica.',
+  url: 'https://somosekilia.com',
 } as const;
 
 export const HERO = {
-  wordmark: 'Glyv',
-  eyebrow: 'Suplementos para diabetes',
-  h1: 'Equilibra tu glucosa.',
+  wordmark: 'Ekilia',
+  h1: 'Nutrición para tu bienestar.',
   body: 'Dos cápsulas al día, con los alimentos. Ciencia clara, origen botánico.',
   cta: 'Empezar reposición',
   secondary: 'Ver fórmula',
-  band: 'Dos fórmulas. Un mismo ritmo.',
+  band: 'Bienestar que nace del equilibrio.',
   bandNote: 'Se pueden pedir juntas. El ritmo es el mismo: 30 días, luego otro envase.',
   specs: [
     { k: 'Porción', v: '2 cápsulas' },
@@ -23,7 +22,7 @@ export const HERO = {
 
 export const PRODUCTS = [
   {
-    id: 'glyv-centia',
+    id: 'ekilia-centia',
     slug: 'centia',
     name: 'Centia',
     line: 'Recupera el equilibrio',
@@ -35,8 +34,8 @@ export const PRODUCTS = [
     cta: 'Quiero Centia',
     formula: 'Ver ingredientes',
     tone: 'centia',
-    photo: '/centia.jpg',
-    photoAlt: 'Frasco Glyv Centia con nopal, canela y cápsulas',
+    photo: '/centia.jpg?v=3',
+    photoAlt: 'Frasco Ekilia Centia con nopal, canela y cápsulas',
     gallery: [
       {
         src: '/centia-botanica.png',
@@ -49,12 +48,12 @@ export const PRODUCTS = [
         caption: 'Con los alimentos.',
       },
       {
-        src: '/centia-ingredientes.png',
+        src: '/centia-ingredientes.png?v=3',
         alt: 'Frasco Centia junto a cápsulas, nopal y canela',
         caption: 'La fórmula, a la vista.',
       },
       {
-        src: '/centia-manana.png',
+        src: '/centia-manana.png?v=3',
         alt: 'Frasco Centia en la cocina, por la mañana',
         caption: 'Cada mañana.',
       },
@@ -97,7 +96,7 @@ export const PRODUCTS = [
     sister: { name: 'Nervia', href: '/nervia', label: 'Ver Nervia' },
   },
   {
-    id: 'glyv-nervia',
+    id: 'ekilia-nervia',
     slug: 'nervia',
     name: 'Nervia',
     line: 'Recupera el equilibrio',
@@ -109,8 +108,8 @@ export const PRODUCTS = [
     cta: 'Quiero Nervia',
     formula: 'Ver ingredientes',
     tone: 'nervia',
-    photo: '/nervia.jpg',
-    photoAlt: 'Frasco Glyv Nervia con pasiflora y cápsulas',
+    photo: '/nervia.jpg?v=3',
+    photoAlt: 'Frasco Ekilia Nervia con pasiflora y cápsulas',
     gallery: [
       {
         src: '/nervia-botanica.png',
@@ -123,12 +122,12 @@ export const PRODUCTS = [
         caption: 'Con los alimentos.',
       },
       {
-        src: '/nervia-ingredientes.png',
+        src: '/nervia-ingredientes.png?v=3',
         alt: 'Frasco Nervia junto a cápsulas y pasiflora',
         caption: 'La fórmula, a la vista.',
       },
       {
-        src: '/nervia-noche.png',
+        src: '/nervia-noche.png?v=3',
         alt: 'Frasco Nervia en la mesa de noche',
         caption: 'Al cerrar el día.',
       },
@@ -208,7 +207,7 @@ export const FOOTER_LINKS = NAV_LINKS;
 export const PAGES = {
   home: {
     title: 'Inicio',
-    description: 'Glyv. Suplementos para diabetes con reposición periódica.',
+    description: 'Ekilia. Nutrición para tu bienestar, con reposición periódica.',
   },
   centia: {
     title: 'Centia',
@@ -228,29 +227,46 @@ export const PAGES = {
   about: {
     title: 'Nosotros',
     description:
-      'Glyv: suplementos alimenticios con reposición mensual. Qué somos y qué no pretendemos ser.',
+      'Ekilia: suplementos alimenticios con reposición mensual. Qué somos y qué no pretendemos ser.',
   },
   contacto: {
     title: 'Contacto',
-    description: 'Escribe a Glyv por Facebook: el envase, la reposición o tus datos.',
+    description: 'Escribe a Ekilia a contacto@somosekilia.com: el envase, la reposición o tus datos.',
+  },
+  carrito: {
+    title: 'Tu envase',
+    description: 'Centia, Nervia, o las dos. 60 cápsulas, cada 30 días.',
+  },
+  reposicion: {
+    title: 'Reposición',
+    description:
+      'Cómo llegas a los suplementos, qué pasa cuando se acaba el envase, y la fórmula: Centia, Nervia o las dos. Cada 30 días.',
+  },
+  cuenta: {
+    title: 'Cuenta',
+    description: 'Entra a tu cuenta Ekilia: la suscripción, la próxima entrega, el pedido y el comprobante.',
+  },
+  app: {
+    title: 'App',
+    description: 'Tu cuenta Ekilia.',
   },
   sistema: {
     title: 'Sistema',
-    description: 'Sistema gráfico de Glyv. Color, tipo, botones y reglas de uso.',
+    description: 'Sistema gráfico de Ekilia. Color, tipo, botones y reglas de uso.',
   },
   marca: {
     title: 'Marca',
-    description: 'Wordmark, nombres y fotos de Glyv para descargar, con fondo y sin fondo.',
+    description: 'Wordmark, nombres y fotos de Ekilia para descargar, con fondo y sin fondo.',
   },
   terminos: {
     title: 'Términos y condiciones',
     description:
-      'Aceptación, suplemento alimenticio, reposición, pago, envío y límite de responsabilidad de Glyv.',
+      'Aceptación, suplemento alimenticio, reposición, pago, envío y límite de responsabilidad de Ekilia.',
   },
   privacidad: {
     title: 'Política de privacidad',
     description:
-      'Aviso de privacidad de Glyv: datos, finalidades, encargados y derechos ARCO.',
+      'Aviso de privacidad de Ekilia: datos, finalidades, encargados y derechos ARCO.',
   },
 } as const;
 
@@ -294,10 +310,38 @@ export const HOW_PAGE = {
   secondary: 'Contacto',
 } as const;
 
+export const CONTACT = {
+  email: 'contacto@somosekilia.com',
+  href: 'mailto:contacto@somosekilia.com',
+} as const;
+
 export const FACEBOOK = {
   label: 'Facebook',
   href: 'https://www.facebook.com/share/18uR7vZB8p/?mibextid=wwXIfr',
 } as const;
+
+export const SOCIAL = [
+  {
+    id: 'facebook',
+    label: FACEBOOK.label,
+    href: FACEBOOK.href,
+  },
+  {
+    id: 'instagram',
+    label: 'Instagram',
+    href: 'https://www.instagram.com/somosekilia',
+  },
+  {
+    id: 'tiktok',
+    label: 'TikTok',
+    href: 'https://www.tiktok.com/@somosekilia',
+  },
+  {
+    id: 'youtube',
+    label: 'YouTube',
+    href: 'https://www.youtube.com/@somosekilia',
+  },
+] as const;
 
 export const LEGAL_LINKS = [
   { label: 'Términos y condiciones', href: '/terminos' },
@@ -310,7 +354,7 @@ export const DISCLAIMER =
 export const HOME_PAGE = {
   promise: {
     h2: 'Un suplemento. Un hábito. Un frasco que vuelve.',
-    left: 'Glyv no es farmacia, ni clínica, ni un milagro. No sustituye a tu médico ni a lo que ya te recetaron.',
+    left: 'Ekilia no es farmacia, ni clínica, ni un milagro. No sustituye a tu médico ni a lo que ya te recetaron.',
     rightTitle: 'Llega cada mes.',
     rightClaim: 'Dos cápsulas al día, con los alimentos.',
     right: 'Es un suplemento alimenticio. Ciencia clara, origen botánico.',
@@ -408,7 +452,7 @@ export const HOME_PAGE = {
     h2: 'Preguntas claras.',
     items: [
       {
-        q: '¿Glyv es un medicamento?',
+        q: '¿Ekilia es un medicamento?',
         a: 'No. Es un suplemento alimenticio. No diagnostica, trata, cura ni previene ninguna enfermedad, y no sustituye lo que te recete tu médico.',
       },
       {
@@ -443,12 +487,42 @@ export const HOME_PAGE = {
 
 export const SYSTEM = {
   colors: [
-    { name: 'Crema', hex: '#F4EFE6', use: 'Campos claros, fotos de Centia, riel del índice.' },
-    { name: 'Crema profunda', hex: '#EBE4D4', use: 'Primera capa del bloom. Nunca como marca sola.' },
-    { name: 'Bosque', hex: '#1E4A32', use: 'Texto sobre crema, placas de Centia, botón Menú.' },
-    { name: 'Petróleo', hex: '#0B4F6C', use: 'Nervia, franja de reposición, hover de la barra.' },
-    { name: 'Petróleo profundo', hex: '#083D54', use: 'Foto de Nervia. Un tono, no una paleta extra.' },
-    { name: 'Tinta', hex: '#1A2A22', use: 'Wordmark y cuerpo sobre crema.' },
+    {
+      name: 'Hueso',
+      role: 'Claridad',
+      hex: '#F6F3EE',
+      rgb: '246, 243, 238',
+      hsl: '38, 31%, 95%',
+      use: 'Fondo. Blanco hueso, no un blanco puro.',
+      on: 'ink',
+    },
+    {
+      name: 'Azul',
+      role: 'Confianza',
+      hex: '#0E6E9E',
+      rgb: '14, 110, 158',
+      hsl: '200, 84%, 34%',
+      use: 'Primario. Menú, Centia, enredaderas sobre hueso, pulgar del scroll.',
+      on: 'cream',
+    },
+    {
+      name: 'Turquesa',
+      role: 'Naturaleza',
+      hex: '#0F6468',
+      rgb: '15, 100, 104',
+      hsl: '183, 75%, 23%',
+      use: 'Complemento. Franja de reposición y bloom.',
+      on: 'cream',
+    },
+    {
+      name: 'Mora',
+      role: 'Equilibrio',
+      hex: '#3E2770',
+      rgb: '62, 39, 112',
+      hsl: '259, 48%, 30%',
+      use: 'Acento. Nervia. Innovación después.',
+      on: 'cream',
+    },
   ],
   type: {
     display: 'Fraunces',
@@ -464,5 +538,5 @@ export const SYSTEM = {
     'Un CTA dice lo que ocurre: Empezar reposición, no Enviar.',
     'Las placas entran desde los lados, una vez. Hero ya está en pantalla: no entra.',
   ],
-  avoid: ['Rosa o morado', 'Amarillo de marca', 'Naranja o terracota', 'Botones redondos', 'Hamburguesa genérica'],
+  avoid: ['Rosa, naranja o terracota', 'Verde bosque de la paleta anterior', 'Amarillo de marca', 'Botones redondos', 'Hamburguesa genérica'],
 } as const;

@@ -1,0 +1,261 @@
+---
+interface Props {
+  primary: string;
+  secondary: string;
+  primaryHref?: string;
+  secondaryHref?: string;
+  primaryTarget?: string;
+  primaryRel?: string;
+  secondaryTarget?: string;
+  secondaryRel?: string;
+  class?: string;
+}
+
+const {
+  primary,
+  secondary,
+  primaryHref = '/centia',
+  secondaryHref = '/#formula',
+  primaryTarget,
+  primaryRel,
+  secondaryTarget,
+  secondaryRel,
+  class: className,
+} = Astro.props;
+---
+
+<div class:list={['ekilia-btns', className]}>
+  <a class="ekilia-btns__btn is-bloom" href={primaryHref} target={primaryTarget} rel={primaryRel}>
+    <span class="ekilia-btns__bloom" aria-hidden="true">
+      <span class="ekilia-btns__layers">
+        <span class="ekilia-btns__layer is-1"></span>
+        <span class="ekilia-btns__layer is-2"></span>
+        <span class="ekilia-btns__layer is-3"></span>
+      </span>
+    </span>
+    <span class="ekilia-btns__inner">
+      <span class="ekilia-btns__static">{primary}</span>
+      <span class="ekilia-btns__hover-label" aria-hidden="true">{primary}</span>
+    </span>
+  </a>
+  <a class="ekilia-btns__btn is-tinta" href={secondaryHref} target={secondaryTarget} rel={secondaryRel}>
+    <span class="ekilia-btns__inner">
+      <span class="ekilia-btns__static">{secondary}</span>
+      <span class="ekilia-btns__hover-label" aria-hidden="true">{secondary}</span>
+    </span>
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M5 12h14M13 6l6 6-6 6"></path>
+    </svg>
+  </a>
+</div>
+
+<style>
+  .ekilia-btns {
+    --cream: #f6f3ee;
+    --forest: #0e6e9e;
+    --hover: 0.48s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    gap: 0.7rem;
+    margin-top: 1.6rem;
+  }
+
+  .ekilia-btns__btn {
+    font-family: Outfit, sans-serif;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: inline-flex;
+    flex-flow: row nowrap;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    writing-mode: horizontal-tb;
+    white-space: nowrap;
+    padding: 0.8rem 1.35rem;
+    border-radius: 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .ekilia-btns__btn:focus-visible {
+    outline: 2px solid var(--cream);
+    outline-offset: 3px;
+  }
+
+  .ekilia-btns__btn.is-bloom {
+    overflow: hidden;
+    background: transparent;
+    color: var(--on-dark, var(--cream));
+    box-shadow: inset 0 0 0 2px var(--cream);
+    padding: 0.8rem 1.5rem;
+  }
+
+  .ekilia-btns__bloom {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .ekilia-btns__layers {
+    position: absolute;
+    left: 50%;
+    top: -60%;
+    width: max(220%, 10rem);
+    aspect-ratio: 1;
+    transform: translate(-50%);
+  }
+
+  .ekilia-btns__layer {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  .ekilia-btns__layer.is-1 {
+    background: var(--bloom, var(--turquoise, #0f6468));
+  }
+
+  .ekilia-btns__layer.is-2,
+  .ekilia-btns__layer.is-3 {
+    background: var(--bloom-fill, #f6f3ee);
+  }
+
+  .ekilia-btns__btn.is-bloom:hover .ekilia-btns__layer.is-1,
+  .ekilia-btns__btn.is-bloom:focus-visible .ekilia-btns__layer.is-1 {
+    transform: scale(1);
+  }
+
+  .ekilia-btns__btn.is-bloom:hover .ekilia-btns__layer.is-2,
+  .ekilia-btns__btn.is-bloom:focus-visible .ekilia-btns__layer.is-2 {
+    transform: scale(1);
+    transition-delay: 0.12s;
+  }
+
+  .ekilia-btns__btn.is-bloom:hover .ekilia-btns__layer.is-3,
+  .ekilia-btns__btn.is-bloom:focus-visible .ekilia-btns__layer.is-3 {
+    transform: scale(1);
+    transition-delay: 0.24s;
+  }
+
+  .ekilia-btns__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template: 1fr / max-content;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .ekilia-btns__static,
+  .ekilia-btns__hover-label {
+    grid-area: 1 / 1;
+    white-space: nowrap;
+    transition:
+      transform 1.1s cubic-bezier(0.19, 1, 0.22, 1),
+      opacity 0.35s linear;
+  }
+
+  .ekilia-btns__hover-label {
+    opacity: 0;
+    user-select: none;
+    color: var(--bloom-ink, var(--bloom, var(--forest)));
+    transform: translateY(70%);
+  }
+
+  .ekilia-btns__btn.is-bloom:hover .ekilia-btns__static,
+  .ekilia-btns__btn.is-bloom:focus-visible .ekilia-btns__static,
+  .ekilia-btns__btn.is-tinta:hover .ekilia-btns__static,
+  .ekilia-btns__btn.is-tinta:focus-visible .ekilia-btns__static {
+    opacity: 0;
+    transform: translateY(-70%);
+  }
+
+  .ekilia-btns__btn.is-bloom:hover .ekilia-btns__hover-label,
+  .ekilia-btns__btn.is-bloom:focus-visible .ekilia-btns__hover-label,
+  .ekilia-btns__btn.is-tinta:hover .ekilia-btns__hover-label,
+  .ekilia-btns__btn.is-tinta:focus-visible .ekilia-btns__hover-label {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .ekilia-btns__btn.is-tinta .ekilia-btns__hover-label {
+    color: inherit;
+  }
+
+  .ekilia-btns__btn.is-tinta {
+    overflow: hidden;
+    background: none;
+    color: var(--on-dark, var(--cream));
+    gap: 0.45rem;
+    padding: 0.8rem 0.2rem 0.55rem 0.15rem;
+  }
+
+  .ekilia-btns__btn.is-tinta svg {
+    position: relative;
+    z-index: 2;
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transform: rotate(-50deg);
+    transition: transform var(--hover);
+  }
+
+  .ekilia-btns__btn.is-tinta:hover svg,
+  .ekilia-btns__btn.is-tinta:focus-visible svg {
+    transform: rotate(0deg);
+  }
+
+  .ekilia-btns__btn.is-tinta::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 2;
+    width: 100%;
+    height: 2px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform var(--hover);
+  }
+
+  .ekilia-btns__btn.is-tinta:hover::before,
+  .ekilia-btns__btn.is-tinta:focus-visible::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ekilia-btns__static,
+    .ekilia-btns__hover-label,
+    .ekilia-btns__layer {
+      transform: none !important;
+      transition: none;
+      transition-delay: 0s !important;
+    }
+
+    .ekilia-btns__hover-label {
+      display: none;
+    }
+
+    .ekilia-btns__btn.is-bloom:hover,
+    .ekilia-btns__btn.is-bloom:focus-visible {
+      background: var(--bloom-fill, #f6f3ee);
+      color: var(--bloom-ink, var(--bloom, var(--forest)));
+    }
+  }
+</style>

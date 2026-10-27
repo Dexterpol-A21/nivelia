@@ -1,5 +1,6 @@
 ---
-import { NAV_PAGES, NAV_PRODUCTS, SITE } from '@utils/constants';
+import Grainient from '@components/ui/Grainient.astro';
+import { NAV_PAGES, NAV_PRODUCTS, SITE, SOCIAL } from '@utils/constants';
 
 const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
 const hash = Astro.url.hash;
@@ -12,90 +13,142 @@ const isCurrent = (href: string) => {
 };
 ---
 
-<div class="glyv-nav">
-  <div class="glyv-nav__chrome">
-    <a class="glyv-nav__home" href="/" aria-current={pathname === '/' ? 'page' : undefined}>
+<div class="ekilia-nav">
+  <div class="ekilia-nav__chrome">
+    <a class="ekilia-nav__home" href="/" aria-current={pathname === '/' ? 'page' : undefined}>
       {SITE.title}
     </a>
     <button
-      class="glyv-nav__toggle"
+      class="ekilia-nav__toggle"
       type="button"
       aria-expanded="false"
-      aria-controls="glyv-index"
+      aria-controls="ekilia-index"
     >
-      <span class="glyv-nav__caption">
+      <span class="ekilia-nav__caption">
         <span data-closed>
-          <span class="glyv-nav__static">Menú</span>
-          <span class="glyv-nav__hover" aria-hidden="true">Menú</span>
+          <span class="ekilia-nav__static">Menú</span>
+          <span class="ekilia-nav__hover" aria-hidden="true">Menú</span>
         </span>
         <span data-open hidden>
-          <span class="glyv-nav__static">Cerrar</span>
-          <span class="glyv-nav__hover" aria-hidden="true">Cerrar</span>
+          <span class="ekilia-nav__static">Cerrar</span>
+          <span class="ekilia-nav__hover" aria-hidden="true">Cerrar</span>
+        </span>
+      </span>
+      <span class="ekilia-nav__glyph" aria-hidden="true">
+        <span data-closed>
+          <svg viewBox="0 0 24 24">
+            <path d="M4.5 7h15M4.5 12h15M4.5 17h15" />
+          </svg>
+        </span>
+        <span data-open hidden>
+          <svg viewBox="0 0 24 24">
+            <path d="M6.5 6.5l11 11M17.5 6.5l-11 11" />
+          </svg>
         </span>
       </span>
     </button>
   </div>
 
-  <div id="glyv-index" class="glyv-nav__index" hidden role="dialog" aria-modal="true" aria-label="Índice">
-    <nav class="glyv-nav__formulas" aria-label="Fórmulas">
+  <div id="ekilia-index" class="ekilia-nav__index" hidden role="dialog" aria-modal="true" aria-label="Índice">
+    <nav class="ekilia-nav__formulas" aria-label="Fórmulas">
       {
         NAV_PRODUCTS.map((link) => (
-          <a
-            class={`glyv-nav__plate is-${link.tone}`}
-            href={link.href}
-            aria-current={isCurrent(link.href) ? 'page' : undefined}
-          >
-            <span class="glyv-nav__name">{link.label}</span>
-            <span class="glyv-nav__claim">{link.claim}</span>
-          </a>
+          <div class={`ekilia-nav__plate is-${link.tone} grain-host`}>
+            <Grainient tone={link.tone === 'nervia' ? 'petroleum' : 'forest'} />
+            {link.tone === 'centia' && (
+              <a
+                class="ekilia-nav__mark"
+                href="/"
+                aria-current={pathname === '/' ? 'page' : undefined}
+              >
+                {SITE.title}
+              </a>
+            )}
+            <a
+              class="ekilia-nav__go"
+              href={link.href}
+              aria-current={isCurrent(link.href) ? 'page' : undefined}
+            >
+              <span class="ekilia-nav__name">{link.label}</span>
+              <span class="ekilia-nav__claim">{link.claim}</span>
+            </a>
+          </div>
         ))
       }
       </nav>
 
-    <nav class="glyv-nav__plate is-cream" aria-label="Páginas">
+    <nav class="ekilia-nav__plate is-cream grain-host" aria-label="Páginas">
+      <Grainient tone="cream" />
       <ul>
         {
           NAV_PAGES.map((link) => (
             <li>
               <a href={link.href} aria-current={isCurrent(link.href) ? 'page' : undefined}>
-                {link.label}
+                <span>{link.label}</span>
               </a>
             </li>
           ))
         }
       </ul>
+      <nav class="ekilia-nav__social" aria-label="Redes">
+        {
+          SOCIAL.map((link) => (
+            <a href={link.href} target="_blank" rel="noopener noreferrer" aria-label={link.label}>
+              <svg viewBox={link.id === 'facebook' ? '0.55 0.9 24 24' : '0 0 24 24'} aria-hidden="true">
+                {link.id === 'facebook' && (
+                  <path d="M14.15 20.6v-6.9h2.45v-2.7h-2.45V9.35c0-.78.22-1.32 1.35-1.32h1.43V5.75c-.24-.03-1.05-.1-2.05-.1-2.05 0-3.45 2.15-3.45 5.35H8.55v2.7h2.88v6.9h2.72z" />
+                )}
+                {link.id === 'instagram' && (
+                  <>
+                    <rect x="3.15" y="3.15" width="17.7" height="17.7" rx="5" fill="none" stroke="currentColor" stroke-width="1.7" />
+                    <circle cx="12" cy="12" r="4.05" fill="none" stroke="currentColor" stroke-width="1.7" />
+                    <circle cx="17.25" cy="6.75" r="1.12" fill="currentColor" stroke="none" />
+                  </>
+                )}
+                {link.id === 'tiktok' && (
+                  <path d="M14.1 3.2c.35 2.15 1.55 3.7 3.7 4.15v2.35a6.2 6.2 0 0 1-3.7-1.15v6.15a5.15 5.15 0 1 1-5.15-5.15c.28 0 .55.03.82.08v2.5a2.7 2.7 0 1 0 1.88 2.57V3.2h2.45z" />
+                )}
+                {link.id === 'youtube' && (
+                  <path d="M22.2 7.7c-.25-1-.95-1.75-1.95-2C18.5 5.3 12 5.3 12 5.3s-6.5 0-8.25.4c-1 .25-1.7 1-1.95 2C1.4 9.45 1.4 12 1.4 12s0 2.55.4 4.3c.25 1 .95 1.75 1.95 2 1.75.4 8.25.4 8.25.4s6.5 0 8.25-.4c1-.25 1.7-1 1.95-2 .4-1.75.4-4.3.4-4.3s0-2.55-.4-4.3zM10.15 15.15V8.85L15.4 12l-5.25 3.15z" />
+                )}
+              </svg>
+            </a>
+          ))
+        }
+      </nav>
     </nav>
   </div>
 </div>
 
 <style>
-  .glyv-nav {
-    --cream: #f4efe6;
-    --forest: #1e4a32;
-    --petroleum: #0b4f6c;
-    --ink: #1a2a22;
-    --hover: 0.48s cubic-bezier(0.4, 0, 0.2, 1);
+  .ekilia-nav {
     font-family: Outfit, sans-serif;
+    --cream: #f6f3ee;
+    --forest: #0e6e9e;
+    --petroleum: #3e2770;
+    --ink: #1A1228;
+    --hover: 0.48s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .glyv-nav__chrome {
+  .ekilia-nav__chrome {
     position: fixed;
-    top: 1.15rem;
-    left: 1.15rem;
+    top: var(--nav-chip-top, max(1.15rem, env(safe-area-inset-top, 0px)));
+    left: max(1.15rem, env(safe-area-inset-left, 0px));
     z-index: 90;
     display: flex;
-    height: 2.75rem;
+    max-width: calc(100vw - 2.3rem - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
+    height: var(--nav-chip-h, 2.75rem);
     background: var(--forest);
     color: var(--on-dark, var(--cream));
   }
 
-  .glyv-nav.is-open .glyv-nav__chrome {
+  .ekilia-nav.is-open .ekilia-nav__chrome {
     background: var(--cream);
     color: var(--forest);
   }
 
-  .glyv-nav__home,
-  .glyv-nav__toggle {
+  .ekilia-nav__home,
+  .ekilia-nav__toggle {
     display: grid;
     place-items: center;
     padding: 0 1.05rem;
@@ -108,8 +161,10 @@ const isCurrent = (href: string) => {
     -webkit-tap-highlight-color: transparent;
   }
 
-  .glyv-nav__home {
+  .ekilia-nav__home {
     font-family: Fraunces, serif;
+    font-optical-sizing: none;
+    font-variation-settings: "opsz" 144, "wght" 600;
     font-size: 1.35rem;
     font-weight: 600;
     letter-spacing: -0.04em;
@@ -117,7 +172,7 @@ const isCurrent = (href: string) => {
     border-right: 1.5px solid color-mix(in srgb, currentColor 28%, transparent);
   }
 
-  .glyv-nav__toggle {
+  .ekilia-nav__toggle {
     position: relative;
     isolation: isolate;
     overflow: hidden;
@@ -126,18 +181,18 @@ const isCurrent = (href: string) => {
     padding: 0 1.15rem;
   }
 
-  .glyv-nav__home:focus-visible,
-  .glyv-nav__toggle:focus-visible {
+  .ekilia-nav__home:focus-visible,
+  .ekilia-nav__toggle:focus-visible {
     outline: 2px solid var(--cream);
     outline-offset: 3px;
   }
 
-  .glyv-nav.is-open .glyv-nav__home:focus-visible,
-  .glyv-nav.is-open .glyv-nav__toggle:focus-visible {
+  .ekilia-nav.is-open .ekilia-nav__home:focus-visible,
+  .ekilia-nav.is-open .ekilia-nav__toggle:focus-visible {
     outline-color: var(--forest);
   }
 
-  .glyv-nav__caption {
+  .ekilia-nav__caption {
     position: relative;
     z-index: 1;
     display: grid;
@@ -147,7 +202,7 @@ const isCurrent = (href: string) => {
     letter-spacing: 0.01em;
   }
 
-  .glyv-nav__caption > span {
+  .ekilia-nav__caption > span {
     grid-area: 1 / 1;
     display: grid;
     grid-template: 1fr / max-content;
@@ -155,8 +210,8 @@ const isCurrent = (href: string) => {
     overflow: hidden;
   }
 
-  .glyv-nav__static,
-  .glyv-nav__hover {
+  .ekilia-nav__static,
+  .ekilia-nav__hover {
     grid-area: 1 / 1;
     white-space: nowrap;
     transition:
@@ -164,25 +219,46 @@ const isCurrent = (href: string) => {
       opacity 0.35s linear;
   }
 
-  .glyv-nav__hover {
+  .ekilia-nav__hover {
     opacity: 0;
     user-select: none;
     transform: translateY(70%);
   }
 
-  .glyv-nav__toggle:hover .glyv-nav__static,
-  .glyv-nav__toggle:focus-visible .glyv-nav__static {
+  .ekilia-nav__toggle:hover .ekilia-nav__static,
+  .ekilia-nav__toggle:focus-visible .ekilia-nav__static {
     opacity: 0;
     transform: translateY(-70%);
   }
 
-  .glyv-nav__toggle:hover .glyv-nav__hover,
-  .glyv-nav__toggle:focus-visible .glyv-nav__hover {
+  .ekilia-nav__toggle:hover .ekilia-nav__hover,
+  .ekilia-nav__toggle:focus-visible .ekilia-nav__hover {
     opacity: 1;
     transform: translateY(0);
   }
 
-  .glyv-nav__toggle::before {
+  .ekilia-nav__glyph {
+    display: none;
+  }
+
+  .ekilia-nav__glyph > span {
+    grid-area: 1 / 1;
+    display: grid;
+    place-items: center;
+  }
+
+  .ekilia-nav__glyph svg {
+    display: block;
+    width: 1.28rem;
+    height: 1.28rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: square;
+    stroke-linejoin: miter;
+  }
+
+  .ekilia-nav__toggle::before {
     content: "";
     position: absolute;
     left: 0;
@@ -196,69 +272,74 @@ const isCurrent = (href: string) => {
     transition: transform var(--hover);
   }
 
-  .glyv-nav__toggle:hover::before,
-  .glyv-nav__toggle:focus-visible::before {
+  .ekilia-nav__toggle:hover::before,
+  .ekilia-nav__toggle:focus-visible::before {
     transform: scaleX(1);
     transform-origin: left;
   }
 
-  .glyv-nav__index {
+  .ekilia-nav__index {
     position: fixed;
     inset: 0;
     z-index: 80;
     display: grid;
-    grid-template-rows: 1fr 1fr auto;
+    grid-template-rows: minmax(7.25rem, 1fr) minmax(7.25rem, 1fr) auto;
     overflow: hidden;
   }
 
-  .glyv-nav__index.is-settled {
+  .ekilia-nav__index.is-settled {
     overflow: auto;
   }
 
-  .glyv-nav__formulas {
+  .ekilia-nav__formulas {
     display: contents;
   }
 
-  .glyv-nav__plate {
+  .ekilia-nav__plate {
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     min-height: 0;
+    overflow: hidden;
     padding: 1.6rem 1.5rem 1.7rem;
+    padding-left: max(1.5rem, env(safe-area-inset-left, 0px));
+    padding-right: max(1.5rem, env(safe-area-inset-right, 0px));
     color: var(--on-dark, var(--cream));
     text-decoration: none;
   }
 
-  .glyv-nav__plate.is-centia {
+  .ekilia-nav__plate.is-centia {
     background: var(--forest);
-    padding-top: 5.4rem;
   }
 
-  .glyv-nav__plate.is-nervia {
+  .ekilia-nav__plate.is-nervia {
     background: var(--petroleum);
   }
 
-  .glyv-nav__plate.is-cream {
+  .ekilia-nav__plate.is-cream {
     background: var(--cream);
     color: var(--ink);
     justify-content: center;
-    padding: 1.5rem 1.5rem 1.8rem;
+    padding: 0.85rem 1.5rem max(1.15rem, env(safe-area-inset-bottom, 0px));
+    padding-left: max(1.5rem, env(safe-area-inset-left, 0px));
+    padding-right: max(1.5rem, env(safe-area-inset-right, 0px));
   }
 
-  .glyv-nav__name {
+  .ekilia-nav__name {
+    font-family: Fraunces, serif;
     position: relative;
     width: fit-content;
+    max-width: 100%;
     padding-bottom: 0.18em;
-    font-family: Fraunces, serif;
-    font-size: clamp(2.6rem, 10vw, 3.8rem);
+    font-size: clamp(2.15rem, min(10vw, 7.5vh), 3.6rem);
     font-weight: 500;
     line-height: 0.92;
     letter-spacing: -0.045em;
   }
 
-  .glyv-nav__name::after,
-  .glyv-nav__plate.is-cream a::after {
+  .ekilia-nav__name::after,
+  .ekilia-nav__plate.is-cream a span::after {
     content: "";
     position: absolute;
     left: 0;
@@ -271,34 +352,49 @@ const isCurrent = (href: string) => {
     transition: transform var(--hover);
   }
 
-  .glyv-nav__name::after {
+  .ekilia-nav__name::after {
     height: 3px;
   }
 
-  .glyv-nav__plate.is-centia:hover .glyv-nav__name::after,
-  .glyv-nav__plate.is-centia:focus-visible .glyv-nav__name::after,
-  .glyv-nav__plate.is-nervia:hover .glyv-nav__name::after,
-  .glyv-nav__plate.is-nervia:focus-visible .glyv-nav__name::after,
-  .glyv-nav__plate.is-cream a:hover::after,
-  .glyv-nav__plate.is-cream a:focus-visible::after {
+  .ekilia-nav__go:hover .ekilia-nav__name::after,
+  .ekilia-nav__go:focus-visible .ekilia-nav__name::after,
+  .ekilia-nav__plate.is-cream a:hover span::after,
+  .ekilia-nav__plate.is-cream a:focus-visible span::after {
     transform: scaleX(1);
     transform-origin: left;
   }
 
-  .glyv-nav__claim {
+  .ekilia-nav__claim {
     margin-top: 0.55rem;
-    max-width: 16rem;
-    font-size: 0.98rem;
-    line-height: 1.4;
+    max-width: min(16rem, 100%);
+    font-size: clamp(0.9rem, 2.5vw, 0.98rem);
+    line-height: 1.35;
     opacity: 0.78;
   }
 
-  .glyv-nav__plate.is-centia[aria-current='page'],
-  .glyv-nav__plate.is-nervia[aria-current='page'] {
+  .ekilia-nav__go {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 0;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .ekilia-nav__mark {
+    font-family: Fraunces, serif;
+    font-optical-sizing: none;
+    font-variation-settings: "opsz" 144, "wght" 600;
+    display: none;
+  }
+
+  .ekilia-nav__plate.is-centia:has(.ekilia-nav__go[aria-current='page']),
+  .ekilia-nav__plate.is-nervia:has(.ekilia-nav__go[aria-current='page']) {
     box-shadow: inset 4px 0 0 var(--cream);
   }
 
-  .glyv-nav__plate.is-cream ul {
+  .ekilia-nav__plate.is-cream ul {
     margin: 0;
     padding: 0;
     list-style: none;
@@ -307,83 +403,254 @@ const isCurrent = (href: string) => {
     gap: 0.15rem;
   }
 
-  .glyv-nav__plate.is-cream a {
+  .ekilia-nav__plate.is-cream a {
     position: relative;
-    display: block;
+    display: flex;
+    align-items: center;
     width: fit-content;
-    padding: 0.45rem 0 0.35rem;
+    min-height: 2.75rem;
+    padding: 0.35rem 0;
     color: inherit;
     font-size: 1.05rem;
     font-weight: 600;
     text-decoration: none;
   }
 
-  .glyv-nav__plate.is-cream a[aria-current='page'] {
+  .ekilia-nav__plate.is-cream a span {
+    position: relative;
+  }
+
+  .ekilia-nav__plate.is-cream a[aria-current='page'] {
     box-shadow: inset 3px 0 0 var(--forest);
     padding-left: 0.7rem;
   }
 
-  .glyv-nav__plate.is-centia:focus-visible,
-  .glyv-nav__plate.is-nervia:focus-visible {
+  .ekilia-nav__go:focus-visible {
     outline: 2px solid var(--cream);
     outline-offset: -6px;
   }
 
-  .glyv-nav__plate.is-cream a:focus-visible {
+  .ekilia-nav__plate.is-cream a:focus-visible {
     outline: 2px solid var(--forest);
     outline-offset: 4px;
   }
 
+  .ekilia-nav__social {
+    display: flex;
+    align-items: center;
+    margin-top: 0.85rem;
+  }
+
+  .ekilia-nav__plate.is-cream .ekilia-nav__social a {
+    display: grid;
+    place-items: center;
+    box-sizing: border-box;
+    width: 2.75rem;
+    height: 2.75rem;
+    min-height: 2.75rem;
+    padding: 0;
+    border: 1.5px solid var(--forest);
+    background: var(--forest);
+    color: var(--on-dark, var(--cream));
+    line-height: 0;
+    transition:
+      background-color 0.22s linear,
+      color 0.22s linear;
+  }
+
+  .ekilia-nav__plate.is-cream .ekilia-nav__social a:hover,
+  .ekilia-nav__plate.is-cream .ekilia-nav__social a:focus-visible {
+    background: var(--cream);
+    color: var(--forest);
+  }
+
+  .ekilia-nav__social svg {
+    display: block;
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: currentColor;
+  }
+
+  .ekilia-nav__plate.is-cream .ekilia-nav__social a:focus-visible {
+    outline: 2px solid var(--forest);
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 899px) {
+    .ekilia-nav__home {
+      display: none;
+    }
+
+    .ekilia-nav__chrome {
+      top: auto;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      box-sizing: border-box;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1.45fr;
+      width: 100%;
+      max-width: none;
+      height: var(--nav-dock);
+      padding-left: env(safe-area-inset-left, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    .ekilia-nav__toggle {
+      grid-column: 1;
+      align-self: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: var(--nav-bar);
+      gap: 0.4rem;
+      padding: 0;
+      border-right: 1.5px solid color-mix(in srgb, currentColor 28%, transparent);
+    }
+
+    .ekilia-nav__glyph {
+      display: grid;
+      place-items: center;
+    }
+
+    .ekilia-nav__glyph > span {
+      grid-area: 1 / 1;
+    }
+
+    .ekilia-nav__glyph svg {
+      width: 1.05rem;
+      height: 1.05rem;
+    }
+
+    .ekilia-nav.is-open .ekilia-nav__chrome {
+      background: var(--forest);
+      color: var(--on-dark, var(--cream));
+    }
+
+    .ekilia-nav.is-open .ekilia-nav__home:focus-visible,
+    .ekilia-nav.is-open .ekilia-nav__toggle:focus-visible {
+      outline-color: var(--cream);
+    }
+
+    .ekilia-nav__index {
+      bottom: var(--nav-dock);
+    }
+
+    .ekilia-nav__mark {
+      position: absolute;
+      z-index: 2;
+      top: max(1.35rem, env(safe-area-inset-top, 0px));
+      left: max(1.5rem, env(safe-area-inset-left, 0px));
+      display: block;
+      color: var(--cream);
+      font-size: clamp(2.5rem, 12vw, 3.5rem);
+      font-weight: 600;
+      letter-spacing: -0.05em;
+      line-height: 0.8;
+      text-decoration: none;
+    }
+
+    .ekilia-nav__mark:focus-visible {
+      outline: 2px solid var(--cream);
+      outline-offset: 6px;
+    }
+  }
+
+  @media (max-width: 899px) and (max-height: 520px) {
+    .ekilia-nav__index {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: minmax(0, 1fr) auto;
+    }
+
+    .ekilia-nav__plate.is-cream {
+      grid-column: 1 / -1;
+      justify-content: center;
+      padding-top: 0.2rem;
+      padding-bottom: max(0.2rem, env(safe-area-inset-bottom, 0px));
+    }
+
+    .ekilia-nav__plate.is-cream ul {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      column-gap: 1.35rem;
+    }
+
+    .ekilia-nav__plate.is-cream a {
+      min-height: 2.5rem;
+    }
+
+    .ekilia-nav__mark {
+      top: 0.85rem;
+      font-size: clamp(1.55rem, 7vh, 2.1rem);
+    }
+
+    .ekilia-nav__name {
+      font-size: clamp(1.7rem, 7vh, 2.5rem);
+    }
+
+    .ekilia-nav__claim {
+      margin-top: 0.3rem;
+      font-size: 0.85rem;
+    }
+  }
+
   @media (min-width: 900px) {
-    .glyv-nav__index.is-settled {
+    .ekilia-nav__index.is-settled {
       overflow: hidden;
     }
 
-    .glyv-nav__index {
+    .ekilia-nav__index {
       grid-template-columns: 1fr 1fr minmax(16rem, 22rem);
-      grid-template-rows: 1fr;
+      grid-template-rows: minmax(0, 1fr);
     }
 
-    .glyv-nav__plate {
+    .ekilia-nav__plate {
       justify-content: flex-end;
       padding: 5.5rem 2.2rem 2.4rem;
     }
 
-    .glyv-nav__plate.is-cream {
+    .ekilia-nav__plate.is-cream {
       justify-content: flex-end;
+      padding: 5.5rem 2.2rem 2.4rem;
     }
 
-    .glyv-nav__name {
+    .ekilia-nav__name {
       font-size: clamp(3.4rem, 5.6vw, 5.4rem);
     }
 
-    .glyv-nav__claim {
+    .ekilia-nav__claim {
       max-width: 18rem;
       font-size: 1.08rem;
     }
 
-    .glyv-nav__plate.is-cream a {
+    .ekilia-nav__plate.is-cream a {
       font-size: 1.12rem;
       padding: 0.5rem 0 0.4rem;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .glyv-nav__static,
-    .glyv-nav__hover,
-    .glyv-nav__toggle::before,
-    .glyv-nav__name::after,
-    .glyv-nav__plate.is-cream a::after {
+    .ekilia-nav__static,
+    .ekilia-nav__hover,
+    .ekilia-nav__toggle::before,
+    .ekilia-nav__name::after,
+    .ekilia-nav__plate.is-cream a span::after {
       transition: none;
     }
 
-    .glyv-nav__static,
-    .glyv-nav__hover {
+    .ekilia-nav__static,
+    .ekilia-nav__hover {
       transform: none !important;
     }
 
-    .glyv-nav__hover {
+    .ekilia-nav__hover {
       display: none;
+    }
+
+    .ekilia-nav__social a {
+      transition: none;
     }
   }
 </style>
@@ -391,12 +658,12 @@ const isCurrent = (href: string) => {
 <script>
   import { gsap } from 'gsap';
 
-  const root = document.querySelector('.glyv-nav');
-  const toggle = root?.querySelector<HTMLButtonElement>('.glyv-nav__toggle');
-  const panel = document.getElementById('glyv-index');
+  const root = document.querySelector('.ekilia-nav');
+  const toggle = root?.querySelector<HTMLButtonElement>('.ekilia-nav__toggle');
+  const panel = document.getElementById('ekilia-index');
   const closedBits = root?.querySelectorAll<HTMLElement>('[data-closed]');
   const openBits = root?.querySelectorAll<HTMLElement>('[data-open]');
-  const plates = panel ? [...panel.querySelectorAll<HTMLElement>('.glyv-nav__plate')] : [];
+  const plates = panel ? [...panel.querySelectorAll<HTMLElement>('.ekilia-nav__plate')] : [];
 
   if (root && toggle && panel && plates.length >= 3) {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -405,10 +672,10 @@ const isCurrent = (href: string) => {
     let tl: gsap.core.Timeline | null = null;
 
     const lenis = () =>
-      (window as Window & { glyvLenis?: { stop: () => void; start: () => void; scrollTo: (el: Element, vars?: { offset: number }) => void } }).glyvLenis;
+      (window as Window & { ekiliaLenis?: { stop: () => void; start: () => void; scrollTo: (el: Element, vars?: { offset: number }) => void } }).ekiliaLenis;
 
     const markHash = () => {
-      panel.querySelectorAll<HTMLAnchorElement>('.glyv-nav__formulas a').forEach((link) => {
+      panel.querySelectorAll<HTMLAnchorElement>('.ekilia-nav__formulas a:not(.ekilia-nav__mark)').forEach((link) => {
         const href = link.getAttribute('href') || '';
         const id = href.includes('#') ? href.slice(href.indexOf('#')) : '';
         if (id && id === window.location.hash) link.setAttribute('aria-current', 'page');
@@ -418,8 +685,8 @@ const isCurrent = (href: string) => {
 
     const focusables = () => {
       const inPanel = [...panel.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')];
-      const home = root.querySelector<HTMLElement>('.glyv-nav__home');
-      return [home, toggle, ...inPanel].filter((el): el is HTMLElement => Boolean(el));
+      const home = root.querySelector<HTMLElement>('.ekilia-nav__home');
+      return [home, toggle, ...inPanel].filter((el): el is HTMLElement => Boolean(el && el.getClientRects().length));
     };
 
     const setInert = (value: boolean) => {
@@ -493,7 +760,7 @@ const isCurrent = (href: string) => {
         requestAnimationFrame(() => {
           playOpen(() => {
             panel.classList.add('is-settled');
-            centia.focus();
+            centia.querySelector<HTMLElement>('.ekilia-nav__go')?.focus();
             after?.();
           });
         });
@@ -530,6 +797,11 @@ const isCurrent = (href: string) => {
           return;
         }
 
+        if (link.target === '_blank') {
+          setOpen(false);
+          return;
+        }
+
         if (samePath && !hash) {
           event.preventDefault();
           setOpen(false);
@@ -537,7 +809,7 @@ const isCurrent = (href: string) => {
       });
     });
 
-    root.querySelector('.glyv-nav__home')?.addEventListener('click', (event) => {
+    root.querySelector('.ekilia-nav__home')?.addEventListener('click', (event) => {
       if (window.location.pathname === '/') {
         event.preventDefault();
         setOpen(false);

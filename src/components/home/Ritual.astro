@@ -1,13 +1,13 @@
 ---
-import GlyvFlora from '@components/home/GlyvFlora.astro';
+import Grainient from '@components/ui/Grainient.astro';
 import { HOME_PAGE } from '@utils/constants';
 
 const copy = HOME_PAGE.ritual;
 ---
 
 <div data-slide-host>
-<section class="home-ritual" data-slide="left" aria-labelledby="home-ritual-title">
-  <GlyvFlora variant="seam" ink="light" />
+<section class="home-ritual grain-host" data-slide="left" aria-labelledby="home-ritual-title">
+  <Grainient tone="petroleum" />
   <div class="home-ritual__copy">
     <h2 id="home-ritual-title">{copy.h2}</h2>
     <p class="home-ritual__same">{copy.same}</p>
@@ -36,15 +36,15 @@ const copy = HOME_PAGE.ritual;
 
 <style>
   .home-ritual {
-    --cream: #f4efe6;
-    --petroleum: #0b4f6c;
+    font-family: Outfit, sans-serif;
+    --cream: #f6f3ee;
+    --petroleum: #3e2770;
     --flora-seam-h: 4.2rem;
     background: var(--petroleum);
     color: var(--on-dark, var(--cream));
     padding: 4.6rem 1.5rem 2.4rem;
     position: relative;
     overflow: hidden;
-    font-family: Outfit, sans-serif;
   }
 
   .home-ritual__copy {
@@ -53,8 +53,8 @@ const copy = HOME_PAGE.ritual;
   }
 
   .home-ritual h2 {
-    margin: 0;
     font-family: Fraunces, serif;
+    margin: 0;
     font-size: clamp(2.15rem, 5.4vw, 3.6rem);
     font-weight: 500;
     line-height: 1.05;
@@ -75,16 +75,16 @@ const copy = HOME_PAGE.ritual;
   }
 
   .home-ritual dd {
-    margin: 0.25rem 0 0;
     font-family: Fraunces, serif;
+    margin: 0.25rem 0 0;
     font-size: clamp(1.2rem, 2.4vw, 1.55rem);
     font-weight: 500;
   }
 
   .home-ritual__same {
+    font-family: Fraunces, serif;
     margin: 0.75rem 0 0;
     max-width: 28rem;
-    font-family: Fraunces, serif;
     font-size: clamp(1.2rem, 2.4vw, 1.45rem);
     font-weight: 500;
     line-height: 1.25;

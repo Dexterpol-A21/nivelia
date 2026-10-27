@@ -1,146 +1,74 @@
 ---
+import Grainient from '@components/ui/Grainient.astro';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { PAGES } from '@utils/constants';
-import { PALETTES } from '@utils/palettes';
 
-const palettes = PALETTES;
-
-const requested = Astro.url.searchParams.get('paleta');
-const palette = palettes.find((item) => item.id === requested) ?? palettes[0];
+const washOf = {
+  crema: 'cream',
+  bosque: 'forest',
+  petroleo: 'petroleum',
+  centia: 'forest',
+  nervia: 'petroleum',
+} as const;
 
 const fieldOf = {
-  crema: { name: palette.creamName, hex: palette.cream },
-  bosque: { name: palette.forestName, hex: palette.forest },
-  petroleo: { name: palette.petroleumName, hex: palette.petroleum },
+  crema: { name: 'Hueso', hex: '#F6F3EE' },
+  bosque: { name: 'Azul', hex: '#0E6E9E' },
+  petroleo: { name: 'Mora', hex: '#3E2770' },
 } as const;
 
 const plates = [
   {
     tone: 'crema',
     hero: true,
-    name: 'Crema',
-    note: 'El uso de todos los días.',
-    src: '/marca/glyv-tinta.png',
-    width: 2400,
-    height: 1513,
-    alt: 'Wordmark Glyv en tinta',
-    files: [
-      { href: '/marca/glyv-sobre-crema.png', label: 'PNG con fondo' },
-      { href: '/marca/glyv-sobre-crema.svg', label: 'SVG con fondo' },
-      { href: '/marca/glyv-tinta.png', label: 'PNG sin fondo' },
-      { href: '/marca/glyv-tinta.svg', label: 'SVG sin fondo' },
-    ],
+    name: 'Hueso',
+    note: 'El uso de todos los días. El nombre va en tinta.',
   },
   {
     tone: 'bosque',
-    name: 'Bosque',
-    note: 'Centia y el menú.',
-    src: '/marca/glyv-crema.png',
-    width: 2400,
-    height: 1513,
-    alt: 'Wordmark Glyv en crema',
-    files: [
-      { href: '/marca/glyv-sobre-bosque.png', label: 'PNG con fondo' },
-      { href: '/marca/glyv-sobre-bosque.svg', label: 'SVG con fondo' },
-      { href: '/marca/glyv-crema.png', label: 'PNG sin fondo' },
-      { href: '/marca/glyv-crema.svg', label: 'SVG sin fondo' },
-    ],
+    name: 'Azul',
+    note: 'Centia y el menú. El nombre va en hueso.',
   },
   {
     tone: 'petroleo',
-    name: 'Petróleo',
-    note: 'Nervia y la reposición.',
-    src: '/marca/glyv-crema.png',
-    width: 2400,
-    height: 1513,
-    alt: 'Wordmark Glyv en crema',
-    files: [
-      { href: '/marca/glyv-sobre-petroleo.png', label: 'PNG con fondo' },
-      { href: '/marca/glyv-sobre-petroleo.svg', label: 'SVG con fondo' },
-      { href: '/marca/glyv-crema.png', label: 'PNG sin fondo' },
-      { href: '/marca/glyv-crema.svg', label: 'SVG sin fondo' },
-    ],
+    name: 'Mora',
+    note: 'Nervia. El nombre va en hueso.',
   },
 ];
 
 const clears = [
   {
     name: 'Tinta',
-    note: 'Sobre crema o foto clara.',
-    files: [
-      { href: '/marca/glyv-tinta.png', label: 'PNG' },
-      { href: '/marca/glyv-tinta.svg', label: 'SVG' },
-    ],
+    note: 'Sobre hueso o foto clara.',
   },
   {
-    name: 'Crema',
-    note: 'Sobre bosque, petróleo o foto oscura.',
-    files: [
-      { href: '/marca/glyv-crema.png', label: 'PNG' },
-      { href: '/marca/glyv-crema.svg', label: 'SVG' },
-    ],
+    name: 'Hueso',
+    note: 'Sobre azul, mora o foto oscura.',
   },
   {
-    name: 'Bosque',
-    note: 'Solo si el fondo ya es claro y no es crema.',
-    files: [
-      { href: '/marca/glyv-bosque.png', label: 'PNG' },
-      { href: '/marca/glyv-bosque.svg', label: 'SVG' },
-    ],
+    name: 'Azul',
+    note: 'Solo si el fondo ya es claro y no es hueso.',
   },
   {
-    name: 'Petróleo',
-    note: 'Solo si el fondo ya es claro y no es crema.',
-    files: [
-      { href: '/marca/glyv-petroleo.png', label: 'PNG' },
-      { href: '/marca/glyv-petroleo.svg', label: 'SVG' },
-    ],
+    name: 'Mora',
+    note: 'Solo si el fondo ya es claro y no es hueso.',
   },
 ];
 
 const squares = [
-  {
-    tone: 'crema',
-    name: 'Crema',
-    src: '/marca/glyv-cuadrado-crema.png',
-    png: '/marca/glyv-cuadrado-crema.png',
-    svg: '/marca/glyv-cuadrado-crema.svg',
-  },
-  {
-    tone: 'bosque',
-    name: 'Bosque',
-    src: '/marca/glyv-cuadrado-bosque.png',
-    png: '/marca/glyv-cuadrado-bosque.png',
-    svg: '/marca/glyv-cuadrado-bosque.svg',
-  },
-  {
-    tone: 'petroleo',
-    name: 'Petróleo',
-    src: '/marca/glyv-cuadrado-petroleo.png',
-    png: '/marca/glyv-cuadrado-petroleo.png',
-    svg: '/marca/glyv-cuadrado-petroleo.svg',
-  },
+  { tone: 'crema', name: 'Hueso' },
+  { tone: 'bosque', name: 'Azul' },
+  { tone: 'petroleo', name: 'Mora' },
 ];
 
 const products = [
   {
     tone: 'centia',
     name: 'Centia',
-    src: '/marca/centia-crema.png',
-    width: 2000,
-    height: 709,
-    alt: 'Centia en crema',
-    files: [
-      { href: '/marca/centia-sobre-bosque.png', label: 'PNG sobre bosque' },
-      { href: '/marca/centia-sobre-bosque.svg', label: 'SVG sobre bosque' },
-      { href: '/marca/centia-sobre-crema.png', label: 'PNG sobre crema' },
-      { href: '/marca/centia-crema.png', label: 'PNG sin fondo' },
-      { href: '/marca/centia-crema.svg', label: 'SVG sin fondo' },
-    ],
     shots: [
       {
-        src: '/centia.jpg',
-        alt: 'Frasco Glyv Centia con nopal, canela y cápsulas',
+        src: '/centia.jpg?v=3',
+        alt: 'Frasco Ekilia Centia con nopal, canela y cápsulas',
         caption: 'Frasco',
         wide: true,
       },
@@ -150,7 +78,7 @@ const products = [
         caption: 'Origen botánico',
       },
       {
-        src: '/centia-ingredientes.png',
+        src: '/centia-ingredientes.png?v=3',
         alt: 'Frasco Centia junto a cápsulas, nopal y canela',
         caption: 'La fórmula',
       },
@@ -160,7 +88,7 @@ const products = [
         caption: 'Con los alimentos',
       },
       {
-        src: '/centia-manana.png',
+        src: '/centia-manana.png?v=3',
         alt: 'Frasco Centia en la cocina, por la mañana',
         caption: 'Cada mañana',
       },
@@ -169,21 +97,10 @@ const products = [
   {
     tone: 'nervia',
     name: 'Nervia',
-    src: '/marca/nervia-crema.png',
-    width: 2000,
-    height: 678,
-    alt: 'Nervia en crema',
-    files: [
-      { href: '/marca/nervia-sobre-petroleo.png', label: 'PNG sobre petróleo' },
-      { href: '/marca/nervia-sobre-petroleo.svg', label: 'SVG sobre petróleo' },
-      { href: '/marca/nervia-sobre-crema.png', label: 'PNG sobre crema' },
-      { href: '/marca/nervia-crema.png', label: 'PNG sin fondo' },
-      { href: '/marca/nervia-crema.svg', label: 'SVG sin fondo' },
-    ],
     shots: [
       {
-        src: '/nervia.jpg',
-        alt: 'Frasco Glyv Nervia con pasiflora y cápsulas',
+        src: '/nervia.jpg?v=3',
+        alt: 'Frasco Ekilia Nervia con pasiflora y cápsulas',
         caption: 'Frasco',
         wide: true,
       },
@@ -193,7 +110,7 @@ const products = [
         caption: 'Origen botánico',
       },
       {
-        src: '/nervia-ingredientes.png',
+        src: '/nervia-ingredientes.png?v=3',
         alt: 'Frasco Nervia junto a cápsulas y pasiflora',
         caption: 'La fórmula',
       },
@@ -203,7 +120,7 @@ const products = [
         caption: 'Con los alimentos',
       },
       {
-        src: '/nervia-noche.png',
+        src: '/nervia-noche.png?v=3',
         alt: 'Frasco Nervia en la mesa de noche',
         caption: 'Al cerrar el día',
       },
@@ -218,14 +135,14 @@ const shared = [
     caption: 'La toma',
   },
   {
-    src: '/cierre-frasco.png',
+    src: '/cierre-frasco.png?v=3',
     alt: 'Un frasco en el umbral, listo para el mes siguiente',
     caption: 'El frasco que vuelve',
   },
 ];
 
 const rules = [
-  `Sobre ${palette.creamName.toLowerCase()}, el logotipo va en tinta. Sobre ${palette.forestName.toLowerCase()} o ${palette.petroleumName.toLowerCase()}, en ${palette.creamName.toLowerCase()}.`,
+  'Sobre hueso, el logotipo va en tinta. Sobre azul o mora, en hueso.',
   'No lo estires. No le cambies el color ni la letra.',
   'Sin sombra, sin contorno y sin esquinas redondas.',
   'Deja aire alrededor del logotipo. No lo pegues al borde de la pieza.',
@@ -233,84 +150,41 @@ const rules = [
 ];
 ---
 
-<BaseLayout title={`${PAGES.marca.title}, ${palette.name}`} description={PAGES.marca.description}>
+<BaseLayout title={PAGES.marca.title} description={PAGES.marca.description}>
   <meta slot="head" name="robots" content="noindex, nofollow" />
 
-  <article
-    class="marca"
-    data-palette={palette.id}
-    style={`--cream: ${palette.cream}; --forest: ${palette.forest}; --petroleum: ${palette.petroleum}; --ink: ${palette.ink};`}
-  >
-    <script is:inline define:vars={{ palettes }}>
-      const chosen = new URLSearchParams(location.search).get('paleta');
-      const active = palettes.find((item) => item.id === chosen) || palettes[0];
-      const root = document.currentScript.parentElement;
-      root.style.setProperty('--cream', active.cream);
-      root.style.setProperty('--forest', active.forest);
-      root.style.setProperty('--petroleum', active.petroleum);
-      root.style.setProperty('--ink', active.ink);
-      if (active.onDark) root.style.setProperty('--on-dark', active.onDark);
-      else root.style.removeProperty('--on-dark');
-      root.dataset.palette = active.id;
-    </script>
-    <header class="marca__intro">
+  <article class="marca">
+    <header class="marca__intro grain-host">
+      <Grainient tone="forest" />
       <div>
         <h1>Marca.</h1>
         <p>
-          Logotipos, nombres y fotos. Baja el archivo con el fondo que vas a usar, o sin fondo para
-          ponerlo encima de una foto. El color y el tipo están en el
+          El nombre va en Fraunces. Las fotos se bajan enteras. El color y el tipo están en el
           <a href="/sistema">sistema gráfico</a>.
         </p>
-        <nav class="marca__switch" aria-label="Paletas">
-          {
-            palettes.map((item) => (
-              <a
-                href={`/marca?paleta=${item.id}`}
-                aria-current={item.id === palette.id ? 'true' : undefined}
-              >
-                <span class="marca__chips" aria-hidden="true">
-                  <i style={`background: ${item.cream}`} />
-                  <i style={`background: ${item.forest}`} />
-                  <i style={`background: ${item.petroleum}`} />
-                </span>
-                {item.name}
-              </a>
-            ))
-          }
-        </nav>
-        <p data-palette-line>{palette.line} Los archivos para bajar son Campos.</p>
       </div>
     </header>
 
     <section class="marca__plates" aria-label="Logotipo">
       {
         plates.map((plate) => (
-          <div class:list={['marca__plate', `is-${plate.tone}`, plate.hero && 'is-hero']}>
-            <p class="marca__mark">Glyv</p>
+          <div class:list={['marca__plate', `is-${plate.tone}`, plate.hero && 'is-hero', 'grain-host']}>
+            <Grainient tone={washOf[plate.tone]} />
+            <p class="marca__mark">Ekilia</p>
             <div>
               <h2 data-field={plate.tone}>{fieldOf[plate.tone].name}</h2>
               <p><span data-hex={plate.tone}>{fieldOf[plate.tone].hex}</span>. {plate.note}</p>
-              <p class="marca__files">
-                {plate.files.map((file) => (
-                  <a href={file.href} download>
-                    {file.label}
-                  </a>
-                ))}
-              </p>
             </div>
           </div>
         ))
       }
     </section>
 
-    <section class="marca__clear" aria-label="Sin fondo">
+    <section class="marca__clear grain-host" aria-label="Sin fondo">
+      <Grainient tone="ink" />
       <div class="marca__clear-copy">
-        <h2>Sin fondo</h2>
-        <p>Para ponerlo sobre una foto. El PNG conserva la transparencia.</p>
-        <p class="marca__files">
-          <a href="/marca/glyv-sobre-tinta.png" download>PNG sobre tinta</a>
-          <a href="/marca/glyv-sobre-tinta.svg" download>SVG sobre tinta</a>
-        </p>
+        <h2>Sobre foto</h2>
+        <p>El nombre se compone en Fraunces. El color depende del fondo.</p>
       </div>
       <ul>
         {
@@ -318,20 +192,14 @@ const rules = [
             <li>
               <p>{item.name}</p>
               <p>{item.note}</p>
-              <p class="marca__files">
-                {item.files.map((file) => (
-                  <a href={file.href} download>
-                    {file.label}
-                  </a>
-                ))}
-              </p>
             </li>
           ))
         }
       </ul>
     </section>
 
-    <section class="marca__squares" aria-label="Cuadrado">
+    <section class="marca__squares grain-host" aria-label="Cuadrado">
+      <Grainient tone="cream" />
       <div class="marca__squares-copy">
         <h2>Cuadrado</h2>
         <p>Perfil, publicación y miniatura. 1600 px.</p>
@@ -340,15 +208,11 @@ const rules = [
         {
           squares.map((item) => (
             <li class={`is-${item.tone}`}>
-              <p class="marca__square-mark">Glyv</p>
-              <p class="marca__files">
-                <a href={item.png} download>
-                  PNG {item.name.toLowerCase()}
-                </a>
-                <a href={item.svg} download>
-                  SVG {item.name.toLowerCase()}
-                </a>
-              </p>
+              <div class="marca__square-mark grain-host">
+                <Grainient tone={washOf[item.tone]} />
+                Ekilia
+              </div>
+              <p class="marca__files">{item.name}</p>
             </li>
           ))
         }
@@ -358,16 +222,10 @@ const rules = [
     <section class="marca__products" aria-label="Nombres y fotos">
       {
         products.map((product) => (
-          <div class={`marca__product is-${product.tone}`}>
+          <div class={`marca__product is-${product.tone} grain-host`}>
+            <Grainient tone={washOf[product.tone]} />
             <header>
               <p class="marca__name">{product.name}</p>
-              <p class="marca__files">
-                {product.files.map((file) => (
-                  <a href={file.href} download>
-                    {file.label}
-                  </a>
-                ))}
-              </p>
             </header>
             <div class="marca__shots">
               {product.shots.map((shot) => (
@@ -387,7 +245,8 @@ const rules = [
       }
     </section>
 
-    <section class="marca__shared" aria-label="Fotos de las dos fórmulas">
+    <section class="marca__shared grain-host" aria-label="Fotos de las dos fórmulas">
+      <Grainient tone="cream" />
       <h2>Las dos fórmulas</h2>
       <div class="marca__shots">
         {
@@ -406,57 +265,29 @@ const rules = [
       </div>
     </section>
 
-    <section class="marca__rules" aria-label="Uso">
+    <section class="marca__rules grain-host" aria-label="Uso">
+      <Grainient tone="ink" />
       <h2>Al usarlo</h2>
       <ul>
-        {rules.map((rule, index) => <li data-palette-rule={index === 0 ? 'uso' : undefined}>{rule}</li>)}
+        {rules.map((rule) => <li>{rule}</li>)}
       </ul>
     </section>
-    <script is:inline define:vars={{ palettes }}>
-      const chosen = new URLSearchParams(location.search).get('paleta');
-      const active = palettes.find((item) => item.id === chosen) || palettes[0];
-      const fields = {
-        crema: [active.creamName, active.cream],
-        bosque: [active.forestName, active.forest],
-        petroleo: [active.petroleumName, active.petroleum],
-      };
-      document.querySelectorAll('[data-field]').forEach((node) => {
-        const pair = fields[node.getAttribute('data-field')];
-        if (pair) node.textContent = pair[0];
-      });
-      document.querySelectorAll('[data-hex]').forEach((node) => {
-        const pair = fields[node.getAttribute('data-hex')];
-        if (pair) node.textContent = pair[1];
-      });
-      const line = document.querySelector('[data-palette-line]');
-      if (line) line.textContent = `${active.line} Los archivos para bajar son Campos.`;
-      const rule = document.querySelector('[data-palette-rule]');
-      if (rule) {
-        rule.textContent = `Sobre ${active.creamName.toLowerCase()}, el logotipo va en tinta. Sobre ${active.forestName.toLowerCase()} o ${active.petroleumName.toLowerCase()}, en ${active.creamName.toLowerCase()}.`;
-      }
-      document.title = `Marca, ${active.name} | Glyv`;
-      document.querySelectorAll('.marca__switch a').forEach((link) => {
-        const on = link.href.includes(`paleta=${active.id}`);
-        if (on) link.setAttribute('aria-current', 'true');
-        else link.removeAttribute('aria-current');
-      });
-    </script>
   </article>
 </BaseLayout>
 
 <style>
   .marca {
-    --cream: #f4efe6;
-    --forest: #1e4a32;
-    --petroleum: #0b4f6c;
-    --ink: #1a2a22;
     font-family: Outfit, sans-serif;
+    --cream: #f6f3ee;
+    --forest: #0e6e9e;
+    --petroleum: #3e2770;
+    --ink: #1A1228;
     color: var(--ink);
   }
 
   .marca h2 {
-    margin: 0;
     font-family: Fraunces, serif;
+    margin: 0;
     font-weight: 500;
     letter-spacing: -0.03em;
     line-height: 1;
@@ -492,9 +323,9 @@ const rules = [
   }
 
   .marca__intro h1 {
+    font-family: Fraunces, serif;
     margin: 0;
     max-width: 12ch;
-    font-family: Fraunces, serif;
     font-size: clamp(2.6rem, 7vw, 4.8rem);
     font-weight: 500;
     line-height: 0.98;
@@ -508,60 +339,24 @@ const rules = [
     line-height: 1.5;
   }
 
-  .marca__switch {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0;
-    margin-top: 1.5rem;
-  }
-
-  .marca__switch a {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    min-height: 2.75rem;
-    padding: 0 0.95rem;
-    border: 1.5px solid color-mix(in srgb, var(--cream) 50%, transparent);
-    text-decoration: none;
-  }
-
-  .marca__switch a[aria-current='true'] {
-    background: var(--cream);
-    color: var(--forest);
-    border-color: var(--on-dark, var(--cream));
-  }
-
-  .marca__chips {
-    display: flex;
-    width: 2.55rem;
-    height: 0.85rem;
-  }
-
-  .marca__chips i {
-    flex: 1;
-    display: block;
-  }
-
-  .marca__switch a[aria-current='true'] .marca__chips i:first-child {
-    box-shadow: inset 0 0 0 1px var(--forest);
-  }
-
   .marca__mark,
   .marca__square-mark,
   .marca__name {
-    margin: 0;
     font-family: Fraunces, serif;
+    margin: 0;
     font-weight: 600;
     letter-spacing: -0.05em;
     line-height: 0.8;
   }
 
   .marca__mark {
-    font-size: clamp(4.2rem, 12vw, 7rem);
+    font-optical-sizing: none;
+    font-variation-settings: "opsz" 144, "wght" 600;
+    font-size: clamp(3.2rem, 9vw, 5.4rem);
   }
 
   .marca__plate.is-hero .marca__mark {
-    font-size: clamp(5rem, 16vw, 9rem);
+    font-size: clamp(3.6rem, 11vw, 6.4rem);
   }
 
   .marca__square-mark {
@@ -570,7 +365,7 @@ const rules = [
     aspect-ratio: 1;
     background: var(--cream);
     color: var(--ink);
-    font-size: clamp(3rem, 7vw, 4.6rem);
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
   }
 
   .marca__squares li.is-bosque .marca__square-mark {
@@ -770,10 +565,10 @@ const rules = [
   }
 
   .marca__rules li {
+    font-family: Fraunces, serif;
     max-width: 32rem;
     padding: 0.85rem 0;
     border-top: 1.5px solid color-mix(in srgb, var(--cream) 28%, transparent);
-    font-family: Fraunces, serif;
     font-size: clamp(1.2rem, 2.6vw, 1.55rem);
     font-weight: 500;
     line-height: 1.25;

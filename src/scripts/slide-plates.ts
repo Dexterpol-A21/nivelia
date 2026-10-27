@@ -9,6 +9,7 @@ export function initSlidePlates() {
   document.querySelectorAll<HTMLElement>('[data-slide-host]').forEach((host) => {
     const panes = [...host.querySelectorAll<HTMLElement>(':scope > [data-slide]')];
     if (!panes.length) return;
+    if (host.getBoundingClientRect().top < window.innerHeight) return;
 
     const tl = gsap.timeline({
       scrollTrigger: {

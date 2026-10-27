@@ -1,10 +1,12 @@
-# Glyv — Copy de etiquetas
+# Ekilia — Copy de etiquetas
 
 Fuente de copy para ficha de producto. Sin indicaciones de color ni de diseño.
 
+La línea «Recupera el equilibrio» y el claim de Centia «Equilibra tu glucosa de forma natural» no pasan el filtro de la presentación. En web no se publican así. La regla y el texto de reemplazo están en `04-cumplimiento-legal.md`.
+
 ---
 
-## Producto 1: Glyv Centia
+## Producto 1: Ekilia Centia
 
 **Línea:** Recupera el equilibrio  
 **Nombre:** Centia  
@@ -25,9 +27,9 @@ Tomar 2 cápsulas al día con los alimentos.
 
 No exceder la porción recomendada. No se use en mujeres embarazadas o en periodo de lactancia. Consulte a su médico antes de usar este producto si está bajo tratamiento médico.
 
-### Garantía Glyv
+### Garantía Ekilia
 
-En Glyv creemos en el poder del equilibrio y en los ingredientes de la más alta calidad. Este producto está elaborado con estándares premium para apoyar tu bienestar cada día.
+En Ekilia creemos en el poder del equilibrio y en los ingredientes de la más alta calidad. Este producto está elaborado con estándares premium para apoyar tu bienestar cada día.
 
 Tu bienestar es tu **mejor inversión**.
 
@@ -80,7 +82,7 @@ Este producto no es un medicamento. El consumo de este producto es responsabilid
 
 ---
 
-## Producto 2: Glyv NERVIA
+## Producto 2: Ekilia NERVIA
 
 **Línea:** Recupera el equilibrio  
 **Nombre:** Nervia  
@@ -101,9 +103,9 @@ Tomar 2 cápsulas al día con los alimentos.
 
 No exceder la porción recomendada. No se use en mujeres embarazadas o en período de lactancia. Consulte a su médico antes de usar este producto si está bajo tratamiento médico.
 
-### Garantía Glyv
+### Garantía Ekilia
 
-En Glyv creemos en el poder del equilibrio y en los ingredientes de la más alta calidad. Este producto está elaborado con estándares premium para apoyar tu bienestar cada día.
+En Ekilia creemos en el poder del equilibrio y en los ingredientes de la más alta calidad. Este producto está elaborado con estándares premium para apoyar tu bienestar cada día.
 
 Tu bienestar es tu **mejor inversión**.
 

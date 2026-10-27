@@ -1,4 +1,4 @@
-# Glyv — Requerimientos de tienda (v1)
+# Ekilia — Requerimientos de tienda (v1)
 
 Stack: Astro (server) + Supabase + Stripe.
 Esto es la primera tienda. El corte es brutal a propósito.
@@ -29,7 +29,7 @@ Stripe y Supabase **sí facilitan** cobro, usuarios y datos. No facilitan envío
 - Perfil con 10 campos
 - Carrito sincronizado entre dispositivos
 
-### Dueño de Glyv / tu cliente freelance (dashboard)
+### Dueño de Ekilia / tu cliente freelance (dashboard)
 
 **No construyas un dashboard a medida en v1.**
 
@@ -93,4 +93,4 @@ Precios y cobro viven en Stripe. Supabase guarda catálogo y el historial. RLS e
 - ¿Un solo producto o varios?
 - ¿La suscripción es mensual fija?
 - ¿Envío a todo México? ¿precio de envío?
-- ¿El dueño de Glyv entra a Stripe o quieres `/admin` sí o sí en v1?
+- ¿El dueño de Ekilia entra a Stripe o quieres `/admin` sí o sí en v1?

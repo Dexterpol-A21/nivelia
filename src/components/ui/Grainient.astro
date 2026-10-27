@@ -1,0 +1,32 @@
+---
+interface Props {
+  tone?: 'hero' | 'hero-bone' | 'hero-blue' | 'cream' | 'forest' | 'petroleum' | 'turquoise' | 'ink';
+  intro?: boolean;
+}
+
+const { tone = 'hero', intro = true } = Astro.props;
+---
+
+<span class="grainient-container" data-grainient data-tone={tone} data-intro={intro ? undefined : 'false'}>
+  <canvas class="grainient-canvas" aria-hidden="true"></canvas>
+</span>
+
+<style>
+  .grainient-container {
+    position: absolute !important;
+    inset: 0;
+    z-index: -1 !important;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .grainient-canvas {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+</style>

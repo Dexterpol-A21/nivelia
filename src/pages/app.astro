@@ -1,0 +1,894 @@
+---
+import Grainient from '@components/ui/Grainient.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { PAGES } from '@utils/constants';
+---
+
+<BaseLayout title={PAGES.app.title} description={PAGES.app.description} bar={false}>
+  <article class="app" data-app>
+    <div class="app__load" data-load>
+      <p>Ekilia</p>
+    </div>
+    <section class="app__next grain-host" data-next>
+      <Grainient tone="forest" intro={false} />
+      <div class="app__lead">
+        <p class="app__name" data-name>Tu frasco</p>
+        <h1 data-when>30 días</h1>
+        <p data-ship>
+          Se prepara a los 30 días. La fecha en la puerta se confirma cuando sale. El envío cubre México.
+        </p>
+      </div>
+      <div class="app__jars" data-jars></div>
+    </section>
+
+    <section class="app__day grain-host">
+      <Grainient tone="cream" intro={false} />
+      <div class="app__today">
+        <p class="app__count" data-count>Ninguna toma marcada</p>
+        <p class="app__status" data-status hidden>Hoy ya está.</p>
+        <p data-advice>Dos cápsulas, con los alimentos. Una toma al día.</p>
+        <div class="app__marking">
+          <button class="app__take" type="button" data-take>La tomé</button>
+          <button class="app__undo" type="button" data-undo hidden>Deshacer</button>
+        </div>
+      </div>
+      <div class="app__log">
+        <div data-strip aria-label="Registro del frasco"></div>
+        <ul class="app__legend">
+          <li><span class="is-today"></span>Hoy</li>
+          <li><span class="is-taken"></span>Toma</li>
+          <li><span class="is-bottle"></span>La otra botella</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="app__hold">
+      <div class="app__row">
+        <button type="button" data-pause>Pausar el siguiente envase</button>
+        <button type="button" data-cancel>Cancelar el ciclo</button>
+        <a href="/contacto">Contacto</a>
+      </div>
+      <p data-order>Envase de este ciclo.</p>
+      <p data-receipt>El monto lo confirma el cobro. Ekilia no guarda tu tarjeta.</p>
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  .app__load {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    display: grid;
+    place-items: center;
+    background: #f6f3ee;
+    color: #1a1228;
+  }
+
+  .app__load p {
+    margin: 0;
+    font-family: Fraunces, serif;
+    font-size: clamp(2.6rem, 7vw, 4rem);
+    font-weight: 500;
+    letter-spacing: -0.045em;
+    line-height: 1;
+  }
+
+  .app__load.is-done {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s linear;
+  }
+
+  .app {
+    --cream: #f6f3ee;
+    --cream-deep: #e6dfd4;
+    --forest: #0e6e9e;
+    --petroleum: #3e2770;
+    --ink: #1a1228;
+    --field: var(--forest);
+    --hover: 0.48s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: Outfit, sans-serif;
+    color: var(--ink);
+  }
+
+  .app.is-nervia {
+    --field: var(--petroleum);
+  }
+
+  .app.is-both {
+    --field: #0f6468;
+  }
+
+  .app__next,
+  .app__day,
+  .app__hold {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .app__next > :not(.grainient-container),
+  .app__day > :not(.grainient-container),
+  .app__hold > :not(.grainient-container) {
+    position: relative;
+    z-index: 1;
+  }
+
+  .app h1,
+  .app__status {
+    margin: 0;
+    font-family: Fraunces, serif;
+    font-weight: 500;
+    letter-spacing: -0.045em;
+  }
+
+  .app h1 {
+    font-size: clamp(2.8rem, 7vw, 4.8rem);
+    line-height: 0.92;
+  }
+
+  .app__next {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.2rem;
+    background: var(--field);
+    color: var(--cream);
+    padding: 1.7rem 1.5rem 2rem;
+  }
+
+  .app__lead {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .app__name {
+    margin: 0 0 0.35rem;
+    font-weight: 600;
+  }
+
+  .app__next p:last-child,
+  .app__lead p:last-child {
+    margin: 0.9rem 0 0;
+    max-width: 28rem;
+    font-size: 1.05rem;
+    line-height: 1.45;
+  }
+
+  .app__jars {
+    display: flex;
+    gap: 0.7rem;
+  }
+
+  .app__jars:empty {
+    display: none;
+  }
+
+  .app__jars :global(img) {
+    width: 6.4rem;
+    height: 7.6rem;
+    object-fit: cover;
+    background: var(--cream);
+  }
+
+  .app__day {
+    display: grid;
+    gap: 1.6rem;
+    background: var(--cream);
+    color: var(--ink);
+    padding: 1.7rem 1.5rem 2rem;
+  }
+
+  .app__count {
+    margin: 0;
+    font-family: Fraunces, serif;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+  }
+
+  .app__status {
+    margin-top: 0.75rem;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    line-height: 1;
+  }
+
+  .app__status[hidden] {
+    display: none;
+  }
+
+  .app__today [data-advice] {
+    margin: 0.85rem 0 0;
+    max-width: 26rem;
+    font-size: 1.08rem;
+    line-height: 1.45;
+  }
+
+  .app__marking {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    gap: 0.8rem 1.2rem;
+    margin-top: 1.3rem;
+  }
+
+  .app__take,
+  .app__undo,
+  .app__row button,
+  .app__row a {
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .app__take {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    min-height: 2.75rem;
+    padding: 0.8rem 1.4rem;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--ink);
+    box-shadow: inset 0 0 0 2px var(--ink);
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .app__take::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--ink);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.55s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  .app__take:hover,
+  .app__take:focus-visible {
+    color: var(--cream-deep);
+  }
+
+  .app__take:hover::before,
+  .app__take:focus-visible::before {
+    transform: scaleX(1);
+  }
+
+  .app__undo,
+  .app__row button,
+  .app__row a {
+    position: relative;
+    padding: 0.2rem 0 0.35rem;
+    border: 0;
+    background: none;
+    color: inherit;
+    font-size: 1.02rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .app__undo[hidden],
+  .app__row button[hidden] {
+    display: none;
+  }
+
+  .app__undo::after,
+  .app__row button::after,
+  .app__row a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform var(--hover);
+  }
+
+  .app__undo:hover::after,
+  .app__undo:focus-visible::after,
+  .app__row button:hover::after,
+  .app__row button:focus-visible::after,
+  .app__row a:hover::after,
+  .app__row a:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .app__day :focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 4px;
+  }
+
+  .app__log :global(table) {
+    width: min(100%, 28rem);
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin: 0 0 1rem;
+  }
+
+  .app__log :global(caption) {
+    caption-side: top;
+    margin: 0 0 0.7rem;
+    font-family: Fraunces, serif;
+    font-size: clamp(1.6rem, 3vw, 2.1rem);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    text-align: left;
+  }
+
+  .app__log :global(th) {
+    padding: 0 0 0.35rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .app__log :global(td) {
+    padding: 0.15rem;
+    text-align: center;
+    vertical-align: top;
+  }
+
+  .app__log :global(.app__num) {
+    display: grid;
+    place-items: center;
+    min-height: 2.15rem;
+    font-weight: 600;
+  }
+
+  .app__log :global(.app__num.is-today) {
+    background: var(--field);
+    color: var(--cream);
+  }
+
+  .app__log :global(.app__num.is-taken) {
+    box-shadow: inset 0 -3px 0 var(--field);
+  }
+
+  .app__log :global(.app__num.is-today.is-taken) {
+    box-shadow: inset 0 -3px 0 var(--cream);
+  }
+
+  .app__log :global(.app__num.is-bottle) {
+    box-shadow: inset 0 0 0 2px var(--field);
+  }
+
+  .app__log :global(.app__num.is-held) {
+    box-shadow: inset 0 0 0 2px var(--ink);
+  }
+
+  .app__log :global(.app__tag) {
+    display: block;
+    margin-top: 0.15rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .app__legend {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 0.35rem 1.1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.92rem;
+  }
+
+  .app__legend li {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .app__legend span {
+    width: 0.85rem;
+    height: 0.85rem;
+  }
+
+  .app__legend .is-today {
+    background: var(--field);
+  }
+
+  .app__legend .is-taken {
+    box-shadow: inset 0 -3px 0 var(--field);
+  }
+
+  .app__legend .is-bottle {
+    box-shadow: inset 0 0 0 2px var(--field);
+  }
+
+  .app__hold {
+    background: #120e16;
+    color: var(--cream);
+    padding: 1.7rem 1.5rem 2.2rem;
+  }
+
+  .app__row {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 0.35rem 1.4rem;
+  }
+
+  .app__hold p {
+    margin: 1rem 0 0;
+    max-width: 32rem;
+    font-size: 1.02rem;
+    line-height: 1.45;
+  }
+
+  .app__next :focus-visible,
+  .app__hold :focus-visible {
+    outline: 2px solid var(--cream);
+    outline-offset: 4px;
+  }
+
+  @media (min-width: 900px) {
+    .app__next,
+    .app__day,
+    .app__hold {
+      padding-left: 2.6rem;
+      padding-right: 2.6rem;
+    }
+
+    .app__next {
+      gap: 2rem;
+      padding-top: 2.4rem;
+      padding-bottom: 2.4rem;
+    }
+
+    .app__jars :global(img) {
+      width: 8.4rem;
+      height: 10rem;
+    }
+
+    .app__day {
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+      gap: 2rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .app__take::before,
+    .app__undo::after,
+    .app__row button::after,
+    .app__row a::after {
+      transition: none;
+    }
+
+    .app__take:hover,
+    .app__take:focus-visible {
+      background: var(--ink);
+    }
+
+    .app__load.is-done {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  import { setGrainientTone } from '@scripts/grainient';
+  import { formulaById, readRepo, type FormulaId } from '@utils/reposicion';
+
+  const CLOCK_KEY = 'ekilia-app';
+  const TOMA_KEY = 'ekilia-tomas';
+  const CYCLE_DAYS = 30;
+
+  const TIPS = [
+    'Dos cápsulas, con los alimentos. Una toma al día.',
+    'Con el desayuno o con la comida, la que te quede cerca.',
+    'A la misma hora se vuelve costumbre.',
+    'El envase trae 30 tomas. Una toma son 2 cápsulas.',
+    'Si se te pasa un día, al siguiente retomas. No dobles la porción.',
+    'No excedas la porción.',
+    'Tómalas con una comida.',
+    'Un día vacío no se recupera con el doble.',
+    'El frasco está medido para 30 días.',
+    'Misma comida, misma toma.',
+    'Si el horario cambia, la toma sigue siendo una.',
+    'Hoy toca la toma, con los alimentos.',
+    'La toma va con la comida, no en lugar de ella.',
+    'Deja el frasco donde comes.',
+    'Dos cápsulas. Luego el día sigue.',
+    'El ritmo es el del frasco: una toma, cada día.',
+    'Si se te pasa la comida, tómalas con la siguiente. No dobles.',
+    'El siguiente envase se prepara al cerrar estos 30 días.',
+    'La fecha en la puerta se confirma cuando sale.',
+    'El envío cubre México.',
+    'Puedes pausar el siguiente. Este frasco se sigue tomando.',
+    'El otro envase espera el cierre del ciclo.',
+    'Cancelar detiene el ciclo que todavía no se cobra.',
+    'El envase ya pagado se entrega.',
+    'No hay permanencia. El ciclo lo paras cuando lo indiques.',
+    'Junto con lo que ya ibas a comer.',
+    'Una toma al día. El frasco no se apura.',
+    'Hoy es una toma más de este envase.',
+    'Mañana toca otra. Hoy cierra con la de ahora.',
+    'Este frasco cierra hoy.',
+  ];
+
+  interface Clock {
+    startedAt: string;
+    paused: boolean;
+    cancelled: boolean;
+  }
+
+  const root = document.querySelector<HTMLElement>('[data-app]');
+
+  const stamp = (date: Date) => {
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${date.getFullYear()}-${month}-${day}`;
+  };
+
+  const parseStamp = (value: string) => {
+    const [year, month, day] = value.split('-').map(Number);
+    return new Date(year || 2026, (month || 1) - 1, day || 1);
+  };
+
+  const addDays = (date: Date, days: number) => {
+    const next = new Date(date);
+    next.setDate(next.getDate() + days);
+    return next;
+  };
+
+  const strip = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+  const longDate = (date: Date) =>
+    new Intl.DateTimeFormat('es-MX', { day: 'numeric', month: 'long' }).format(date);
+
+  const monthTitle = (date: Date) =>
+    new Intl.DateTimeFormat('es-MX', { month: 'long', year: 'numeric' }).format(date);
+
+  const readClock = (): Clock => {
+    const today = stamp(new Date());
+    try {
+      const raw = localStorage.getItem(CLOCK_KEY);
+      if (!raw) return { startedAt: today, paused: false, cancelled: false };
+      const data = JSON.parse(raw) as Partial<Clock>;
+      return {
+        startedAt: typeof data.startedAt === 'string' ? data.startedAt : today,
+        paused: data.paused === true,
+        cancelled: data.cancelled === true,
+      };
+    } catch {
+      return { startedAt: today, paused: false, cancelled: false };
+    }
+  };
+
+  const writeClock = (clock: Clock) => {
+    try {
+      localStorage.setItem(CLOCK_KEY, JSON.stringify(clock));
+    } catch {
+      /* modo privado */
+    }
+  };
+
+  const readTomas = () => {
+    try {
+      const raw = localStorage.getItem(TOMA_KEY);
+      const data = raw ? (JSON.parse(raw) as unknown) : [];
+      return new Set(Array.isArray(data) ? data.filter((item) => typeof item === 'string') : []);
+    } catch {
+      return new Set<string>();
+    }
+  };
+
+  const writeTomas = (days: Set<string>) => {
+    try {
+      localStorage.setItem(TOMA_KEY, JSON.stringify([...days]));
+    } catch {
+      /* modo privado */
+    }
+  };
+
+  const toneOf = (formula: FormulaId) =>
+    formula === 'nervia' ? 'petroleum' : formula === 'both' ? 'turquoise' : 'forest';
+
+  const jarsOf = (formula: FormulaId) => {
+    if (formula === 'both') {
+      return [
+        { src: '/centia.jpg?v=3', alt: 'Frasco Ekilia Centia' },
+        { src: '/nervia.jpg?v=3', alt: 'Frasco Ekilia Nervia' },
+      ];
+    }
+    const row = formulaById(formula);
+    return row?.photo ? [{ src: row.photo, alt: `Frasco Ekilia ${row.name}` }] : [];
+  };
+
+  const tipFor = (day: number, formula: FormulaId | null) => {
+    const index = Math.min(CYCLE_DAYS, Math.max(1, day)) - 1;
+    if (formula === 'both' && index === 0) {
+      return 'Dos cápsulas de Centia y dos de Nervia, con los alimentos. Una toma de cada una al día.';
+    }
+    if (formula === 'both' && index === 3) {
+      return 'El envase trae 30 tomas. Una toma son 2 cápsulas de cada fórmula.';
+    }
+    if (formula === 'both' && index === 14) {
+      return 'Dos cápsulas de cada fórmula. Luego el día sigue.';
+    }
+    return TIPS[index] ?? TIPS[0];
+  };
+
+  if (root) {
+    const nameEl = root.querySelector<HTMLElement>('[data-name]');
+    const whenEl = root.querySelector<HTMLElement>('[data-when]');
+    const shipEl = root.querySelector<HTMLElement>('[data-ship]');
+    const jarsEl = root.querySelector<HTMLElement>('[data-jars]');
+    const countEl = root.querySelector<HTMLElement>('[data-count]');
+    const statusEl = root.querySelector<HTMLElement>('[data-status]');
+    const adviceEl = root.querySelector<HTMLElement>('[data-advice]');
+    const stripEl = root.querySelector<HTMLElement>('[data-strip]');
+    const takeBtn = root.querySelector<HTMLButtonElement>('[data-take]');
+    const undoBtn = root.querySelector<HTMLButtonElement>('[data-undo]');
+    const pauseBtn = root.querySelector<HTMLButtonElement>('[data-pause]');
+    const cancelBtn = root.querySelector<HTMLButtonElement>('[data-cancel]');
+    const orderEl = root.querySelector<HTMLElement>('[data-order]');
+    const receiptEl = root.querySelector<HTMLElement>('[data-receipt]');
+    const grain = root.querySelector<HTMLElement>('[data-next] [data-grainient]');
+
+    const state = () => {
+      const clock = readClock();
+      const today = strip(new Date());
+      let start = strip(parseStamp(clock.startedAt));
+      if (!clock.paused && !clock.cancelled) {
+        const passed = Math.floor((today.getTime() - start.getTime()) / 86400000);
+        if (passed >= CYCLE_DAYS) {
+          start = addDays(start, Math.floor(passed / CYCLE_DAYS) * CYCLE_DAYS);
+          clock.startedAt = stamp(start);
+          writeClock(clock);
+        }
+      }
+      const elapsed = Math.max(0, Math.floor((today.getTime() - start.getTime()) / 86400000));
+      const day = Math.min(CYCLE_DAYS, elapsed + 1);
+      const lastDose = addDays(start, CYCLE_DAYS - 1);
+      const arrival = addDays(start, CYCLE_DAYS);
+      const open = today >= start && today <= lastDose;
+      const tomas = readTomas();
+      const inJar = (date: Date) => date >= start && date <= lastDose;
+      let marked = 0;
+      tomas.forEach((value) => {
+        const date = strip(parseStamp(value));
+        if (inJar(date)) marked += 1;
+      });
+      const yesterday = addDays(today, -1);
+      let streak = 0;
+      let cursor = tomas.has(stamp(today)) ? today : yesterday;
+      if (tomas.has(stamp(cursor))) {
+        while (cursor >= start && tomas.has(stamp(cursor))) {
+          streak += 1;
+          cursor = addDays(cursor, -1);
+        }
+      }
+      const missedYesterday = yesterday >= start && yesterday <= lastDose && !tomas.has(stamp(yesterday));
+      return { clock, today, start, day, lastDose, arrival, open, tomas, marked, streak, missedYesterday };
+    };
+
+    const paint = () => {
+      const formula = readRepo()?.formula ?? null;
+      const row = formula ? formulaById(formula) : null;
+      const tone = formula ? toneOf(formula) : 'forest';
+      const view = state();
+      const todayKey = stamp(view.today);
+      const takenToday = view.tomas.has(todayKey);
+
+      root.classList.toggle('is-nervia', formula === 'nervia');
+      root.classList.toggle('is-both', formula === 'both');
+      setGrainientTone(grain, tone);
+
+      if (nameEl) nameEl.textContent = row?.name ?? 'Tu frasco';
+      if (whenEl) {
+        whenEl.textContent = view.clock.cancelled ? 'Sin siguiente envase' : longDate(view.arrival);
+      }
+      if (shipEl) {
+        shipEl.textContent = view.clock.cancelled
+          ? 'No hay próxima entrega. El envase ya pagado se entrega.'
+          : view.clock.paused
+            ? 'Ese envase no sale hasta que reanudes. El envío cubre México.'
+            : 'Se prepara a los 30 días. La fecha en la puerta se confirma cuando sale. El envío cubre México.';
+      }
+      if (jarsEl) {
+        jarsEl.replaceChildren(
+          ...jarsOf(formula ?? 'centia')
+            .filter(() => formula)
+            .map((jar) => {
+              const image = document.createElement('img');
+              image.src = jar.src;
+              image.alt = jar.alt;
+              image.width = 280;
+              image.height = 340;
+              return image;
+            }),
+        );
+      }
+
+      const tomaText =
+        view.marked === 0
+          ? 'Ninguna toma marcada'
+          : view.marked === 1
+            ? '1 toma de este frasco'
+            : `${view.marked} tomas de este frasco`;
+      const rachaText =
+        view.streak <= 0 ? '' : view.streak === 1 ? '1 día seguido' : `${view.streak} días seguidos`;
+      if (countEl) countEl.textContent = rachaText ? `${tomaText} · ${rachaText}` : tomaText;
+
+      if (statusEl) {
+        const status = !view.open
+          ? 'Este frasco ya cerró.'
+          : takenToday
+            ? 'Hoy ya está.'
+            : view.missedYesterday
+              ? 'Ayer se pasó. Hoy retomas.'
+              : '';
+        statusEl.hidden = status === '';
+        statusEl.textContent = status;
+      }
+      if (adviceEl) adviceEl.textContent = tipFor(view.day, formula);
+
+      if (takeBtn) takeBtn.hidden = !view.open || takenToday;
+      if (undoBtn) undoBtn.hidden = !view.open || !takenToday;
+
+      if (pauseBtn) {
+        pauseBtn.hidden = view.clock.cancelled;
+        pauseBtn.textContent = view.clock.paused ? 'Reanudar el siguiente envase' : 'Pausar el siguiente envase';
+        pauseBtn.setAttribute('aria-pressed', String(view.clock.paused));
+      }
+      if (cancelBtn) cancelBtn.hidden = view.clock.cancelled;
+
+      const started = longDate(view.start);
+      if (orderEl) {
+        orderEl.textContent = view.clock.cancelled
+          ? `Envase del ${started}. Es el pedido ya pagado.`
+          : view.clock.paused
+            ? `Envase del ${started}. Lo sigues tomando. El siguiente no sale.`
+            : `Envase del ${started}. Es el pedido de este ciclo.`;
+      }
+      if (receiptEl) {
+        receiptEl.textContent = view.clock.cancelled
+          ? 'No hay un cobro nuevo. Ekilia no guarda tu tarjeta.'
+          : 'El monto lo confirma el cobro. Ekilia no guarda tu tarjeta.';
+      }
+
+      if (stripEl) {
+        stripEl.replaceChildren();
+        const through = view.clock.cancelled ? view.lastDose : view.arrival;
+        const cursor = new Date(view.start.getFullYear(), view.start.getMonth(), 1);
+        const end = new Date(through.getFullYear(), through.getMonth(), 1);
+        const week = ['lu', 'ma', 'mi', 'ju', 'vi', 'sá', 'do'];
+        while (cursor <= end) {
+          const year = cursor.getFullYear();
+          const month = cursor.getMonth();
+          const table = document.createElement('table');
+          const caption = document.createElement('caption');
+          caption.textContent = monthTitle(cursor);
+          table.append(caption);
+          const head = document.createElement('tr');
+          week.forEach((label) => {
+            const cell = document.createElement('th');
+            cell.scope = 'col';
+            cell.textContent = label;
+            head.append(cell);
+          });
+          const thead = document.createElement('thead');
+          thead.append(head);
+          table.append(thead);
+          const tbody = document.createElement('tbody');
+          const first = new Date(year, month, 1);
+          let lead = first.getDay() - 1;
+          if (lead < 0) lead = 6;
+          const daysInMonth = new Date(year, month + 1, 0).getDate();
+          let dayNum = 1;
+          for (let rowIndex = 0; rowIndex < 6 && dayNum <= daysInMonth; rowIndex += 1) {
+            const line = document.createElement('tr');
+            for (let col = 0; col < 7; col += 1) {
+              const cell = document.createElement('td');
+              if (rowIndex * 7 + col < lead || dayNum > daysInMonth) {
+                cell.setAttribute('aria-hidden', 'true');
+                line.append(cell);
+                continue;
+              }
+              const date = new Date(year, month, dayNum);
+              const key = stamp(date);
+              const inJar = date >= view.start && date <= view.lastDose;
+              const isToday = key === todayKey;
+              const isBottle = !view.clock.cancelled && key === stamp(view.arrival);
+              const isTaken = inJar && view.tomas.has(key);
+              const num = document.createElement('span');
+              num.className = 'app__num';
+              if (isToday) num.classList.add('is-today');
+              if (isTaken) num.classList.add('is-taken');
+              if (isBottle) num.classList.add('is-bottle');
+              if (view.clock.paused && isBottle) num.classList.add('is-held');
+              num.textContent = String(dayNum);
+              cell.append(num);
+              if (isBottle) {
+                const tag = document.createElement('span');
+                tag.className = 'app__tag';
+                tag.textContent = view.clock.paused ? 'Pausa' : 'Envase';
+                cell.append(tag);
+              }
+              const bits = [longDate(date)];
+              if (isToday) bits.push('hoy');
+              if (isTaken) bits.push('toma');
+              if (isBottle && view.clock.paused) bits.push('la otra botella, en pausa');
+              else if (isBottle) bits.push('la otra botella');
+              cell.setAttribute('aria-label', bits.join(', '));
+              dayNum += 1;
+              line.append(cell);
+            }
+            tbody.append(line);
+          }
+          table.append(tbody);
+          stripEl.append(table);
+          cursor.setMonth(cursor.getMonth() + 1);
+        }
+      }
+    };
+
+    takeBtn?.addEventListener('click', () => {
+      const view = state();
+      if (!view.open) return;
+      const tomas = view.tomas;
+      tomas.add(stamp(view.today));
+      writeTomas(tomas);
+      paint();
+    });
+
+    undoBtn?.addEventListener('click', () => {
+      const view = state();
+      const tomas = view.tomas;
+      tomas.delete(stamp(view.today));
+      writeTomas(tomas);
+      paint();
+    });
+
+    pauseBtn?.addEventListener('click', () => {
+      const clock = readClock();
+      clock.paused = !clock.paused;
+      writeClock(clock);
+      paint();
+    });
+
+    cancelBtn?.addEventListener('click', () => {
+      const clock = readClock();
+      clock.cancelled = true;
+      clock.paused = false;
+      writeClock(clock);
+      paint();
+    });
+
+    const stored = readClock();
+    if (!localStorage.getItem(CLOCK_KEY)) writeClock(stored);
+    paint();
+
+    const veil = root.querySelector<HTMLElement>('[data-load]');
+    if (veil) {
+      let gone = false;
+      const hide = () => {
+        if (gone) return;
+        gone = true;
+        veil.classList.add('is-done');
+        window.setTimeout(() => veil.remove(), 380);
+      };
+      window.setTimeout(hide, 2200);
+      const frames = new Promise<void>((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
+      });
+      const hold = new Promise<void>((resolve) => {
+        window.setTimeout(resolve, 420);
+      });
+      const pictures = Promise.all(
+        [...root.querySelectorAll('img')].map((img) => img.decode().catch(() => undefined)),
+      );
+      Promise.all([document.fonts.ready, frames, hold, pictures]).then(hide);
+    }
+  }
+</script>

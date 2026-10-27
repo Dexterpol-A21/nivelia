@@ -1,6 +1,4 @@
 ---
-import GlyvFlora from '@components/home/GlyvFlora.astro';
-import GlyvNerves from '@components/home/GlyvNerves.astro';
 import { HOME_PAGE } from '@utils/constants';
 
 const copy = HOME_PAGE.choose;
@@ -9,7 +7,6 @@ const copy = HOME_PAGE.choose;
 <section class="home-choose" aria-labelledby="home-choose-title">
   <div data-slide-host>
     <header data-slide="left">
-      <GlyvFlora variant="seam" ink="dark" />
       <h2 id="home-choose-title">{copy.h2}</h2>
       <p>{copy.note}</p>
     </header>
@@ -22,9 +19,6 @@ const copy = HOME_PAGE.choose;
           href={item.href}
           data-slide={item.name === 'Nervia' ? 'right' : 'left'}
         >
-          <GlyvFlora variant="seam" ink="light" />
-          {item.name === 'Centia' && <GlyvFlora variant="leaves" />}
-          {item.name === 'Nervia' && <GlyvNerves />}
           <h3>{item.name}</h3>
           <p class="home-choose__claim">{item.claim}</p>
           <p>{item.body}</p>
@@ -36,11 +30,11 @@ const copy = HOME_PAGE.choose;
 
 <style>
   .home-choose {
-    --cream: #f4efe6;
-    --forest: #1e4a32;
-    --petroleum: #0b4f6c;
-    --ink: #1a2a22;
     font-family: Outfit, sans-serif;
+    --cream: #f6f3ee;
+    --forest: #0e6e9e;
+    --petroleum: #3e2770;
+    --ink: #1A1228;
   }
 
   .home-choose header {
@@ -50,14 +44,14 @@ const copy = HOME_PAGE.choose;
     padding: 7.6rem 1.5rem 2rem;
   }
 
-  .home-choose header > :not(.glyv-flora) {
+  .home-choose header > :not(.ekilia-flora) {
     position: relative;
     z-index: 1;
   }
 
   .home-choose h2 {
-    margin: 0;
     font-family: Fraunces, serif;
+    margin: 0;
     font-size: clamp(2.15rem, 5.4vw, 3.6rem);
     font-weight: 500;
     line-height: 1.05;
@@ -84,7 +78,7 @@ const copy = HOME_PAGE.choose;
     text-decoration: none;
   }
 
-  .home-choose__plate > :not(.glyv-flora):not(.glyv-nerves) {
+  .home-choose__plate > :not(.ekilia-flora):not(.ekilia-nerves) {
     position: relative;
     z-index: 1;
   }
@@ -98,8 +92,8 @@ const copy = HOME_PAGE.choose;
   }
 
   .home-choose h3 {
-    margin: 0;
     font-family: Fraunces, serif;
+    margin: 0;
     font-size: clamp(2.6rem, 7vw, 4.4rem);
     font-weight: 500;
     line-height: 0.9;
@@ -107,9 +101,9 @@ const copy = HOME_PAGE.choose;
   }
 
   .home-choose__claim {
+    font-family: Fraunces, serif;
     margin: 1rem 0 0;
     max-width: 16ch;
-    font-family: Fraunces, serif;
     font-size: clamp(1.25rem, 3vw, 1.7rem);
     font-weight: 500;
     line-height: 1.2;

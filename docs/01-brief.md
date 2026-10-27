@@ -1,15 +1,20 @@
-# Glyv — Brief
+# Ekilia — Brief
 
-- **Nombre**: Glyv (antes Nivelia)
-- **Slogan**: pendiente
+- **Nombre**: Ekilia
+- **Slogan**: Nutrición para tu bienestar. Alternativas: Bienestar que acompaña tu día. Constancia que transforma hábitos. «Recupera el equilibrio» queda fuera (ver `04-cumplimiento-legal.md`).
 - **Qué hacen**: Tienda de suplementos para diabetes.
 - **El punto del negocio**: que la gente compre de forma periódica (reposición / suscripción), no una compra suelta.
 - **NO son**: farmacia, clínica, médico, tienda general de vitaminas.
-- **Tono**: pendiente (salud / confianza; no “milagro”)
+- **Tono**: salud / confianza; no “milagro”
+- **Paleta**:
+  - Azul `#0E6E9E` — Confianza (primario)
+  - Hueso `#F6F3EE` — Claridad (fondo, tono Noche)
+  - Turquesa `#0F6468` — Naturaleza (complemento, tono Noche)
+  - Mora `#3E2770` — Equilibrio (acento, tono Noche)
 - **Páginas**: pendiente (mínimo: home, productos, cómo funciona la reposición, contacto)
 - **Keywords**: suplementos diabetes, glucosa, reposición periódica
 - **Assets**: pendiente (logo, fotos de producto)
-- **Dominio**: pendiente
+- **Dominio**: somosekilia.com
 - **Cobro**: web. Stripe (pagos + suscripción) + Supabase (usuarios, pedidos, catálogo)
 - **Modelo de compra**: reposición periódica (suscripción Stripe), no solo one-shot
 - **Cuentas**: sí (el pedido recurrente va atado a un usuario)

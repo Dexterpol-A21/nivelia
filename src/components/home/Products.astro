@@ -1,25 +1,25 @@
 ---
-import GlyvFlora from '@components/home/GlyvFlora.astro';
-import GlyvNerves from '@components/home/GlyvNerves.astro';
-import GlyvButtons from '@components/ui/GlyvButtons.astro';
+import EkiliaButtons from '@components/ui/EkiliaButtons.astro';
+import Grainient from '@components/ui/Grainient.astro';
 import { PRODUCTS } from '@utils/constants';
 
 const photos = {
   centia: {
-    src: '/centia.jpg',
-    alt: 'Frasco Glyv Centia con nopal, canela y cápsulas',
+    src: '/centia.jpg?v=3',
+    alt: 'Frasco Ekilia Centia con nopal, canela y cápsulas',
   },
   nervia: {
-    src: '/nervia.jpg',
-    alt: 'Frasco Glyv Nervia con pasiflora y cápsulas',
+    src: '/nervia.jpg?v=3',
+    alt: 'Frasco Ekilia Nervia con pasiflora y cápsulas',
   },
 } as const;
 ---
 
-<section class="home-products" aria-label="Productos Glyv">
+<section class="home-products" aria-label="Productos Ekilia">
   {
     PRODUCTS.map((product) => (
-      <article class={`product-plate is-${product.tone}`} id={product.id} data-slide-host>
+      <article class={`product-plate is-${product.tone} grain-host`} id={product.id} data-slide-host>
+        <Grainient tone={product.tone === 'nervia' ? 'petroleum' : 'forest'} />
         <div class="product-plate__figure" data-slide={product.tone === 'nervia' ? 'right' : 'left'}>
           <img
             class="product-plate__photo"
@@ -31,22 +31,19 @@ const photos = {
         </div>
 
         <div class="product-plate__copy" data-slide={product.tone === 'nervia' ? 'left' : 'right'}>
-          {product.tone === 'nervia' && <GlyvNerves />}
           <h2>{product.name}</h2>
           <p class="product-plate__claim" set:html={product.claim.replace('. ', '.<br />')} />
           <p class="product-plate__use">
             {product.use} {product.pack}
           </p>
           <p class="product-plate__ings">{product.ingredients}</p>
-          <GlyvButtons
+          <EkiliaButtons
             primary={product.cta}
             secondary={product.formula}
-            primaryHref={`/${product.slug}`}
+            primaryHref={`/reposicion?formula=${product.slug}`}
             secondaryHref={`/${product.slug}#ingredientes`}
           />
         </div>
-
-        {product.tone === 'centia' && <GlyvFlora variant="plate" />}
       </article>
     ))
   }
@@ -54,11 +51,11 @@ const photos = {
 
 <style>
   .home-products {
-    --cream: #f4efe6;
-    --forest: #1e4a32;
-    --petroleum: #0b4f6c;
-    --ink: #1a2a22;
     font-family: Outfit, sans-serif;
+    --cream: #f6f3ee;
+    --forest: #0e6e9e;
+    --petroleum: #3e2770;
+    --ink: #1A1228;
   }
 
   .product-plate {
@@ -69,11 +66,13 @@ const photos = {
   }
 
   .product-plate.is-centia {
+    --bloom: var(--forest);
     background: var(--forest);
     color: var(--on-dark, var(--cream));
   }
 
   .product-plate.is-nervia {
+    --bloom: var(--petroleum);
     background: var(--petroleum);
     color: var(--on-dark, var(--cream));
   }
@@ -107,14 +106,14 @@ const photos = {
     padding: 2rem 1.5rem 2.2rem;
   }
 
-  .product-plate__copy > :not(.glyv-nerves) {
+  .product-plate__copy > :not(.ekilia-nerves) {
     position: relative;
     z-index: 1;
   }
 
   .product-plate h2 {
-    margin: 0;
     font-family: Fraunces, serif;
+    margin: 0;
     font-size: clamp(2.6rem, 8vw, 5.2rem);
     font-weight: 500;
     line-height: 0.9;
@@ -122,9 +121,9 @@ const photos = {
   }
 
   .product-plate__claim {
+    font-family: Fraunces, serif;
     margin: 1.15rem 0 0;
     max-width: 18ch;
-    font-family: Fraunces, serif;
     font-size: clamp(1.25rem, 3vw, 1.85rem);
     font-weight: 500;
     line-height: 1.2;

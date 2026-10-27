@@ -1,26 +1,27 @@
 ---
-import GlyvFlora from '@components/home/GlyvFlora.astro';
-import GlyvButtons from '@components/ui/GlyvButtons.astro';
+import EkiliaButtons from '@components/ui/EkiliaButtons.astro';
+import Grainient from '@components/ui/Grainient.astro';
 import { HOME_PAGE } from '@utils/constants';
 
 const copy = HOME_PAGE.close;
 ---
 
 <div data-slide-host>
-<section class="home-close" data-slide="left" aria-labelledby="home-close-title">
-  <GlyvFlora variant="seam" ink="dark" />
+<section class="home-close grain-host" data-slide="left" aria-labelledby="home-close-title">
+  <Grainient tone="cream" />
   <div class="home-close__copy">
     <h2 id="home-close-title">{copy.h2}</h2>
     <p>{copy.body}</p>
-    <GlyvButtons
+    <EkiliaButtons
       primary={copy.primary}
+      primaryHref="/reposicion"
       secondary={copy.secondary}
-        secondaryHref="/centia"
+      secondaryHref="/centia"
     />
   </div>
   <figure class="home-close__photo">
     <img
-      src="/cierre-frasco.png"
+      src="/cierre-frasco.png?v=3"
       alt="Un frasco en el umbral, listo para el mes siguiente"
       width="1200"
       height="900"
@@ -31,18 +32,20 @@ const copy = HOME_PAGE.close;
 
 <style>
   .home-close {
-    --cream: #f4efe6;
-    --forest: #1e4a32;
-    --ink: #1a2a22;
+    font-family: Outfit, sans-serif;
+    --cream: #f6f3ee;
+    --forest: #0e6e9e;
+    --ink: #1A1228;
+    --bloom: var(--forest);
+    --bloom-ink: var(--forest);
     background: var(--cream);
     color: var(--ink);
     padding: 7.6rem 1.5rem 3.2rem;
     position: relative;
     overflow: hidden;
-    font-family: Outfit, sans-serif;
   }
 
-  .home-close > :not(.glyv-flora) {
+  .home-close > :not(.ekilia-flora) {
     position: relative;
     z-index: 1;
   }
@@ -59,9 +62,9 @@ const copy = HOME_PAGE.close;
   }
 
   .home-close h2 {
+    font-family: Fraunces, serif;
     margin: 0;
     max-width: 14ch;
-    font-family: Fraunces, serif;
     font-size: clamp(2.4rem, 6vw, 4.2rem);
     font-weight: 500;
     line-height: 1.02;
@@ -75,24 +78,16 @@ const copy = HOME_PAGE.close;
     line-height: 1.5;
   }
 
-  .home-close :global(.glyv-btns__btn.is-bloom) {
+  .home-close :global(.ekilia-btns__btn.is-bloom) {
     color: var(--forest);
     box-shadow: inset 0 0 0 2px var(--forest);
   }
 
-  .home-close :global(.glyv-btns__btn.is-bloom .glyv-btns__layer) {
-    background: var(--forest);
-  }
-
-  .home-close :global(.glyv-btns__btn.is-bloom .glyv-btns__hover-label) {
-    color: var(--on-dark, var(--cream));
-  }
-
-  .home-close :global(.glyv-btns__btn.is-tinta) {
+  .home-close :global(.ekilia-btns__btn.is-tinta) {
     color: var(--forest);
   }
 
-  .home-close :global(.glyv-btns__btn:focus-visible) {
+  .home-close :global(.ekilia-btns__btn:focus-visible) {
     outline-color: var(--forest);
   }
 

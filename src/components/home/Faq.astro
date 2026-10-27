@@ -1,14 +1,13 @@
 ---
-import GlyvFlora from '@components/home/GlyvFlora.astro';
+import Grainient from '@components/ui/Grainient.astro';
 import { HOME_PAGE } from '@utils/constants';
 
 const copy = HOME_PAGE.faq;
 ---
 
 <div data-slide-host>
-<section class="home-faq" id="faq" data-slide="right" aria-labelledby="home-faq-title">
-  <GlyvFlora variant="seam" ink="light" />
-  <GlyvFlora variant="leaves" />
+<section class="home-faq grain-host" id="faq" data-slide="right" aria-labelledby="home-faq-title">
+  <Grainient tone="forest" />
   <h2 id="home-faq-title">{copy.h2}</h2>
   <div>
     {
@@ -29,26 +28,20 @@ const copy = HOME_PAGE.faq;
 
 <style>
   .home-faq {
-    --cream: #f4efe6;
-    --forest: #1e4a32;
-    --ink: #1a2a22;
-    --flora-seam-h: 4.2rem;
+    font-family: Outfit, sans-serif;
+    --cream: #f6f3ee;
+    --forest: #0e6e9e;
+    --ink: #1A1228;
     background: var(--forest);
     color: var(--on-dark, var(--cream));
-    padding: 4.8rem 1.5rem 3rem;
+    padding: 2.8rem 1.5rem 3rem;
     position: relative;
     overflow: hidden;
-    font-family: Outfit, sans-serif;
-  }
-
-  .home-faq > :not(.glyv-flora) {
-    position: relative;
-    z-index: 1;
   }
 
   .home-faq h2 {
-    margin: 0 0 1.6rem;
     font-family: Fraunces, serif;
+    margin: 0 0 1.6rem;
     font-size: clamp(2.15rem, 5.4vw, 3.6rem);
     font-weight: 500;
     line-height: 1.05;
@@ -64,11 +57,11 @@ const copy = HOME_PAGE.faq;
   }
 
   .home-faq summary {
+    font-family: Fraunces, serif;
     position: relative;
     cursor: pointer;
     list-style: none;
     padding: 1.05rem 2.2rem 1.05rem 0;
-    font-family: Fraunces, serif;
     font-size: clamp(1.2rem, 2.6vw, 1.55rem);
     font-weight: 500;
     line-height: 1.25;
@@ -79,10 +72,10 @@ const copy = HOME_PAGE.faq;
   }
 
   .home-faq summary::after {
+    font-family: Outfit, sans-serif;
     content: '+';
     position: absolute;
     right: 0;
-    font-family: Outfit, sans-serif;
     font-size: 1.2rem;
     font-weight: 600;
   }
@@ -156,8 +149,7 @@ const copy = HOME_PAGE.faq;
 
   @media (min-width: 900px) {
     .home-faq {
-      --flora-seam-h: 4.6rem;
-      padding: 5.3rem 2.6rem 3.2rem;
+      padding: 3.2rem 2.6rem;
     }
 
     .home-faq summary::after {

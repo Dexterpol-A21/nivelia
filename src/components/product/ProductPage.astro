@@ -1,7 +1,6 @@
 ---
-import GlyvFlora from '@components/home/GlyvFlora.astro';
-import GlyvNerves from '@components/home/GlyvNerves.astro';
-import GlyvButtons from '@components/ui/GlyvButtons.astro';
+import EkiliaButtons from '@components/ui/EkiliaButtons.astro';
+import Grainient from '@components/ui/Grainient.astro';
 import type { Product } from '@utils/constants';
 
 interface Props {
@@ -18,24 +17,24 @@ const [, toma, formulaShot] = product.gallery;
     <div class="product-page__figure" data-slide={isCentia ? 'left' : 'right'}>
       <img src={product.photo} alt={product.photoAlt} width="2000" height="2000" />
     </div>
-    <div class="product-page__intro" data-slide={isCentia ? 'right' : 'left'}>
-      {!isCentia && <GlyvNerves />}
+    <div class="product-page__intro grain-host" data-slide={isCentia ? 'right' : 'left'}>
+      <Grainient tone={isCentia ? 'forest' : 'petroleum'} />
       <p class="product-page__focus">{product.focus}</p>
       <h1 id="product-title">{product.name}</h1>
       <p class="product-page__claim" set:html={product.claim.replace('. ', '.<br />')} />
       <p class="product-page__pack">{product.use} {product.pack}</p>
-      <GlyvButtons
+      <EkiliaButtons
         primary={product.cta}
         secondary={product.sister.label}
-        primaryHref="/contacto"
+        primaryHref={`/reposicion?formula=${product.slug}`}
         secondaryHref={product.sister.href}
       />
     </div>
   </section>
 
   <div data-slide-host>
-    <section class="product-page__benefits" data-slide="right" aria-labelledby="product-benefits">
-      <GlyvFlora variant="seam" ink="dark" />
+    <section class="product-page__benefits grain-host" data-slide="right" aria-labelledby="product-benefits">
+      <Grainient tone="cream" />
       <h2 id="product-benefits">Para qué sirve.</h2>
       <ul class="product-page__benefit-row">
         {
@@ -52,9 +51,8 @@ const [, toma, formulaShot] = product.gallery;
 
   <div data-slide-host>
     <section class="product-page__pair" aria-labelledby="product-use">
-      <div class="product-page__pair-copy is-field" data-slide="left">
-        <GlyvFlora variant="seam" ink="light" />
-        {!isCentia && <GlyvNerves />}
+      <div class="product-page__pair-copy is-field grain-host" data-slide="left">
+        <Grainient tone={isCentia ? 'forest' : 'petroleum'} />
         <h2 id="product-use">Así se toma.</h2>
         <dl>
           {
@@ -75,12 +73,12 @@ const [, toma, formulaShot] = product.gallery;
 
   <div data-slide-host>
     <section
-      class="product-page__formula"
+      class="product-page__formula grain-host"
       id="ingredientes"
       data-slide="right"
       aria-labelledby="product-formula"
     >
-      <GlyvFlora variant="seam" ink="dark" />
+      <Grainient tone="cream" />
       <div class="product-page__formula-copy">
         <h2 id="product-formula">Qué trae.</h2>
         <p>{product.ingredients}</p>
@@ -119,9 +117,8 @@ const [, toma, formulaShot] = product.gallery;
   </div>
 
   <div data-slide-host>
-    <section class="product-page__marks" data-slide="left" aria-labelledby="product-marks">
-      <GlyvFlora variant="seam" ink="light" />
-      {!isCentia && <GlyvNerves />}
+    <section class="product-page__marks grain-host" data-slide="left" aria-labelledby="product-marks">
+      <Grainient tone={isCentia ? 'forest' : 'petroleum'} />
       <h2 id="product-marks">En el envase.</h2>
       <dl>
         {
@@ -137,14 +134,14 @@ const [, toma, formulaShot] = product.gallery;
   </div>
 
   <div data-slide-host>
-    <section class="product-page__close" data-slide="left" aria-labelledby="product-close">
-      <GlyvFlora variant="seam" ink="dark" />
+    <section class="product-page__close grain-host" data-slide="left" aria-labelledby="product-close">
+      <Grainient tone="cream" />
       <h2 id="product-close">Empieza la reposición.</h2>
       <p>{product.caution}</p>
-      <GlyvButtons
+      <EkiliaButtons
         primary={product.cta}
         secondary={product.sister.label}
-        primaryHref="/contacto"
+        primaryHref={`/reposicion?formula=${product.slug}`}
         secondaryHref={product.sister.href}
       />
     </section>
@@ -153,14 +150,15 @@ const [, toma, formulaShot] = product.gallery;
 
 <style>
   .product-page {
-    --cream: #f4efe6;
-    --forest: #1e4a32;
-    --petroleum: #0b4f6c;
-    --petroleum-deep: #083d54;
-    --ink: #1a2a22;
+    font-family: Outfit, sans-serif;
+    --cream: #f6f3ee;
+    --forest: #0e6e9e;
+    --petroleum: #3e2770;
+    --petroleum-deep: #2a1b4d;
+    --ink: #1A1228;
     --field: var(--forest);
     --field-deep: var(--forest);
-    font-family: Outfit, sans-serif;
+    --bloom: var(--field);
   }
 
   .product-page.is-nervia {
@@ -220,12 +218,12 @@ const [, toma, formulaShot] = product.gallery;
     color: var(--on-dark, var(--cream));
   }
 
-  .product-page__intro > :not(.glyv-flora):not(.glyv-nerves),
-  .product-page__pair-copy > :not(.glyv-flora):not(.glyv-nerves),
-  .product-page__benefits > :not(.glyv-flora),
-  .product-page__formula > :not(.glyv-flora),
-  .product-page__marks > :not(.glyv-flora):not(.glyv-nerves),
-  .product-page__close > :not(.glyv-flora) {
+  .product-page__intro > :not(.ekilia-flora):not(.ekilia-nerves),
+  .product-page__pair-copy > :not(.ekilia-flora):not(.ekilia-nerves),
+  .product-page__benefits > :not(.ekilia-flora),
+  .product-page__formula > :not(.ekilia-flora),
+  .product-page__marks > :not(.ekilia-flora):not(.ekilia-nerves),
+  .product-page__close > :not(.ekilia-flora) {
     position: relative;
     z-index: 1;
   }
@@ -240,8 +238,8 @@ const [, toma, formulaShot] = product.gallery;
   }
 
   .product-page h1 {
-    margin: 0;
     font-family: Fraunces, serif;
+    margin: 0;
     font-size: clamp(3rem, 10vw, 5.2rem);
     font-weight: 500;
     line-height: 0.9;
@@ -249,9 +247,9 @@ const [, toma, formulaShot] = product.gallery;
   }
 
   .product-page__claim {
+    font-family: Fraunces, serif;
     margin: 1rem 0 0;
     max-width: 14ch;
-    font-family: Fraunces, serif;
     font-size: clamp(1.35rem, 3.2vw, 1.85rem);
     font-weight: 500;
     line-height: 1.2;
@@ -287,8 +285,8 @@ const [, toma, formulaShot] = product.gallery;
   }
 
   .product-page h2 {
-    margin: 0;
     font-family: Fraunces, serif;
+    margin: 0;
     font-size: clamp(2.15rem, 5.4vw, 3.4rem);
     font-weight: 500;
     line-height: 1.05;
@@ -305,13 +303,13 @@ const [, toma, formulaShot] = product.gallery;
   }
 
   .product-page__benefit-row li {
+    font-family: Fraunces, serif;
     display: grid;
     justify-items: start;
     gap: 0.7rem;
     max-width: none;
     padding: 0;
     border-top: 0;
-    font-family: Fraunces, serif;
     font-size: clamp(1.15rem, 2.4vw, 1.45rem);
     font-weight: 500;
     line-height: 1.2;
@@ -461,8 +459,8 @@ const [, toma, formulaShot] = product.gallery;
   }
 
   .product-page dd {
-    margin: 0.25rem 0 0;
     font-family: Fraunces, serif;
+    margin: 0.25rem 0 0;
     font-size: clamp(1.2rem, 2.4vw, 1.55rem);
     font-weight: 500;
   }
@@ -543,24 +541,20 @@ const [, toma, formulaShot] = product.gallery;
     line-height: 1.5;
   }
 
-  .product-page__close :global(.glyv-btns__btn.is-bloom) {
+  .product-page__close {
+    --bloom-ink: var(--field);
+  }
+
+  .product-page__close :global(.ekilia-btns__btn.is-bloom) {
     color: var(--field);
     box-shadow: inset 0 0 0 2px var(--field);
   }
 
-  .product-page__close :global(.glyv-btns__btn.is-bloom .glyv-btns__layer) {
-    background: var(--field);
-  }
-
-  .product-page__close :global(.glyv-btns__btn.is-bloom .glyv-btns__hover-label) {
-    color: var(--on-dark, var(--cream));
-  }
-
-  .product-page__close :global(.glyv-btns__btn.is-tinta) {
+  .product-page__close :global(.ekilia-btns__btn.is-tinta) {
     color: var(--field);
   }
 
-  .product-page__close :global(.glyv-btns__btn:focus-visible) {
+  .product-page__close :global(.ekilia-btns__btn:focus-visible) {
     outline-color: var(--field);
   }
 

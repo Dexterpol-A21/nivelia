@@ -1,0 +1,514 @@
+---
+import Grainient from '@components/ui/Grainient.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { PAGES } from '@utils/constants';
+---
+
+<BaseLayout title={PAGES.cuenta.title} description={PAGES.cuenta.description}>
+  <article class="cuenta" data-cuenta>
+    <div class="cuenta__gate">
+      <section class="cuenta__enter grain-host">
+        <Grainient tone="cream" />
+        <h1 data-gate-title>Entra.</h1>
+        <p data-gate-lead>El correo abre tu suscripción, la próxima entrega, el pedido y el comprobante.</p>
+        <form class="cuenta__form" data-login data-mode="enter" novalidate>
+          <p class="cuenta__name" data-name hidden>
+            <label for="cuenta-nombre">Nombre</label>
+            <input id="cuenta-nombre" name="name" type="text" autocomplete="name" />
+          </p>
+          <label for="cuenta-correo">Correo</label>
+          <input
+            id="cuenta-correo"
+            name="email"
+            type="email"
+            inputmode="email"
+            autocomplete="email"
+            spellcheck="false"
+            required
+          />
+          <p class="cuenta__error" data-login-error hidden>Escribe un correo, con su arroba y su dominio.</p>
+          <div class="cuenta__actions">
+            <button class="cuenta__btn is-bloom" type="submit" data-submit>
+              <span class="cuenta__bloom" aria-hidden="true">
+                <span class="cuenta__layers">
+                  <span class="cuenta__layer is-1"></span>
+                  <span class="cuenta__layer is-2"></span>
+                  <span class="cuenta__layer is-3"></span>
+                </span>
+              </span>
+              <span class="cuenta__inner">
+                <span class="cuenta__static" data-label>Entrar</span>
+                <span class="cuenta__hover" aria-hidden="true" data-label>Entrar</span>
+              </span>
+            </button>
+            <button class="cuenta__btn is-tinta" type="button" data-create>
+              <span class="cuenta__inner">
+                <span class="cuenta__static" data-label>No tengo cuenta</span>
+                <span class="cuenta__hover" aria-hidden="true" data-label>No tengo cuenta</span>
+              </span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6"></path>
+              </svg>
+            </button>
+          </div>
+        </form>
+      </section>
+      <section class="cuenta__aside grain-host">
+        <Grainient tone="forest" />
+        <p>El frasco que sigue,<br />y el que ya pagaste.</p>
+      </section>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .cuenta {
+    font-family: Outfit, sans-serif;
+    --cream: #f6f3ee;
+    --cream-deep: #e6dfd4;
+    --forest: #0e6e9e;
+    --ink: #1a1228;
+    --hover: 0.48s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .cuenta__enter,
+  .cuenta__aside {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cuenta__enter > :not(.grainient-container),
+  .cuenta__aside > :not(.grainient-container) {
+    position: relative;
+    z-index: 1;
+  }
+
+  .cuenta__gate {
+    display: grid;
+    min-height: calc(100dvh - var(--nav-dock, 0px));
+  }
+
+  .cuenta__enter {
+    background: var(--cream);
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 6.5rem 1.5rem 2.4rem;
+  }
+
+  .cuenta__aside {
+    background: var(--forest);
+    color: var(--on-dark, var(--cream));
+    display: flex;
+    align-items: flex-end;
+    padding: 2.4rem 1.5rem;
+    min-height: 16rem;
+  }
+
+  .cuenta__aside p {
+    margin: 0;
+    max-width: 12ch;
+    font-family: Fraunces, serif;
+    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-weight: 500;
+    line-height: 0.98;
+    letter-spacing: -0.045em;
+  }
+
+  .cuenta h1 {
+    margin: 0;
+    font-family: Fraunces, serif;
+    font-weight: 500;
+    letter-spacing: -0.045em;
+    font-size: clamp(4.2rem, 12vw, 7.4rem);
+    line-height: 0.86;
+  }
+
+  .cuenta__enter > p {
+    margin: 1rem 0 0;
+    max-width: 28rem;
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
+
+  .cuenta__form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.55rem;
+    max-width: 24rem;
+    margin-top: 2.2rem;
+  }
+
+  .cuenta__form label {
+    font-size: 1.02rem;
+    font-weight: 600;
+  }
+
+  .cuenta__name {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.55rem;
+    width: 100%;
+    margin: 0 0 0.35rem;
+  }
+
+  .cuenta__name[hidden] {
+    display: none;
+  }
+
+  .cuenta__actions {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    gap: 0.7rem;
+    margin-top: 0.8rem;
+  }
+
+  .cuenta__form input {
+    width: 100%;
+    margin: 0 0 0.4rem;
+    padding: 0.7rem 0;
+    border: 0;
+    border-bottom: 2px solid var(--ink);
+    border-radius: 0;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    font-size: 1.2rem;
+  }
+
+  .cuenta__form input:focus-visible {
+    outline: 2px solid var(--forest);
+    outline-offset: 4px;
+  }
+
+  .cuenta__error {
+    margin: 0;
+    font-size: 0.98rem;
+    line-height: 1.4;
+  }
+
+  .cuenta__error[hidden] {
+    display: none;
+  }
+
+  .cuenta__btn:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: 4px;
+  }
+
+  .cuenta__btn {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: inline-flex;
+    flex-flow: row nowrap;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 0;
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .cuenta__btn.is-bloom {
+    padding: 0.8rem 1.5rem;
+    background: transparent;
+    color: var(--ink);
+    box-shadow: inset 0 0 0 2px var(--ink);
+  }
+
+  .cuenta__bloom {
+    pointer-events: none;
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .cuenta__layers {
+    position: absolute;
+    left: 50%;
+    top: -60%;
+    width: max(220%, 10rem);
+    aspect-ratio: 1;
+    transform: translate(-50%);
+  }
+
+  .cuenta__layer {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--ink);
+    transform: scale(0);
+    transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+
+  .cuenta__layer.is-2,
+  .cuenta__layer.is-3 {
+    background: var(--ink);
+  }
+
+  .cuenta__btn.is-bloom:hover .cuenta__layer.is-1,
+  .cuenta__btn.is-bloom:focus-visible .cuenta__layer.is-1 {
+    transform: scale(1);
+  }
+
+  .cuenta__btn.is-bloom:hover .cuenta__layer.is-2,
+  .cuenta__btn.is-bloom:focus-visible .cuenta__layer.is-2 {
+    transform: scale(1);
+    transition-delay: 0.12s;
+  }
+
+  .cuenta__btn.is-bloom:hover .cuenta__layer.is-3,
+  .cuenta__btn.is-bloom:focus-visible .cuenta__layer.is-3 {
+    transform: scale(1);
+    transition-delay: 0.24s;
+  }
+
+  .cuenta__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template: 1fr / max-content;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .cuenta__static,
+  .cuenta__hover {
+    grid-area: 1 / 1;
+    white-space: nowrap;
+    transition:
+      transform 1.1s cubic-bezier(0.19, 1, 0.22, 1),
+      opacity 0.35s linear;
+  }
+
+  .cuenta__hover {
+    opacity: 0;
+    user-select: none;
+    transform: translateY(70%);
+  }
+
+  .cuenta__btn.is-bloom .cuenta__hover {
+    color: var(--cream-deep);
+  }
+
+  .cuenta__btn:hover .cuenta__static,
+  .cuenta__btn:focus-visible .cuenta__static {
+    opacity: 0;
+    transform: translateY(-70%);
+  }
+
+  .cuenta__btn:hover .cuenta__hover,
+  .cuenta__btn:focus-visible .cuenta__hover {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .cuenta__btn.is-tinta {
+    gap: 0.45rem;
+    padding: 0.8rem 0.2rem 0.55rem 0.15rem;
+    background: none;
+    color: var(--ink);
+  }
+
+  .cuenta__btn.is-tinta svg {
+    position: relative;
+    z-index: 2;
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transform: rotate(-50deg);
+    transition: transform var(--hover);
+  }
+
+  .cuenta__btn.is-tinta:hover svg,
+  .cuenta__btn.is-tinta:focus-visible svg {
+    transform: rotate(0deg);
+  }
+
+  .cuenta__btn.is-tinta::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    z-index: 2;
+    width: 100%;
+    height: 2px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform var(--hover);
+  }
+
+  .cuenta__btn.is-tinta:hover::before,
+  .cuenta__btn.is-tinta:focus-visible::before {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  @media (min-width: 900px) {
+    .cuenta__gate {
+      grid-template-columns: 1.15fr 0.85fr;
+    }
+
+    .cuenta__enter,
+    .cuenta__aside {
+      padding-left: 2.6rem;
+      padding-right: 2.6rem;
+    }
+
+    .cuenta__enter {
+      justify-content: center;
+      padding-top: 6.5rem;
+      padding-bottom: 3rem;
+    }
+
+    .cuenta__aside {
+      align-items: flex-end;
+      min-height: 0;
+      padding-bottom: 3.2rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cuenta__static,
+    .cuenta__hover,
+    .cuenta__layer {
+      transform: none !important;
+      transition: none;
+      transition-delay: 0s !important;
+    }
+
+    .cuenta__hover {
+      display: none;
+    }
+
+    .cuenta__btn.is-bloom:hover,
+    .cuenta__btn.is-bloom:focus-visible {
+      background: var(--ink);
+      color: var(--cream-deep);
+    }
+
+    .cuenta__btn.is-tinta svg,
+    .cuenta__btn.is-tinta::before {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const SESSION_KEY = 'ekilia-sesion';
+
+  const root = document.querySelector<HTMLElement>('[data-cuenta]');
+
+  const validEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+
+  const writeSession = (session: { email?: string; name?: string; entered?: boolean }) => {
+    try {
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+    } catch {
+      /* modo privado */
+    }
+  };
+
+  if (root) {
+    const form = root.querySelector<HTMLFormElement>('[data-login]');
+    const gateTitle = root.querySelector<HTMLElement>('[data-gate-title]');
+    const gateLead = root.querySelector<HTMLElement>('[data-gate-lead]');
+    const nameField = root.querySelector<HTMLElement>('[data-name]');
+    const nameInput = root.querySelector<HTMLInputElement>('#cuenta-nombre');
+    const submitButton = root.querySelector<HTMLButtonElement>('[data-submit]');
+    const createButton = root.querySelector<HTMLButtonElement>('[data-create]');
+    const emailInput = root.querySelector<HTMLInputElement>('#cuenta-correo');
+    const loginError = root.querySelector<HTMLElement>('[data-login-error]');
+
+    const setMode = (mode: 'enter' | 'create') => {
+      if (form) form.dataset.mode = mode;
+      const creating = mode === 'create';
+      if (nameField) nameField.hidden = !creating;
+      if (gateTitle) gateTitle.textContent = creating ? 'Crea tu cuenta.' : 'Entra.';
+      if (gateLead) {
+        gateLead.textContent = creating
+          ? 'Tu nombre y tu correo. Después ves la suscripción, la entrega y el comprobante.'
+          : 'El correo abre tu suscripción, la próxima entrega, el pedido y el comprobante.';
+      }
+      const setLabel = (button: HTMLButtonElement | null, text: string) => {
+        button?.querySelectorAll<HTMLElement>('[data-label]').forEach((label) => {
+          label.textContent = text;
+        });
+      };
+      setLabel(submitButton, creating ? 'Crear cuenta' : 'Entrar');
+      setLabel(createButton, creating ? 'Ya tengo cuenta' : 'No tengo cuenta');
+      if (loginError) loginError.hidden = true;
+    };
+
+    createButton?.addEventListener('click', () => {
+      setMode(form?.dataset.mode === 'create' ? 'enter' : 'create');
+      (form?.dataset.mode === 'create' ? nameInput : emailInput)?.focus();
+    });
+
+    form?.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const creating = form.dataset.mode === 'create';
+      const value = emailInput?.value.trim() ?? '';
+      const name = nameInput?.value.trim() ?? '';
+      if (creating && name.length < 2) {
+        if (loginError) {
+          loginError.hidden = false;
+          loginError.textContent = 'Escribe tu nombre.';
+        }
+        nameInput?.focus();
+        return;
+      }
+      if (creating && !validEmail(value)) {
+        if (loginError) {
+          loginError.hidden = false;
+          loginError.textContent = 'Escribe un correo, con su arroba y su dominio.';
+        }
+        emailInput?.focus();
+        return;
+      }
+      if (!creating && value && !validEmail(value)) {
+        if (loginError) {
+          loginError.hidden = false;
+          loginError.textContent = 'Escribe un correo, con su arroba y su dominio.';
+        }
+        emailInput?.focus();
+        return;
+      }
+      if (loginError) loginError.hidden = true;
+      if (creating) writeSession({ email: value, name });
+      else if (value) writeSession({ email: value });
+      else writeSession({ entered: true });
+      window.location.assign('/app');
+    });
+
+    document.querySelectorAll<HTMLAnchorElement>('a[href="/cuenta"]').forEach((link) => {
+      link.addEventListener('click', (event) => {
+        if (window.location.pathname !== '/cuenta') return;
+        event.preventDefault();
+        setMode('enter');
+        const lenis = (
+          window as Window & { ekiliaLenis?: { scrollTo: (target: number, opts: { immediate: boolean }) => void } }
+        ).ekiliaLenis;
+        if (lenis) lenis.scrollTo(0, { immediate: true });
+        else window.scrollTo(0, 0);
+      });
+    });
+  }
+</script>

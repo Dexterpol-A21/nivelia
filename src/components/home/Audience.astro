@@ -1,23 +1,21 @@
 ---
-import GlyvFlora from '@components/home/GlyvFlora.astro';
-import GlyvNerves from '@components/home/GlyvNerves.astro';
+import Grainient from '@components/ui/Grainient.astro';
 import { HOME_PAGE } from '@utils/constants';
 
 const copy = HOME_PAGE.audience;
 ---
 
-<section class="home-audience" data-slide-host aria-label="Para quién es Glyv">
-  <GlyvFlora variant="seam" ink="light" />
-  <div class="is-yes" data-slide="left">
-    <GlyvFlora variant="leaves" />
+<section class="home-audience" data-slide-host aria-label="Para quién es Ekilia">
+  <div class="is-yes grain-host" data-slide="left">
+    <Grainient tone="forest" />
     <div class="home-audience__copy">
       <h2>{copy.yesTitle}</h2>
       <p>{copy.yes}</p>
     </div>
     <span class="home-audience__mark" aria-hidden="true"></span>
   </div>
-  <div class="is-no" data-slide="right">
-    <GlyvNerves />
+  <div class="is-no grain-host" data-slide="right">
+    <Grainient tone="petroleum" />
     <div class="home-audience__copy">
       <h2>{copy.noTitle}</h2>
       <p>{copy.no}</p>
@@ -28,22 +26,13 @@ const copy = HOME_PAGE.audience;
 
 <style>
   .home-audience {
-    --cream: #f4efe6;
-    --forest: #1e4a32;
-    --petroleum: #0b4f6c;
+    font-family: Outfit, sans-serif;
+    --cream: #f6f3ee;
+    --forest: #0e6e9e;
+    --petroleum: #3e2770;
     display: grid;
     position: relative;
     overflow: hidden;
-    font-family: Outfit, sans-serif;
-  }
-
-  .home-audience > .glyv-flora {
-    z-index: 4;
-  }
-
-  .home-audience > :not(.glyv-flora) {
-    position: relative;
-    z-index: 1;
   }
 
   .home-audience > div {
@@ -53,10 +42,10 @@ const copy = HOME_PAGE.audience;
     flex-direction: column;
     align-items: flex-start;
     gap: 2.4rem;
-    padding: 7.6rem 1.5rem 2.6rem;
+    padding: 2.6rem 1.5rem;
   }
 
-  .home-audience > div > :not(.glyv-flora):not(.glyv-nerves) {
+  .home-audience > div > :not(.ekilia-nerves) {
     position: relative;
     z-index: 1;
   }
@@ -99,7 +88,7 @@ const copy = HOME_PAGE.audience;
 
   .is-no .home-audience__mark,
   .is-no .home-audience__mark::before {
-    background: var(--petroleum);
+    background: transparent;
   }
 
   .is-no .home-audience__mark::after {
@@ -116,8 +105,8 @@ const copy = HOME_PAGE.audience;
   }
 
   .home-audience h2 {
-    margin: 0;
     font-family: Fraunces, serif;
+    margin: 0;
     font-size: clamp(2.15rem, 5vw, 3.2rem);
     font-weight: 500;
     line-height: 1.05;
@@ -137,16 +126,16 @@ const copy = HOME_PAGE.audience;
 
     .home-audience > div {
       flex-direction: row;
-      align-items: flex-end;
+      align-items: flex-start;
       justify-content: space-between;
       gap: 2.2rem;
-      min-height: 22rem;
-      padding: 8.4rem 2.6rem;
+      padding: 2.4rem 2.6rem;
     }
 
     .home-audience__mark {
       width: 8.2rem;
       height: 10rem;
+      margin-top: 2.05rem;
     }
 
     .home-audience__mark::before {

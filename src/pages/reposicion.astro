@@ -1,0 +1,612 @@
+---
+import Grainient from '@components/ui/Grainient.astro';
+import BaseLayout from '@layouts/BaseLayout.astro';
+import { FORMULAS, HABITS, STANCES } from '@utils/reposicion';
+import { PAGES } from '@utils/constants';
+---
+
+<BaseLayout title={PAGES.reposicion.title} description={PAGES.reposicion.description}>
+  <article class="repo grain-host" data-repo>
+    <Grainient tone="cream" />
+    <noscript>
+      <p class="repo__noscript">Para armar la reposición, activa JavaScript.</p>
+    </noscript>
+
+    <form>
+      <header class="repo__bar">
+        <button class="repo__back" type="button" data-back hidden>Atrás</button>
+        <p><span data-count>1</span> de 4</p>
+      </header>
+
+      <section data-step="stance" hidden>
+        <h1 tabindex="-1">¿Cómo llegas a los suplementos?</h1>
+        <div class="repo__choices" role="group" aria-label="Cómo llegas">
+          {
+            STANCES.map((item) => (
+              <button type="button" class="repo__choice" data-value={item.id} aria-pressed="false">
+                {item.label}
+              </button>
+            ))
+          }
+        </div>
+      </section>
+
+      <section data-step="habit" hidden>
+        <h1 tabindex="-1">¿Qué suele pasar cuando se acaba el envase?</h1>
+        <div class="repo__choices" role="group" aria-label="Cuando se acaba el envase">
+          {
+            HABITS.map((item) => (
+              <button type="button" class="repo__choice" data-value={item.id} aria-pressed="false">
+                {item.label}
+              </button>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="is-wide" data-step="formula" hidden>
+        <h1 tabindex="-1">Elige tu fórmula.</h1>
+        <div class="repo__formulas" role="group" aria-label="Fórmula">
+          {
+            FORMULAS.map((item) => (
+              <button
+                type="button"
+                class:list={['repo__formula', `is-${item.id}`, 'grain-host']}
+                data-value={item.id}
+                aria-pressed="false"
+              >
+                <Grainient
+                  tone={item.id === 'nervia' ? 'petroleum' : item.id === 'both' ? 'turquoise' : 'forest'}
+                />
+                {item.id === 'both' ? (
+                  <span class="repo__photos">
+                    <img src="/centia.jpg?v=3" alt="" width="800" height="800" />
+                    <img src="/nervia.jpg?v=3" alt="" width="800" height="800" />
+                  </span>
+                ) : (
+                  <img src={item.photo} alt={item.photoAlt} width="800" height="800" />
+                )}
+                <span class="repo__formula-copy">
+                  <span class="repo__formula-name">{item.name}</span>
+                  <span class="repo__formula-line">{item.line}</span>
+                </span>
+              </button>
+            ))
+          }
+        </div>
+      </section>
+
+      <section data-step="cycle" hidden>
+        <h1 tabindex="-1" data-cycle-title>Tu reposición.</h1>
+        <p class="repo__echo" data-stance-line></p>
+        <p class="repo__formula-summary" data-formula-line></p>
+        <dl class="repo__specs">
+          <div>
+            <dt>Porción</dt>
+            <dd>2 cápsulas</dd>
+          </div>
+          <div>
+            <dt>Ciclo</dt>
+            <dd>30 días</dd>
+          </div>
+          <div>
+            <dt>Pausa</dt>
+            <dd>Desde tu cuenta</dd>
+          </div>
+        </dl>
+        <p class="repo__legend">
+          Este producto no es un medicamento. El consumo de este producto es responsabilidad de quien lo
+          recomienda y de quien lo usa.
+        </p>
+        <fieldset class="repo__consent">
+          <legend>Antes de guardar.</legend>
+          <label class="repo__check">
+            <input type="checkbox" name="age" data-check required />
+            <span>Soy mayor de edad.</span>
+          </label>
+          <label class="repo__check">
+            <input type="checkbox" name="supplement" data-check required />
+            <span>Entiendo que es un suplemento alimenticio, no un medicamento.</span>
+          </label>
+          <label class="repo__check">
+            <input type="checkbox" name="doctor" data-check required />
+            <span>
+              Si estoy bajo tratamiento médico o tomo fármacos para la glucosa, hablé con mi médico antes de
+              empezar.
+            </span>
+          </label>
+        </fieldset>
+        <button class="repo__save" type="submit" data-save disabled>Guardar en el carrito</button>
+      </section>
+    </form>
+  </article>
+</BaseLayout>
+
+<script>
+  import { setGrainientTone } from '@scripts/grainient';
+  import {
+    emptyRepo,
+    formulaById,
+    habitById,
+    readRepo,
+    REPO_STEPS,
+    stanceById,
+    writeRepo,
+    type FormulaId,
+    type HabitId,
+    type StanceId,
+  } from '@utils/reposicion';
+
+  const root = document.querySelector<HTMLElement>('[data-repo]');
+  const form = root?.querySelector('form');
+
+  if (root && form) {
+    const steps = [...root.querySelectorAll<HTMLElement>('[data-step]')];
+    const count = root.querySelector<HTMLElement>('[data-count]');
+    const back = root.querySelector<HTMLButtonElement>('[data-back]');
+    const cycleTitle = root.querySelector<HTMLElement>('[data-cycle-title]');
+    const stanceLine = root.querySelector<HTMLElement>('[data-stance-line]');
+    const formulaLine = root.querySelector<HTMLElement>('[data-formula-line]');
+    const save = root.querySelector<HTMLButtonElement>('[data-save]');
+    const checks = [...root.querySelectorAll<HTMLInputElement>('[data-check]')];
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const params = new URLSearchParams(location.search);
+    const formulaParam = params.get('formula');
+    const paso = params.get('paso');
+
+    let draft = readRepo() ?? emptyRepo();
+    if (formulaParam === 'centia' || formulaParam === 'nervia' || formulaParam === 'both') {
+      draft.formula = formulaParam;
+    }
+
+    let index = 0;
+    const pasoIndex = REPO_STEPS.indexOf(paso as (typeof REPO_STEPS)[number]);
+    const formulaFromLink =
+      formulaParam === 'centia' || formulaParam === 'nervia' || formulaParam === 'both';
+    if (pasoIndex >= 0) index = pasoIndex;
+    else if (!draft.complete && draft.step > 0) index = Math.min(draft.step, steps.length - 1);
+    else if (draft.complete && formulaFromLink) index = 2;
+    if (index > 0 && !draft.stance) index = 0;
+    if (index > 1 && !draft.habit) index = 1;
+    if (index > 2 && !draft.formula) index = 2;
+
+    let moving = false;
+
+    const paintPressed = () => {
+      root.querySelectorAll<HTMLButtonElement>('[data-value]').forEach((button) => {
+        const kind = button.closest<HTMLElement>('[data-step]')?.dataset.step;
+        const value = button.dataset.value;
+        const current =
+          kind === 'stance' ? draft.stance : kind === 'habit' ? draft.habit : draft.formula;
+        button.setAttribute('aria-pressed', String(value === current));
+      });
+    };
+
+    const scrollTop = () => {
+      const lenis = (window as Window & { ekiliaLenis?: { scrollTo: (target: number, opts: { immediate: boolean }) => void } })
+        .ekiliaLenis;
+      if (lenis) lenis.scrollTo(0, { immediate: true });
+      else window.scrollTo(0, 0);
+    };
+
+    const show = (next: number, focus = true) => {
+      index = next;
+      draft.step = next;
+      writeRepo(draft);
+      steps.forEach((step, stepIndex) => {
+        step.hidden = stepIndex !== next;
+      });
+      if (count) count.textContent = String(next + 1);
+      if (back) back.hidden = next === 0;
+      const onCycle = REPO_STEPS[next] === 'cycle';
+      root.classList.toggle('is-cycle', onCycle);
+      root.classList.remove('is-centia', 'is-nervia', 'is-both');
+      if (onCycle && draft.formula) {
+        root.classList.add(`is-${draft.formula}`);
+        const habit = habitById(draft.habit);
+        const stance = stanceById(draft.stance);
+        const formula = formulaById(draft.formula);
+        if (cycleTitle && habit) cycleTitle.textContent = habit.payoff;
+        if (stanceLine && stance) stanceLine.textContent = `Así llegas: ${stance.label}.`;
+        if (formulaLine && formula) formulaLine.textContent = formula.summary;
+      }
+      setGrainientTone(
+        root.querySelector<HTMLElement>(':scope > [data-grainient]'),
+        !onCycle
+          ? 'cream'
+          : draft.formula === 'nervia'
+            ? 'petroleum'
+            : draft.formula === 'both'
+              ? 'turquoise'
+              : 'forest',
+      );
+      paintPressed();
+      root.dataset.ready = 'true';
+      scrollTop();
+      if (focus) steps[next]?.querySelector<HTMLElement>('h1')?.focus();
+    };
+
+    root.addEventListener('click', (event) => {
+      const button = (event.target as HTMLElement | null)?.closest<HTMLButtonElement>('[data-value]');
+      if (!button || moving) return;
+      const kind = button.closest<HTMLElement>('[data-step]')?.dataset.step;
+      const value = button.dataset.value;
+      if (!kind || !value) return;
+      if (kind === 'stance') draft.stance = value as StanceId;
+      if (kind === 'habit') draft.habit = value as HabitId;
+      if (kind === 'formula') draft.formula = value as FormulaId;
+      draft.complete = false;
+      paintPressed();
+      moving = true;
+      window.setTimeout(() => {
+        show(Math.min(index + 1, steps.length - 1));
+        moving = false;
+      }, reduceMotion ? 0 : 160);
+    });
+
+    back?.addEventListener('click', () => {
+      if (index > 0 && !moving) show(index - 1);
+    });
+
+    const syncSave = () => {
+      if (!save) return;
+      save.disabled = checks.some((input) => !input.checked);
+    };
+
+    checks.forEach((input) => input.addEventListener('change', syncSave));
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (!draft.stance || !draft.habit || !draft.formula) return;
+      if (checks.some((input) => !input.checked)) return;
+      draft.complete = true;
+      draft.step = 0;
+      writeRepo(draft);
+      window.location.href = '/carrito';
+    });
+
+    show(index, false);
+    syncSave();
+  }
+</script>
+
+<style>
+  .repo {
+    font-family: Outfit, sans-serif;
+    --cream: #f6f3ee;
+    --cream-deep: #e6dfd4;
+    --forest: #0e6e9e;
+    --petroleum: #3e2770;
+    --turquoise: #0f6468;
+    --ink: #1a1228;
+    min-height: 100dvh;
+    background: var(--cream);
+    color: var(--ink);
+    padding: calc(var(--nav-clearance) + 0.4rem) 1.5rem 3.2rem;
+  }
+
+  .repo:not([data-ready]) form {
+    display: none;
+  }
+
+  .repo.is-cycle.is-centia {
+    background: var(--forest);
+    color: var(--cream);
+  }
+
+  .repo.is-cycle.is-nervia {
+    background: var(--petroleum);
+    color: var(--cream);
+  }
+
+  .repo.is-cycle.is-both {
+    background: var(--turquoise);
+    color: var(--cream);
+  }
+
+  .repo__noscript {
+    max-width: 28rem;
+    margin: 1.2rem 0 0;
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
+
+  .repo__bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+    min-height: 2.75rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .repo__bar p {
+    margin: 0;
+  }
+
+  .repo__back {
+    margin-right: auto;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .repo h1 {
+    font-family: Fraunces, serif;
+    max-width: 16ch;
+    margin: 1.4rem 0 0;
+    scroll-margin-top: var(--nav-clearance);
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    font-weight: 500;
+    line-height: 1.02;
+    letter-spacing: -0.04em;
+  }
+
+  .repo__choices,
+  .repo__formulas {
+    display: grid;
+    gap: 0.55rem;
+    max-width: 38rem;
+    margin-top: 1.6rem;
+  }
+
+  .repo__choice,
+  .repo__formula {
+    font-family: Outfit, sans-serif;
+    width: 100%;
+    border: 0;
+    cursor: pointer;
+    text-align: left;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .repo__choice {
+    font-family: Outfit, sans-serif;
+    min-height: 4.25rem;
+    padding: 1rem 1.15rem;
+    background: transparent;
+    color: var(--ink);
+    box-shadow: inset 0 0 0 2px var(--ink);
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  .repo__choice[aria-pressed='true'] {
+    background: var(--forest);
+    color: var(--cream);
+    box-shadow: none;
+  }
+
+  .repo section.is-wide .repo__formulas {
+    max-width: 72rem;
+  }
+
+  .repo__formula {
+    display: grid;
+    grid-template-columns: 6.4rem 1fr;
+    min-height: 6.4rem;
+    color: var(--cream);
+  }
+
+  .repo__formula.is-centia {
+    background: var(--forest);
+  }
+
+  .repo__formula.is-nervia {
+    background: var(--petroleum);
+  }
+
+  .repo__formula.is-both {
+    background: var(--turquoise);
+  }
+
+  .repo__formula img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .repo__photos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 6.4rem;
+  }
+
+  .repo__formula-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.3rem;
+    padding: 0.9rem 1rem;
+  }
+
+  .repo__formula-name {
+    font-family: Fraunces, serif;
+    font-size: clamp(1.7rem, 3vw, 2.4rem);
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+  }
+
+  .repo__formula-line {
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+
+  .repo__formula[aria-pressed='true'],
+  .repo__formula:focus-visible {
+    box-shadow: inset 0 0 0 4px var(--cream);
+  }
+
+  .repo__echo,
+  .repo__formula-summary,
+  .repo__legend {
+    max-width: 32rem;
+    margin: 1rem 0 0;
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
+
+  .repo__formula-summary {
+    font-weight: 600;
+  }
+
+  .repo__specs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem 1.2rem;
+    margin: 1.6rem 0 0;
+  }
+
+  .repo__specs dt {
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .repo__specs dd {
+    font-family: Fraunces, serif;
+    margin: 0.25rem 0 0;
+    font-size: clamp(1.15rem, 4.2vw, 1.35rem);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+  }
+
+  .repo__legend {
+    font-size: 0.95rem;
+  }
+
+  .repo__consent {
+    max-width: 34rem;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .repo__consent legend {
+    margin-bottom: 0.85rem;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .repo__check {
+    display: grid;
+    grid-template-columns: 1.15rem 1fr;
+    gap: 0.75rem;
+    align-items: start;
+    margin-top: 0.75rem;
+    font-size: 0.98rem;
+    line-height: 1.45;
+    cursor: pointer;
+  }
+
+  .repo__check input {
+    appearance: none;
+    width: 1.15rem;
+    height: 1.15rem;
+    margin: 0.15rem 0 0;
+    background: transparent;
+    box-shadow: inset 0 0 0 2px currentColor;
+  }
+
+  .repo__check input:checked {
+    background-color: var(--cream);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%231A1228' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' d='M5 12.5l4.2 4.2L19 7.2'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 0.8rem;
+    box-shadow: none;
+  }
+
+  .repo__save {
+    font-family: Outfit, sans-serif;
+    min-height: var(--cta-h);
+    margin-top: 1.5rem;
+    padding: 0.8rem 1.35rem;
+    border: 0;
+    background: var(--cream);
+    color: var(--ink);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .repo__save:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .repo :focus-visible {
+    outline: 2px solid var(--forest);
+    outline-offset: 3px;
+  }
+
+  .repo.is-cycle :focus-visible {
+    outline-color: var(--cream);
+  }
+
+  @media (hover: hover) {
+    .repo__choice:hover {
+      background: var(--cream-deep);
+    }
+
+    .repo__formula:hover {
+      box-shadow: inset 0 0 0 4px var(--cream);
+    }
+
+    .repo__choice[aria-pressed='true']:hover {
+      background: var(--forest);
+    }
+
+    .repo__save:hover:not(:disabled) {
+      background: transparent;
+      color: var(--cream);
+      box-shadow: inset 0 0 0 2px var(--cream);
+    }
+  }
+
+  @media (min-width: 900px) {
+    .repo {
+      padding-left: 2.6rem;
+      padding-right: 2.6rem;
+    }
+
+    .repo__formulas {
+      grid-template-columns: repeat(3, 1fr);
+      align-items: stretch;
+    }
+
+    .repo__formula {
+      grid-template-columns: 1fr;
+      grid-template-rows: 14rem 1fr;
+      min-height: 22rem;
+    }
+
+    .repo__photos {
+      min-height: 14rem;
+    }
+
+    .repo__formula-copy {
+      padding: 1.15rem 1.15rem 1.3rem;
+    }
+
+    .repo__save {
+      width: auto;
+    }
+  }
+
+  @media (max-width: 899px) {
+    .repo__save {
+      width: 100%;
+    }
+  }
+</style>

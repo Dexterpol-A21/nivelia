@@ -1,13 +1,13 @@
 ---
-import GlyvFlora from '@components/home/GlyvFlora.astro';
+import Grainient from '@components/ui/Grainient.astro';
 import { HOME_PAGE } from '@utils/constants';
 
 const copy = HOME_PAGE.reviews;
 ---
 
 <div data-slide-host>
-<section class="home-reviews" id="resenas" data-slide="left" aria-labelledby="home-reviews-title">
-  <GlyvFlora variant="seam" ink="dark" />
+<section class="home-reviews grain-host" id="resenas" data-slide="left" aria-labelledby="home-reviews-title">
+  <Grainient tone="cream" />
   <h2 id="home-reviews-title">{copy.h2}</h2>
   <ul>
     {
@@ -29,24 +29,24 @@ const copy = HOME_PAGE.reviews;
 
 <style>
   .home-reviews {
-    --cream: #f4efe6;
-    --forest: #1e4a32;
-    --ink: #1a2a22;
+    font-family: Outfit, sans-serif;
+    --cream: #f6f3ee;
+    --forest: #0e6e9e;
+    --ink: #1A1228;
     background: var(--cream);
     color: var(--ink);
-    padding: 7.6rem 1.5rem 2.8rem;
+    padding: 2.8rem 1.5rem 2.8rem;
     position: relative;
-    font-family: Outfit, sans-serif;
   }
 
-  .home-reviews > :not(.glyv-flora) {
+  .home-reviews > :not(.ekilia-flora) {
     position: relative;
     z-index: 1;
   }
 
   .home-reviews h2 {
-    margin: 0 0 1.8rem;
     font-family: Fraunces, serif;
+    margin: 0 0 1.8rem;
     font-size: clamp(2.15rem, 5.4vw, 3.6rem);
     font-weight: 500;
     line-height: 1.05;
@@ -69,9 +69,9 @@ const copy = HOME_PAGE.reviews;
   }
 
   .home-reviews blockquote p {
+    font-family: Fraunces, serif;
     margin: 0;
     max-width: 22ch;
-    font-family: Fraunces, serif;
     font-size: clamp(1.35rem, 3.2vw, 2rem);
     font-weight: 500;
     line-height: 1.2;
@@ -97,7 +97,7 @@ const copy = HOME_PAGE.reviews;
 
   @media (min-width: 900px) {
     .home-reviews {
-      padding: 8.4rem 2.6rem 3rem;
+      padding: 3.2rem 2.6rem 3rem;
     }
 
     .home-reviews ul {

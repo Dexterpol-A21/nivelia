@@ -1,4 +1,6 @@
 ---
+import Grainient from '@components/ui/Grainient.astro';
+
 interface Section {
   title: string;
   paragraphs: readonly string[];
@@ -17,13 +19,15 @@ const { title, lead, updated, sections, relatedHref, relatedLabel } = Astro.prop
 ---
 
 <article class="legal">
-  <header class="legal__intro">
+  <header class="legal__intro grain-host">
+    <Grainient tone="cream" />
     <h1>{title}</h1>
     <p>{lead}</p>
     <p class="legal__updated">{updated}</p>
   </header>
 
-  <div class="legal__body">
+  <div class="legal__body grain-host">
+    <Grainient tone="forest" />
     {
       sections.map((section) => (
         <section>
@@ -42,11 +46,11 @@ const { title, lead, updated, sections, relatedHref, relatedLabel } = Astro.prop
 
 <style>
   .legal {
-    --cream: #f4efe6;
-    --forest: #1e4a32;
-    --ink: #1a2a22;
-    --hover: 0.48s cubic-bezier(0.4, 0, 0.2, 1);
     font-family: Outfit, sans-serif;
+    --cream: #f6f3ee;
+    --forest: #0e6e9e;
+    --ink: #1A1228;
+    --hover: 0.48s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .legal__intro,
@@ -61,9 +65,9 @@ const { title, lead, updated, sections, relatedHref, relatedLabel } = Astro.prop
   }
 
   .legal h1 {
+    font-family: Fraunces, serif;
     margin: 0;
     max-width: 12ch;
-    font-family: Fraunces, serif;
     font-size: clamp(2.8rem, 8vw, 5.2rem);
     font-weight: 500;
     line-height: 0.95;
@@ -95,8 +99,8 @@ const { title, lead, updated, sections, relatedHref, relatedLabel } = Astro.prop
   }
 
   .legal__body h2 {
-    margin: 0;
     font-family: Fraunces, serif;
+    margin: 0;
     font-size: clamp(1.45rem, 3vw, 1.85rem);
     font-weight: 500;
     line-height: 1.15;

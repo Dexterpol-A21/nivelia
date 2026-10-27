@@ -2,8 +2,8 @@
 import Footer from '@components/global/Footer.astro';
 import Nav from '@components/global/Nav.astro';
 import Scrollbar from '@components/global/Scrollbar.astro';
+import StoreCorner from '@components/global/StoreCorner.astro';
 import SEO from '@components/global/SEO.astro';
-import { PALETTES } from '@utils/palettes';
 import '../styles/global.css';
 
 interface Props {
@@ -11,10 +11,11 @@ interface Props {
   description: string;
   image?: string;
   chrome?: boolean;
+  bar?: boolean;
   footTone?: 'site' | 'centia' | 'nervia';
 }
 
-const { title, description, image, chrome = true, footTone = 'site' } = Astro.props;
+const { title, description, image, chrome = true, bar = true, footTone = 'site' } = Astro.props;
 ---
 
 <!doctype html>
@@ -23,31 +24,39 @@ const { title, description, image, chrome = true, footTone = 'site' } = Astro.pr
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="generator" content={Astro.generator} />
-    <SEO {title} {description} {image} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,100..900&family=Outfit:wght@100..900&display=swap"
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Outfit:wght@400;500;600;700&display=swap"
     />
+    <SEO {title} {description} {image} />
     <slot name="head" />
-    <script is:inline define:vars={{ ids: PALETTES.map((item) => item.id).filter((id) => id !== 'campos') }}>
-      const paleta = new URLSearchParams(location.search).get('paleta');
-      if (ids.includes(paleta)) document.documentElement.dataset.paleta = paleta;
-    </script>
   </head>
-  <body class="flex min-h-dvh flex-col">
-    <Nav />
-    <Scrollbar />
+  <body class:list={['flex min-h-dvh flex-col', { 'is-bare': !bar }]}>
+    {bar && <Nav />}
+    {bar && <StoreCorner />}
+    {bar && <Scrollbar />}
     <main class="flex-1">
       <slot />
     </main>
     {chrome && <Footer tone={footTone} />}
 
+    <style>
+      body.is-bare {
+        padding-bottom: 0;
+        scroll-padding-bottom: 0;
+      }
+    </style>
+
     <script>
+      import { bootGrainients } from '../scripts/grainient';
       import { gsap } from 'gsap';
       import { ScrollTrigger } from 'gsap/ScrollTrigger';
       import Lenis from 'lenis';
       import { initSlidePlates } from '../scripts/slide-plates';
 
+      bootGrainients();
       gsap.registerPlugin(ScrollTrigger);
 
       const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -60,7 +69,7 @@ const { title, description, image, chrome = true, footTone = 'site' } = Astro.pr
           smoothWheel: true,
         });
 
-        (window as Window & { glyvLenis?: typeof lenis }).glyvLenis = lenis;
+        (window as Window & { ekiliaLenis?: typeof lenis }).ekiliaLenis = lenis;
 
         lenis.on('scroll', ScrollTrigger.update);
 
@@ -81,16 +90,23 @@ const { title, description, image, chrome = true, footTone = 'site' } = Astro.pr
         });
       }
 
-      document.querySelectorAll('.animate-in').forEach((el) => {
+      document.querySelectorAll<HTMLElement>('.animate-in').forEach((el) => {
+        if (reduceMotion) return;
+        if (el.getBoundingClientRect().top < window.innerHeight * 0.92) return;
         gsap.from(el, {
-          y: reduceMotion ? 0 : 60,
+          y: 60,
           opacity: 0,
-          duration: reduceMotion ? 0 : 0.8,
-          scrollTrigger: { trigger: el, start: 'top 85%' },
+          duration: 0.8,
+          scrollTrigger: { trigger: el, start: 'top 92%', once: true },
         });
       });
 
       ScrollTrigger.refresh();
+      ScrollTrigger.update();
+      document.fonts.ready.then(() => {
+        ScrollTrigger.refresh();
+        ScrollTrigger.update();
+      });
     </script>
   </body>
 </html>

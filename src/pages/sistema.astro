@@ -1,5 +1,6 @@
 ---
-import GlyvButtons from '@components/ui/GlyvButtons.astro';
+import EkiliaButtons from '@components/ui/EkiliaButtons.astro';
+import Grainient from '@components/ui/Grainient.astro';
 import BaseLayout from '@layouts/BaseLayout.astro';
 import { PAGES, SYSTEM } from '@utils/constants';
 ---
@@ -8,41 +9,57 @@ import { PAGES, SYSTEM } from '@utils/constants';
   <meta slot="head" name="robots" content="noindex, nofollow" />
 
   <article class="sistema">
-    <header class="sistema__intro">
-      <p class="sistema__word">Glyv</p>
+    <header class="sistema__intro grain-host">
+      <Grainient tone="cream" />
+      <p class="sistema__word">Ekilia</p>
       <div>
         <h1>Sistema gráfico.</h1>
         <p>
-          Suplementos para diabetes, reposición cada mes. Campos de color, tipo editorial, botones
-          cuadrados. Esto es lo que se usa; lo demás no entra. Los archivos para bajar están en
+          Nutrición para tu bienestar, reposición cada mes. Hueso, azul, turquesa y mora. Tipo
+          editorial, botones cuadrados. Esto es lo que se usa; lo demás no entra. Los archivos para
+          bajar están en
           <a href="/marca">Marca</a>.
         </p>
       </div>
     </header>
 
-    <section class="sistema__rules" aria-label="Reglas">
+    <section class="sistema__rules grain-host" aria-label="Reglas">
+      <Grainient tone="forest" />
       <ul>
         {SYSTEM.rules.map((rule) => <li>{rule}</li>)}
       </ul>
     </section>
 
-    <section class="sistema__color" aria-label="Color">
+    <section class="sistema__color grain-host" aria-label="Color">
+      <Grainient tone="cream" />
       <h2>Color</h2>
-      <p>Seis valores. Tres campos (crema, bosque, petróleo) y tres apoyos. Nada más.</p>
+      <p>Cuatro valores de marca. Nada más entra como campo.</p>
       <ul>
         {
           SYSTEM.colors.map((color) => (
-            <li style={`background: ${color.hex}`}>
+            <li class={`is-on-${color.on} grain-host`} style={`background: ${color.hex}`}>
+              <Grainient
+                tone={
+                  color.hex === '#0E6E9E'
+                    ? 'forest'
+                    : color.hex === '#0F6468'
+                      ? 'turquoise'
+                      : color.hex === '#3E2770'
+                        ? 'petroleum'
+                        : 'cream'
+                }
+              />
               <p>{color.name}</p>
               <p>{color.hex}</p>
-              <p>{color.use}</p>
+              <p>{color.role}. {color.use}</p>
             </li>
           ))
         }
       </ul>
     </section>
 
-    <section class="sistema__type" aria-label="Tipografía">
+    <section class="sistema__type grain-host" aria-label="Tipografía">
+      <Grainient tone="forest" />
       <div class="sistema__type-meta">
         <h2>Tipo</h2>
         <p>
@@ -51,44 +68,68 @@ import { PAGES, SYSTEM } from '@utils/constants';
         </p>
       </div>
       <div class="sistema__specimens">
-        <p class="is-word">Glyv</p>
-        <p class="is-h1">Equilibra tu glucosa.</p>
+        <p class="is-word">Ekilia</p>
+        <p class="is-h1">Nutrición para tu bienestar.</p>
         <p class="is-claim">Equilibra tu mente. Recupera tu bienestar.</p>
         <p class="is-body">Dos cápsulas al día, con los alimentos. Ciencia clara, origen botánico.</p>
         <p class="is-cta">Empezar reposición</p>
       </div>
     </section>
 
-    <section class="sistema__buttons" aria-label="Botones">
+    <section class="sistema__buttons grain-host" aria-label="Botones">
+      <Grainient tone="petroleum" />
       <div>
         <h2>Botones</h2>
         <p>
-          Siempre cuadrados, 2.75 rem de alto. Bloom rellena el recuadro. Tinta cambia letra a letra y
-          endereza la flecha. Van en bosque o petróleo; sobre crema el trazo desaparece.
+          Siempre cuadrados, 2.75 rem de alto. Bloom abre con el color de la placa: turquesa solo sobre turquesa. Tinta sube la palabra y
+          endereza la flecha. Sobre color, trazo hueso. Sobre hueso, trazo tinta.
         </p>
       </div>
-      <GlyvButtons primary="Empezar reposición" secondary="Ver Centia" secondaryHref="/centia" />
+      <EkiliaButtons primary="Empezar reposición" primaryHref="/reposicion" secondary="Ver Centia" secondaryHref="/centia" />
     </section>
 
-    <section class="sistema__layout" aria-label="Layout">
+    <section class="sistema__buttons is-hueso grain-host" aria-label="Botones sobre hueso">
+      <Grainient tone="cream" />
+      <div>
+        <h2>Sobre hueso.</h2>
+        <p>
+          El trazo hueso desaparece. Entrar y Crear cuenta van en tinta #1A1228. Al hover el relleno toma el color de las letras, tinta, y la palabra queda hueso #E6DFD4, el color del fondo. La tinta
+          subraya y endereza la flecha.
+        </p>
+      </div>
+      <EkiliaButtons primary="Entrar" primaryHref="/cuenta" secondary="Crear cuenta" secondaryHref="/cuenta" />
+    </section>
+
+    <section class="sistema__layout grain-host" aria-label="Layout">
+      <Grainient tone="cream" />
       <h2>Layout</h2>
       <div class="sistema__plates" data-slide-host aria-hidden="true">
-        <div class="is-cream" data-slide="left">Crema</div>
-        <div class="is-forest" data-slide="right">Bosque</div>
+        <div class="is-cream grain-host" data-slide="left">
+          <Grainient tone="cream" />
+          Hueso
+        </div>
+        <div class="is-forest grain-host" data-slide="right">
+          <Grainient tone="forest" />
+          Azul
+        </div>
       </div>
       <div class="sistema__bar-host" data-slide-host aria-hidden="true">
-        <div class="is-petroleum" data-slide="left">Petróleo</div>
+        <div class="is-petroleum grain-host" data-slide="left">
+          <Grainient tone="petroleum" />
+          Mora
+        </div>
       </div>
       <ul>
         <li>Hero y productos: placas a sangre, 50 / 50 desde 900 px.</li>
         <li>Las placas entran desde los lados, una vez. Host recorta; el color va en el pane. Cada placa apilada es su propio host. Hero no entra.</li>
         <li>Menú: se abre al clic, no al hover. Riel estrecho (reposición) a la izquierda; índice a la derecha, fórmulas en Fraunces y páginas en Outfit. No copia el hero.</li>
         <li>Alineación a la izquierda. Cajas sin sombra y sin radio.</li>
-        <li>Barra de scroll: riel crema, pulgar bosque, hover petróleo.</li>
+        <li>Barra de scroll: riel hueso, pulgar azul, hover turquesa.</li>
       </ul>
     </section>
 
-    <section class="sistema__avoid" aria-label="Fuera de marca">
+    <section class="sistema__avoid grain-host" aria-label="Fuera de marca">
+      <Grainient tone="ink" />
       <h2>No entra</h2>
       <ul>
         {SYSTEM.avoid.map((item) => <li>{item}</li>)}
@@ -99,17 +140,18 @@ import { PAGES, SYSTEM } from '@utils/constants';
 
 <style>
   .sistema {
-    --cream: #f4efe6;
-    --cream-deep: #ebe4d4;
-    --forest: #1e4a32;
-    --petroleum: #0b4f6c;
-    --ink: #1a2a22;
     font-family: Outfit, sans-serif;
+    --cream: #f6f3ee;
+    --cream-deep: #e6dfd4;
+    --forest: #0e6e9e;
+    --petroleum: #3e2770;
+    --turquoise: #0f6468;
+    --ink: #1A1228;
   }
 
   .sistema h2 {
-    margin: 0 0 0.8rem;
     font-family: Fraunces, serif;
+    margin: 0 0 0.8rem;
     font-size: clamp(2.1rem, 5vw, 3.4rem);
     font-weight: 500;
     line-height: 1;
@@ -137,9 +179,11 @@ import { PAGES, SYSTEM } from '@utils/constants';
   }
 
   .sistema__word {
-    margin: 0;
     font-family: Fraunces, serif;
-    font-size: clamp(4.4rem, 16vw, 8.5rem);
+    font-optical-sizing: none;
+    font-variation-settings: "opsz" 144, "wght" 600;
+    margin: 0;
+    font-size: clamp(3.2rem, 11vw, 6.4rem);
     font-weight: 600;
     line-height: 0.78;
     letter-spacing: -0.05em;
@@ -184,10 +228,10 @@ import { PAGES, SYSTEM } from '@utils/constants';
   .sistema__rules li,
   .sistema__layout li,
   .sistema__avoid li {
+    font-family: Fraunces, serif;
     max-width: 28rem;
     padding: 0.85rem 0;
     border-top: 1.5px solid color-mix(in srgb, currentColor 28%, transparent);
-    font-family: Fraunces, serif;
     font-size: clamp(1.25rem, 3vw, 1.7rem);
     font-weight: 500;
     line-height: 1.25;
@@ -200,6 +244,7 @@ import { PAGES, SYSTEM } from '@utils/constants';
 
   .sistema__color ul {
     display: grid;
+    grid-template-columns: 1fr;
     gap: 0;
     margin: 2rem 0 0;
     padding: 0;
@@ -238,8 +283,17 @@ import { PAGES, SYSTEM } from '@utils/constants';
     opacity: 0.78;
   }
 
-  .sistema__color li:nth-child(n + 3) {
+  .sistema__color li.is-on-cream {
     color: var(--on-dark, var(--cream));
+  }
+
+  .sistema__color li.is-on-navy {
+    color: #062a3d;
+  }
+
+  .sistema__color li.is-on-ink {
+    color: var(--ink);
+    box-shadow: inset 0 0 0 1px var(--color-border, #d3e2e8);
   }
 
   .sistema__type {
@@ -264,17 +318,17 @@ import { PAGES, SYSTEM } from '@utils/constants';
   }
 
   .is-h1 {
-    margin-top: 1.4rem;
     font-family: Fraunces, serif;
+    margin-top: 1.4rem;
     font-size: clamp(2.15rem, 5vw, 4.2rem);
     font-weight: 500;
     line-height: 1.02;
   }
 
   .is-claim {
+    font-family: Fraunces, serif;
     margin-top: 1.1rem;
     max-width: 18ch;
-    font-family: Fraunces, serif;
     font-size: clamp(1.25rem, 3vw, 1.85rem);
     font-weight: 500;
     line-height: 1.2;
@@ -295,12 +349,34 @@ import { PAGES, SYSTEM } from '@utils/constants';
   }
 
   .sistema__buttons {
+    --bloom: var(--petroleum);
     background: var(--petroleum);
     color: var(--on-dark, var(--cream));
   }
 
-  .sistema__buttons :global(.glyv-btns) {
+  .sistema__buttons :global(.ekilia-btns) {
     margin-top: 1.6rem;
+  }
+
+  .sistema__buttons.is-hueso {
+    --bloom: var(--ink);
+    --bloom-fill: var(--ink);
+    --bloom-ink: var(--cream-deep);
+    background: var(--cream);
+    color: var(--ink);
+  }
+
+  .sistema__buttons.is-hueso :global(.ekilia-btns__btn.is-bloom) {
+    color: var(--ink);
+    box-shadow: inset 0 0 0 2px var(--ink);
+  }
+
+  .sistema__buttons.is-hueso :global(.ekilia-btns__btn.is-tinta) {
+    color: var(--ink);
+  }
+
+  .sistema__buttons.is-hueso :global(.ekilia-btns__btn:focus-visible) {
+    outline-color: var(--ink);
   }
 
   .sistema__layout {
@@ -315,10 +391,10 @@ import { PAGES, SYSTEM } from '@utils/constants';
   }
 
   .sistema__plates div {
+    font-family: Fraunces, serif;
     display: grid;
     place-items: center;
     min-height: 5.5rem;
-    font-family: Fraunces, serif;
     font-size: 1.4rem;
     font-weight: 500;
   }
@@ -339,12 +415,12 @@ import { PAGES, SYSTEM } from '@utils/constants';
   }
 
   .sistema__bar-host .is-petroleum {
+    font-family: Fraunces, serif;
     display: grid;
     place-items: center;
     min-height: 5.5rem;
     background: var(--petroleum);
     color: var(--on-dark, var(--cream));
-    font-family: Fraunces, serif;
     font-size: 1.4rem;
     font-weight: 500;
   }
@@ -365,14 +441,14 @@ import { PAGES, SYSTEM } from '@utils/constants';
       padding: 5rem 2.6rem 3.6rem;
     }
 
+    .sistema__color ul {
+      grid-template-columns: 1fr 1fr;
+    }
+
     .sistema__intro {
       display: grid;
       grid-template-columns: 1fr 1fr;
       align-items: end;
-    }
-
-    .sistema__color ul {
-      grid-template-columns: repeat(3, 1fr);
     }
 
     .sistema__color li {

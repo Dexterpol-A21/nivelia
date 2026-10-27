@@ -1,13 +1,13 @@
 ---
-import GlyvFlora from '@components/home/GlyvFlora.astro';
+import Grainient from '@components/ui/Grainient.astro';
 import { HOME_PAGE } from '@utils/constants';
 
 const copy = HOME_PAGE.formula;
 ---
 
 <div data-slide-host>
-<section class="home-formula" id="formula" data-slide="right" aria-labelledby="home-formula-title">
-  <GlyvFlora variant="seam" ink="dark" />
+<section class="home-formula grain-host" id="formula" data-slide="right" aria-labelledby="home-formula-title">
+  <Grainient tone="cream" />
   <div class="home-formula__copy">
     <h2 id="home-formula-title">{copy.h2}</h2>
     <p>{copy.body}</p>
@@ -27,25 +27,25 @@ const copy = HOME_PAGE.formula;
 
 <style>
   .home-formula {
-    --cream: #f4efe6;
-    --forest: #1e4a32;
-    --ink: #1a2a22;
+    font-family: Outfit, sans-serif;
+    --cream: #f6f3ee;
+    --forest: #0e6e9e;
+    --ink: #1A1228;
     background: var(--cream);
     color: var(--ink);
     padding: 7.6rem 1.5rem 2.8rem;
     position: relative;
-    font-family: Outfit, sans-serif;
   }
 
-  .home-formula > :not(.glyv-flora) {
+  .home-formula > :not(.ekilia-flora) {
     position: relative;
     z-index: 1;
   }
 
   .home-formula h2 {
+    font-family: Fraunces, serif;
     margin: 0;
     max-width: 16ch;
-    font-family: Fraunces, serif;
     font-size: clamp(2.15rem, 5.4vw, 3.6rem);
     font-weight: 500;
     line-height: 1.05;
@@ -73,8 +73,8 @@ const copy = HOME_PAGE.formula;
   }
 
   .home-formula dd {
-    margin: 0.25rem 0 0;
     font-family: Fraunces, serif;
+    margin: 0.25rem 0 0;
     font-size: 1.2rem;
     font-weight: 500;
   }

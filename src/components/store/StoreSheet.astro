@@ -1,0 +1,95 @@
+---
+import EkiliaButtons from '@components/ui/EkiliaButtons.astro';
+import Grainient from '@components/ui/Grainient.astro';
+
+interface Props {
+  title: string;
+  lead: string;
+  plateTitle: string;
+  plateBody: string;
+  primary: string;
+  primaryHref: string;
+  secondary: string;
+  secondaryHref: string;
+}
+
+const { title, lead, plateTitle, plateBody, primary, primaryHref, secondary, secondaryHref } = Astro.props;
+---
+
+<article class="store-sheet">
+  <header class="grain-host">
+    <Grainient tone="cream" />
+    <h1>{title}</h1>
+    <p>{lead}</p>
+  </header>
+  <section class="grain-host">
+    <Grainient tone="forest" />
+    <h2>{plateTitle}</h2>
+    <p>{plateBody}</p>
+    <EkiliaButtons {primary} {primaryHref} {secondary} {secondaryHref} />
+  </section>
+</article>
+
+<style>
+  .store-sheet {
+    font-family: Outfit, sans-serif;
+    --cream: #f6f3ee;
+    --forest: #0e6e9e;
+    --ink: #1a1228;
+  }
+
+  .store-sheet header,
+  .store-sheet section {
+    padding: 6.5rem 1.5rem 2.8rem;
+  }
+
+  .store-sheet header {
+    background: var(--cream);
+    color: var(--ink);
+    padding-bottom: 2.6rem;
+  }
+
+  .store-sheet section {
+    --bloom: var(--forest);
+    background: var(--forest);
+    color: var(--on-dark, var(--cream));
+    padding-top: 2.8rem;
+  }
+
+  .store-sheet h1,
+  .store-sheet h2 {
+    font-family: Fraunces, serif;
+    margin: 0;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+  }
+
+  .store-sheet h1 {
+    font-size: clamp(3.2rem, 9vw, 5.6rem);
+    line-height: 0.92;
+  }
+
+  .store-sheet h2 {
+    font-size: clamp(2.2rem, 5vw, 3.4rem);
+    line-height: 0.98;
+  }
+
+  .store-sheet p {
+    margin: 1.05rem 0 0;
+    max-width: 28rem;
+    font-size: 1.05rem;
+    line-height: 1.5;
+  }
+
+  @media (min-width: 900px) {
+    .store-sheet header,
+    .store-sheet section {
+      padding-left: 2.6rem;
+      padding-right: 2.6rem;
+    }
+
+    .store-sheet header {
+      padding-top: 8rem;
+    }
+  }
+</style>

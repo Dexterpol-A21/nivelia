@@ -1,14 +1,14 @@
-<div class="glyv-scroll" aria-hidden="true">
-  <div class="glyv-scroll__track">
-    <div class="glyv-scroll__thumb"></div>
+<div class="ekilia-scroll" aria-hidden="true">
+  <div class="ekilia-scroll__track">
+    <div class="ekilia-scroll__thumb"></div>
   </div>
 </div>
 
 <style>
-  .glyv-scroll {
-    --cream: #f4efe6;
-    --forest: #1e4a32;
-    --petroleum: #0b4f6c;
+  .ekilia-scroll {
+    --cream: #f6f3ee;
+    --forest: #0e6e9e;
+    --petroleum: #3e2770;
     pointer-events: none;
     position: fixed;
     top: 0;
@@ -18,11 +18,11 @@
     width: 0.7rem;
   }
 
-  .glyv-scroll.is-off {
+  .ekilia-scroll.is-off {
     display: none;
   }
 
-  .glyv-scroll__track {
+  .ekilia-scroll__track {
     pointer-events: auto;
     position: absolute;
     inset: 0;
@@ -30,7 +30,7 @@
     cursor: pointer;
   }
 
-  .glyv-scroll__thumb {
+  .ekilia-scroll__thumb {
     position: absolute;
     left: 0;
     right: 0;
@@ -39,28 +39,38 @@
     touch-action: none;
   }
 
-  .glyv-scroll__thumb:active {
-    cursor: grabbing;
-    background: var(--petroleum);
+  .ekilia-scroll__thumb:hover {
+    background: var(--turquoise, #0f6468);
   }
 
-  :global(body:has(.glyv-nav.is-open) .glyv-scroll) {
+  .ekilia-scroll__thumb:active {
+    cursor: grabbing;
+    background: var(--turquoise, #0f6468);
+  }
+
+  :global(body:has(.ekilia-nav.is-open) .ekilia-scroll) {
     opacity: 0;
     pointer-events: none;
+  }
+
+  @media (max-width: 899px) {
+    .ekilia-scroll {
+      bottom: var(--nav-dock, 0px);
+    }
   }
 </style>
 
 <script>
-  const root = document.querySelector('.glyv-scroll');
-  const track = root?.querySelector<HTMLElement>('.glyv-scroll__track');
-  const thumb = root?.querySelector<HTMLElement>('.glyv-scroll__thumb');
+  const root = document.querySelector('.ekilia-scroll');
+  const track = root?.querySelector<HTMLElement>('.ekilia-scroll__track');
+  const thumb = root?.querySelector<HTMLElement>('.ekilia-scroll__thumb');
 
   if (root && track && thumb) {
     let dragging = false;
     let grab = 0;
 
     const lenis = () =>
-      (window as Window & { glyvLenis?: { scrollTo: (y: number, opts?: { immediate?: boolean }) => void; scroll: number; limit: number } }).glyvLenis;
+      (window as Window & { ekiliaLenis?: { scrollTo: (y: number, opts?: { immediate?: boolean }) => void; scroll: number; limit: number } }).ekiliaLenis;
 
     const metrics = () => {
       const view = window.innerHeight;
